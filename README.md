@@ -1,7 +1,7 @@
 # facenet
 FaceNet OpenAPI & Node.js Module
 
-![Google Facenet](https://zixia.github.io/facenet/images/facenet.jpg "Google Facenet")
+<img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width=50%>
 
 ### Under Construction
 
