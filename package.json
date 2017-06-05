@@ -12,6 +12,7 @@
     "typescript": "^2.3.4"
   },
   "scripts": {
+    "start": "echo started",
     "test": "echo test"
   },
   "repository": {
