@@ -2,16 +2,22 @@
   "name": "facenet",
   "version": "0.0.2",
   "description": "OpenAPI for FaceNet",
-  "main": "index.js",
-  "dependencies": {
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^7.0.27",
+    "shx": "^0.2.2",
     "tap": "^10.3.3",
     "ts-node": "^3.0.4",
+    "tslint": "^5.4.2",
     "typescript": "^2.3.4"
   },
   "scripts": {
+    "clean": "shx rm -fr dist/*",
+    "dist": "npm run clean && tsc",
+    "lint": "npm run lint:ts",
+    "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
     "start": "echo started",
     "test": "echo test"
   },
@@ -28,5 +34,14 @@
   "bugs": {
     "url": "https://github.com/zixia/facenet/issues"
   },
-  "homepage": "https://github.com/zixia/facenet#readme"
+  "homepage": "https://github.com/zixia/facenet#readme",
+  "files": [
+    "CHANGELOG",
+    "LICENSE",
+    "README.md",
+    "package.json",
+    "dist/bin",
+    "dist/index.*",
+    "dist/src"
+  ]
 }

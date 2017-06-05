@@ -5,17 +5,16 @@
     , "outDir": "dist"
     , "declaration": true
     , "sourceMap": true
-    , "noLib": false
-
     , "noEmitOnError": true
     , "noUnusedLocals": true
     , "noImplicitReturns": true
     , "noFallthroughCasesInSwitch": true
     , "strictNullChecks": true
+    , "noImplicitAny": true
+    , "noUnusedParameters": true
+    , "noImplicitThis": true
 
-    , "noImplicitAny": false
-    , "noUnusedParameters": false
-    , "noImplicitThis": false
+    , "noLib": false
     , "traceResolution": false
   }
   , "exclude": [
@@ -23,11 +22,12 @@
     , "dist/"
   ]
   , "include": [
-       "bin/*.ts"
-     , "example/**/*.ts"
+       "index.ts"
+     , "bin/*.ts"
+     , "examples/**/*.ts"
      , "src/**/*.ts"
-     , "test/**/*.spec.ts"
-     , "bot/**/*.ts"
-     , "app/**/*.ts"
+     , "tests/**/*.spec.ts"
+     , "facenet/**/*.ts"
+     , "oas/**/*.ts"
   ]
 }

@@ -4,7 +4,7 @@ FaceNet OpenAPI Specification & Docker Microservices & Node.js Module
 
 <img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
 
-FaceNet is a deep convolutional network trained to solve face verification, recognition and clustering problem with efficiently at scale.
+FaceNet is a deep convolutional network designed by Google, trained to solve face verification, recognition and clustering problem with efficiently at scale.
 
 1. directly learns a mapping from face images to a compact Euclidean space where distances directly correspond to a measure of face similarity.
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
