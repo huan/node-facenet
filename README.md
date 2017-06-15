@@ -16,10 +16,44 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 Please come back after 2 weeks.
 
+### Todo
+
+#### Train
+
+```shell
+python src/classifier.py TRAIN /facenet/training-images-mtcnn-182/ /facenet/models/facenet/20170512-110547/20170512-110547.pb /facenet/models/my_classifier.pkl --batch_size 1000
+```
+
+#### Classify
+
+```shell
+python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/models/facenet/20170512-110547/20170512-110547.pb /facenet/models/my_classifier.pkl --batch_size 1000
+```
+
 ### Resources
 
 * [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 * [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
+* [A tensorflow implementation of "Deep Convolutional Generative Adversarial Networks](http://carpedm20.github.io/faces/)
+
+#### Python
+
+* [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
+* [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
+* [Useful Python Modules: Flake8](https://dancallahan.info/journal/python-flake8/)
+* [PEP 8 - Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
+
+##### Typing
+
+* [Mypy syntax cheat sheet (Python 3)](mypy.readthedocs.io/en/latest/cheat_sheet_py3.html)
+* [Python 3 Type Hints and Static Analysis](https://code.tutsplus.com/tutorials/python-3-type-hints-and-static-analysis--cms-25731)
+* [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+
+## Develop
+
+```shell
+apt install mypy flake8
+```
 
 Author
 ------
