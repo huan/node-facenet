@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-gpu-py3
+FROM tensorflow/tensorflow:latest-gpu
 MAINTAINER Huan LI <zixia@zixia.net>
 
 ENV LC_ALL C.UTF-8
@@ -13,8 +13,10 @@ RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 ENV PYTHON_FACENET /python-facenet
 RUN  mkdir "$PYTHON_FACENET" \
   && cd "$PYTHON_FACENET" \
-  && git clone https://github.com/zixia/python-facenet.git . \
-  && pip install opencv-python \
+  && git clone https://github.com/davidsandberg/facenet.git . \
+  && pip install \
+          h5py \
+          opencv-python \
   && echo "Python Facenet Installed."
 ENV PYTHONPATH "$PYTHON_FACENET/src"
 
