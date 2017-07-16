@@ -30,6 +30,10 @@ python src/classifier.py TRAIN /facenet/training-images-mtcnn-182/ /facenet/mode
 python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/models/facenet/20170512-110547/20170512-110547.pb /facenet/models/my_classifier.pkl --batch_size 1000
 ```
 
+### Tutorials
+
+* [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
+
 ### Resources
 
 * [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
