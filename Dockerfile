@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-gpu
+FROM tensorflow/tensorflow:latest-gpu-py3
 MAINTAINER Huan LI <zixia@zixia.net>
 
 ENV LC_ALL C.UTF-8

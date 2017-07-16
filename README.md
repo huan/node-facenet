@@ -49,10 +49,15 @@ python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/m
 * [Python 3 Type Hints and Static Analysis](https://code.tutsplus.com/tutorials/python-3-type-hints-and-static-analysis--cms-25731)
 * [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
 
+#### Discussion
+
+* [Stackoverflow: numpy-like package for node](https://stackoverflow.com/questions/31412537/numpy-like-package-for-node)
+
 ## Develop
 
 ```shell
 apt install mypy flake8
+pip install flake8-commas  # missing trailing comma
 ```
 
 Author

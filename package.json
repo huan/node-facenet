@@ -7,8 +7,10 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^7.0.27",
+    "argparse": "^1.0.9",
+    "python-bridge": "^1.0.0",
     "shx": "^0.2.2",
-    "tap": "^10.3.3",
+    "tap": "^10.7.0",
     "ts-node": "^3.0.4",
     "tslint": "^5.4.2",
     "typescript": "^2.3.4"
@@ -19,7 +21,7 @@
     "lint": "npm run lint:ts",
     "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
     "start": "echo started",
-    "test": "echo test"
+    "test": "tap tests/*.spec.ts"
   },
   "repository": {
     "type": "git",

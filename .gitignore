@@ -60,3 +60,5 @@ typings/
 t/
 t.*
 dist/
+.vscode/.ropeproject/
+package-lock.json
