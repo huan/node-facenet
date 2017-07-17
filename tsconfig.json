@@ -23,11 +23,11 @@
   ]
   , "include": [
        "index.ts"
-     , "bin/*.ts"
-     , "examples/**/*.ts"
-     , "src/**/*.ts"
-     , "tests/**/*.spec.ts"
-     , "facenet/**/*.ts"
-     , "oas/**/*.ts"
+    //  , "bin/*.ts"
+    //  , "examples/**/*.ts"
+    //  , "src/**/*.ts"
+    //  , "tests/**/*.ts"
+    //  , "facenet/**/*.ts"
+    //  , "oas/**/*.ts"
   ]
 }

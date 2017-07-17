@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
+    "@types/argparse": "^1.0.30",
     "@types/node": "^7.0.27",
     "argparse": "^1.0.9",
     "python-bridge": "^1.0.0",
@@ -21,7 +22,7 @@
     "lint": "npm run lint:ts",
     "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
     "start": "echo started",
-    "test": "tap tests/*.spec.ts"
+    "test": "tap src/**/*.spec.ts tests/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
