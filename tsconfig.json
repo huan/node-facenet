@@ -23,10 +23,10 @@
   ]
   , "include": [
        "index.ts"
-    //  , "bin/*.ts"
-    //  , "examples/**/*.ts"
-    //  , "src/**/*.ts"
-    //  , "tests/**/*.ts"
+     , "bin/*.ts"
+     , "examples/**/*.ts"
+     , "src/**/*.ts"
+     , "tests/**/*.ts"
     //  , "facenet/**/*.ts"
     //  , "oas/**/*.ts"
   ]
