@@ -16,10 +16,10 @@ test('python 3 version test', async (t: any) => {
     t.ok(minor >= 5, 'should be at least v3.5')
   } catch (e) {
     t.fail(e.message)
+  } finally {
+    python.end()
+    t.end()
   }
-
-  python.end()
-  t.end()
 })
 
 test('math test', async (t: any) => {
@@ -31,10 +31,10 @@ test('math test', async (t: any) => {
     t.equal(three, 3, 'should get 3 from math.sqrt(9)')
   } catch (e) {
     t.fail(e.message)
+  } finally {
+    python.end()
+    t.end()
   }
-
-  python.end()
-  t.end()
 })
 
 test('list test', async (t: any) => {
@@ -46,9 +46,10 @@ test('list test', async (t: any) => {
     t.deepEqual(sortedList, list.sort(), 'should get sorted list from python')
   } catch (e) {
     t.fail(e.message)
+  } finally {
+    python.end()
+    t.end()
   }
-  python.end()
-  t.end()
 })
 
 export {}

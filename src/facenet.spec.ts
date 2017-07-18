@@ -1,8 +1,8 @@
 #!/usr/bin/env ts-node
 
-import { Facenet } from './facenet'
-
 const { test } = require('tap')
+
+import { Facenet } from './facenet'
 
 test('facenet', async (t: any) => {
   t.ok(Facenet, 'ok')
