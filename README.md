@@ -56,6 +56,9 @@ python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/m
 #### Discussion
 
 * [Stackoverflow: numpy-like package for node](https://stackoverflow.com/questions/31412537/numpy-like-package-for-node)
+* [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
+* [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
+* [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
 
 ## Develop
 
