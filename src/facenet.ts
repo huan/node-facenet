@@ -1,5 +1,5 @@
-import * as ndarray from 'ndarray'
-const nj = require('numjs')
+// import * as ndarray from 'ndarray'
+// const nj = require('numjs')
 
 const pythonBridge = require('python-bridge')
 
@@ -33,6 +33,6 @@ export class Facenet {
     }
 
     // TODO
-    return [1,2,3]
+    return [1, 2, 3]
   }
 }

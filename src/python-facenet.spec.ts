@@ -2,10 +2,10 @@
 
 const { test } = require('tap')
 
-import { Facenet } from './facenet'
+import { PythonFacenet } from './python-facenet'
 
-test('facenet', async (t: any) => {
-  t.ok(Facenet, 'ok')
+test('PythonFacenet', async (t: any) => {
+  t.ok(PythonFacenet, 'ok')
   t.pass('TODO')
   t.end()
 })
