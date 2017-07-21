@@ -4,9 +4,10 @@ MAINTAINER Huan LI <zixia@zixia.net>
 ENV LC_ALL C.UTF-8
 
 RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-  && apt-get install -y \
+  && apt-get update && apt-get install -y \
       git \
       nodejs \
+      iputils-ping \
       vim \
   && rm -rf /var/lib/apt/lists/*
 
