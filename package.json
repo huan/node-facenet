@@ -4,9 +4,12 @@
   "description": "OpenAPI for FaceNet",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "dependencies": {},
+  "dependencies": {
+    "numjs": "^0.14.0"
+  },
   "devDependencies": {
     "@types/argparse": "^1.0.30",
+    "@types/ndarray": "^1.0.3",
     "@types/node": "^7.0.27",
     "argparse": "^1.0.9",
     "python-bridge": "^1.0.0",
