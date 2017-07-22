@@ -12,12 +12,12 @@
     "@types/ndarray": "^1.0.3",
     "@types/node": "^7.0.27",
     "argparse": "^1.0.9",
-    "python-bridge": "^1.0.0",
+    "python-bridge": "^1.0.1",
     "shx": "^0.2.2",
     "tap": "^10.7.0",
     "ts-node": "^3.0.4",
     "tslint": "^5.4.2",
-    "typescript": "^2.3.4"
+    "typescript": "^2.4.2"
   },
   "scripts": {
     "clean": "shx rm -fr dist/*",
