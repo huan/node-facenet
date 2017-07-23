@@ -5,12 +5,15 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/ndarray": "^1.0.3",
+    "get-pixels": "^3.3.0",
+    "ndarray": "^1.0.18",
+    "ndarray-distance": "^1.0.0",
     "numjs": "^0.14.0"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.30",
-    "@types/ndarray": "^1.0.3",
-    "@types/node": "^7.0.27",
+    "@types/node": "^8.0.15",
     "argparse": "^1.0.9",
     "python-bridge": "^1.0.1",
     "shx": "^0.2.2",
