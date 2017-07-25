@@ -6,7 +6,8 @@ const distance  = require('ndarray-distance')
 // const getPixels = require('get-pixels')
 const nj        = require('numjs')
 
-import { PythonFacenet } from './python-facenet'
+import { PythonFacenet }  from './python-facenet'
+import { Image }          from './image'
 
 export type FeatureVector = any  // 128 dim
 export type ImageVector   = any
@@ -38,7 +39,7 @@ export class Facenet {
    */
   public async image(url: string): Promise<ImageVector> {
     // return await promisify(getPixels)(url)
-    return nj.images.read(url)
+    return Image.load(url)
     // resized = nj.images.resize(img, H / 2, W / 2),
   }
 

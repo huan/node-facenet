@@ -15,7 +15,7 @@ test('tensorflow smoke testing', async (t: any) => {
     await python.ex`
       import tensorflow as tf
 
-      sess = tf.session()
+      sess = tf.Session()
       a = tf.constant(5.0)
       b = tf.constant(6.0)
       c = a * b
