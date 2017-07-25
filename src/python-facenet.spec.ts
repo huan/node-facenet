@@ -4,12 +4,9 @@ const { test } = require('tap')
 
 import { PythonFacenet } from './python-facenet'
 
-test('PythonFacenet', async (t: any) => {
-  t.ok(PythonFacenet, 'ok')
-  t.pass('TODO')
-  t.end()
+test('PythonFacenet smoke testing', async (t: any) => {
+  const pf = new PythonFacenet()
+  await pf.init()
+  t.pass('should init successful')
+  await pf.quit()
 })
-
-// 'Cannot redeclare block-scoped variable' in unrelated files
-// https://stackoverflow.com/a/41975448/1123955
-export {}

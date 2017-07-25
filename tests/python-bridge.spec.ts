@@ -2,11 +2,14 @@
 
 const { test } = require('tap')
 
-const pythonBridge = require('python-bridge')
+const { pythonBridge } = require('python-bridge')
 
 test('python 3 version test', async (t: any) => {
   const python = pythonBridge({
     python: 'python3',
+    env: {
+      TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
+    },
   })
 
   try {
@@ -23,7 +26,11 @@ test('python 3 version test', async (t: any) => {
 })
 
 test('math test', async (t: any) => {
-  const python = pythonBridge()
+  const python = pythonBridge({
+    env: {
+      TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
+    },
+  })
 
   try {
     await python.ex`import math`
@@ -38,7 +45,11 @@ test('math test', async (t: any) => {
 })
 
 test('list test', async (t: any) => {
-  const python = pythonBridge()
+  const python = pythonBridge({
+    env: {
+      TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
+    },
+  })
 
   const list = [3, 4, 2, 1]
   try {
