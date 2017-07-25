@@ -12,9 +12,9 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 > See: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
 
-### Under Construction
+# Under Construction
 
-Please come back after 2 weeks.
+# Please come back after 2 weeks.
 
 ### Todo
 
@@ -59,6 +59,11 @@ python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/m
 * [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
 * [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
 * [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
+
+#### Algorithm
+
+* [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
+
 
 ## Develop
 
