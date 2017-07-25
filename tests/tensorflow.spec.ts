@@ -15,13 +15,13 @@ test('tensorflow smoke testing', async (t: any) => {
     await python.ex`
       import tensorflow as tf
 
-      sess = tf.InteractiveSession()
+      sess = tf.session()
       a = tf.constant(5.0)
       b = tf.constant(6.0)
       c = a * b
     `
     // http://ellisvalentiner.com/post/2016-01-20-numpyfloat64-is-json-serializable-but-numpyfloat32-is-not/
-    const c = await python`1.0 * c.eval()`
+    const c = await python`1.0 * sess.run(c)`
     t.equal(c, 30, 'should get 5 * 6 = 30')
     await python.ex`sess.close()`
 
