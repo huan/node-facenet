@@ -1,6 +1,6 @@
 # facenet
 
-FaceNet OpenAPI Specification & Docker Microservices & Node.js Module
+FaceNet OpenAPI Specification & Docker Microservices & TensorFlow Serving & Node.js Module
 
 <img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
 
@@ -11,6 +11,12 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
 
 > See: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
+
+## Inspiration
+
+This repository is heavily inspired by the following implementations:
+* [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg(@[davidsandberg](https://github.com/davidsandberg))
+* [OpenFacee](https://github.com/cmusatyalab/openface) by @[cmusatyalab](https://github.com/cmusatyalab)
 
 # Under Construction
 
