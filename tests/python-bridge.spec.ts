@@ -2,7 +2,7 @@
 
 const { test } = require('tap')
 
-const { pythonBridge } = require('python-bridge')
+import { pythonBridge } from 'python-bridge'
 
 test('python 3 version test', async (t: any) => {
   const python = pythonBridge({

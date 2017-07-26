@@ -9,13 +9,13 @@
     "get-pixels": "^3.3.0",
     "ndarray": "^1.0.18",
     "ndarray-distance": "^1.0.0",
-    "numjs": "^0.14.0"
+    "numjs": "^0.14.0",
+    "python-bridge": "^1.0.2"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.30",
     "@types/node": "^8.0.15",
     "argparse": "^1.0.9",
-    "python-bridge": "^1.0.1",
     "shx": "^0.2.2",
     "tap": "^10.7.0",
     "ts-node": "^3.0.4",

@@ -14,9 +14,16 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 # Under Construction
 
-# Please come back after 2 weeks.
+## Please come back after 2 weeks.
 
 ### Todo
+
+1. [ ] NPM Module: `facenet`
+1. [ ] Docker Image: `zixia/facenet`
+1. [ ] TensorFlow Sereving
+1. [ ] OpenAPI Specification(Swagger)
+1. [ ] Examples
+
 
 #### Train
 

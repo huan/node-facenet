@@ -1,4 +1,4 @@
-const pythonBridge = require('python-bridge')
+import { pythonBridge } from 'python-bridge'
 
 export class PythonFacenet {
   private python: any
