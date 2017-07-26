@@ -4,13 +4,15 @@
 
 const distance  = require('ndarray-distance')
 // const getPixels = require('get-pixels')
-const nj        = require('numjs')
+import * as nj        from 'numjs'
 
 import { PythonFacenet }  from './python-facenet'
-import { Image }          from './image'
+import {
+  Image,
+  ImageArray,
+}                         from './image'
 
-export type FeatureVector = any  // 128 dim
-export type ImageVector   = any
+export type FeatureVector = nj.NdArray  // 128 dim
 
 export interface FaceRect {
   top:    number,
@@ -37,7 +39,7 @@ export class Facenet {
    * @param url
    * @return [width, height, channel] of image
    */
-  public async image(url: string): Promise<ImageVector> {
+  public async image(url: string): Promise<ImageArray> {
     // return await promisify(getPixels)(url)
     return Image.load(url)
     // resized = nj.images.resize(img, H / 2, W / 2),
@@ -47,7 +49,7 @@ export class Facenet {
    * Alignment the image, get faces list, ordered with biggest first
    * @param image
    */
-  public async align(image: ImageVector): Promise<FaceRect[]> {
+  public async align(image: ImageArray): Promise<FaceRect[]> {
     const top     = 0
     const left    = 0
     const height  = image.shape[0]
@@ -63,7 +65,7 @@ export class Facenet {
   /**
    * Get the 128 dims embeding from image(s)
    */
-  public async embeding(image: ImageVector): Promise<FeatureVector[]> {
+  public async embeding(image: ImageArray): Promise<FeatureVector[]> {
     console.log(image)
     // TODO
     return [nj.array([1, 2, 3])]

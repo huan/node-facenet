@@ -1,7 +1,9 @@
 /**
  *
  */
-const nj = require('numjs')
+import * as nj from 'numjs'
+
+export type ImageArray = nj.NdArray<Uint32Array>
 
 export class Image {
   constructor() {
@@ -12,7 +14,7 @@ export class Image {
     return 'image!'
   }
 
-  public static load(url: string): any {
+  public static load(url: string): ImageArray {
     return nj.images.read(url)
   }
 }
