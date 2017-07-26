@@ -36,5 +36,3 @@ test('tensorflow smoke testing', async (t: any) => {
     t.end()
   }
 })
-
-
