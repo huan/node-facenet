@@ -16,7 +16,7 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 This repository is heavily inspired by the following implementations:
 
-* [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg(@[davidsandberg](https://github.com/davidsandberg))
+* [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
 * [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
 
 # Under Construction
