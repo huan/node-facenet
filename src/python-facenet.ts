@@ -1,13 +1,12 @@
-import { pythonBridge } from 'python-bridge'
+import {
+  pythonBridge,
+  PythonBridge,
+}                 from 'python-bridge'
 
 export class PythonFacenet {
-  private python: any
+  private python: PythonBridge
 
   constructor() {
-    //
-  }
-
-  public async init(): Promise<void> {
     this.python = pythonBridge({
       python: 'python3',
       env: {
@@ -15,7 +14,9 @@ export class PythonFacenet {
         TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
       },
     })
+  }
 
+  public async init(): Promise<void> {
     // we need not to care about session.close()(?)
     await this.python.ex`
       import tensorflow as tf
@@ -32,7 +33,10 @@ export class PythonFacenet {
   }
 
   public async quit(): Promise<void> {
+    await this.python.ex`
+      session.close()
+      graph.close()
+    `
     await this.python.end()
-    this.python = null
   }
 }
