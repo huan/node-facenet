@@ -25,18 +25,21 @@ export class PythonFacenet {
     `
   }
 
-  // public async prepare(): Promise<void> {
-  // }
-
-  public async test1() {
-    return await this.python`1+1`
-  }
-
   public async quit(): Promise<void> {
     await this.python.ex`
       session.close()
       graph.close()
     `
     await this.python.end()
+  }
+
+  public async align(data: number[][]): Promise<number[]> {
+    const r = await this.python`[4, 5, 6]`
+    return r
+  }
+
+  public async embedding(data: number[][]): Promise<number[]> {
+    const v = await this.python`[1, 2, 3]`
+    return v
   }
 }
