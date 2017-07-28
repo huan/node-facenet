@@ -62,3 +62,11 @@ t.*
 dist/
 .vscode/.ropeproject/
 package-lock.json
+
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+.cache/
+__pycache__/
