@@ -74,6 +74,7 @@ export class Face {
   public image(): Image {
     return this.parentImage
   }
+
   // public save(imageType: 'png' | 'jpg') {
 
   // }

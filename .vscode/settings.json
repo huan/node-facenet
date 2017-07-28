@@ -5,5 +5,18 @@
     , "dist/": true
     , "package/": true
     , ".vscode/.ropeproject/": true
+    , "**/*.py[cod]": true
+    , ".mypy_cache/": true
   }
+  , "python.pythonPath": "python3"
+  , "python.linting.enabled": true
+  , "python.linting.pylintEnabled": true
+  , "python.linting.mypyEnabled": true
+  , "python.linting.mypyArgs": [
+        "--ignore-missing-imports"
+      , "--follow-imports=silent"
+      , "--python-version=3"
+  ]
+  , "python.linting.pep8Enabled": false
+  , "python.linting.flake8Enabled": true
 }

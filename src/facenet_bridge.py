@@ -3,12 +3,12 @@ facenet-bridge
 """
 from typing import Any
 
-import tensorflow as tf
-import numpy as np
-from scipy import misc
+import tensorflow as tf     # type: ignore
+import numpy as np          # type: ignore
+from scipy import misc      # type: ignore
 
-import align.detect_face
-import facenet
+import align.detect_face    # type: ignore
+import facenet              # type: ignore
 
 
 class FacenetBridge(object):
@@ -17,20 +17,28 @@ class FacenetBridge(object):
     """
     MODEL_DIR = 'models/facenet/20170512-110547/'
 
-    def __init__(self):
-        self.graph = self.session = None
+    def __init__(self) -> None:
+        self.graph = self.session = None        # type: Any
 
-    def init(self):
+        self.placeholder_input = None           # type: Any
+        self.placeholder_phase_train = None     # type: Any
+        self.placeholder_embeddings = None      # type: Any
+
+    def init(self) -> None:
+        """ doc """
         self.graph = tf.Graph()
         self.session = tf.Session(graph=self.graph)
 
+        # pylint: disable=not-context-manager
         with self.graph.as_default():
             with self.session.as_default():
                 facenet.load_model(self.MODEL_DIR)
 
         self.placeholder_input = self.graph.get_tensor_by_name('input:0')
-        self.placeholder_phase_train = self.graph.get_tensor_by_name('phase_train:0')
-        self.placeholder_embeddings = self.graph.get_tensor_by_name('embeddings:0')
+        self.placeholder_phase_train = \
+            self.graph.get_tensor_by_name('phase_train:0')
+        self.placeholder_embeddings = \
+            self.graph.get_tensor_by_name('embeddings:0')
 
     def embedding(self, file: str) -> None:
         """
@@ -41,7 +49,7 @@ class FacenetBridge(object):
             img = facenet.to_rgb(img)
         img = facenet.prewhiten(img)
 
-        w, h, d = img.shape
+        w, h = img.shape
         images = np.empty((1, w, h, 3), dtype=np.uint8)
         images[0] = img
 
@@ -62,20 +70,20 @@ class MtcnnBridge():
     """
     MTCNN Face Alignment
     """
-    def __init__(self):
-        self.graph = self.session = None
-        self.pnet = self.rnete = self.onet = None
+    def __init__(self) -> None:
+        self.graph = self.session = None            # type: Any
+        self.pnet = self.rnet = self.onet = None   # type: Any
 
-
-    def init(self):
+    def init(self) -> None:
         """ doc """
         self.graph = tf.Graph()
         self.session = tf.Session(graph=self.graph)
 
+        # pylint: disable=not-context-manager
         with self.graph.as_default():
             with self.session.as_default():
-                self.pnet, self.rnet, self.onet = align.detect_face.create_mtcnn(self.session, None)
-
+                self.pnet, self.rnet, self.onet = \
+                    align.detect_face.create_mtcnn(self.session, None)
 
     def align(self, file: str) -> Any:
         """ doc """
