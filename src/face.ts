@@ -6,17 +6,18 @@ import * as nj from 'numjs'
 import { Image } from './image'
 
 export type Point = [number, number]
-export type FacialLandmarkRawArray = [Point, Point, Point, Point, Point]
+export type FacialLandmarkPoints = [Point, Point, Point, Point, Point]
 
 export interface BoundingBox {
-  top:          number,
-  left:         number,
-  width:        number,
-  height:       number,
+  y1:  number,
+  x1:  number,
+  x2:  number,
+  y2:  number,
   confidence?: number,
 }
 
 export interface FacialLandmark {
+  [idx: string]:    Point,
   leftEye:          Point,
   rightEye:         Point,
   nose:             Point,
@@ -32,8 +33,8 @@ export class Face {
 
   constructor(
     public parentImage: Image,
-    box: number[],              // Bounding Box
-    mark: FacialLandmarkRawArray,  // Facial Landmark
+    private box: number[],         // Bounding Box
+    mark: FacialLandmarkPoints,  // Facial Landmark
     confidence: number,
   ) {
     this.facialLandmark = {
@@ -45,16 +46,16 @@ export class Face {
     }
 
     this.boundingBox = {
-      top:    box[0],
-      left:   box[1],
-      width:  box[3] - box[0],
-      height: box[4] - box[1],
+      x1:  Math.round(box[0]),
+      y1:  Math.round(box[1]),
+      x2:  Math.round(box[2]),
+      y2:  Math.round(box[3]),
       confidence,
     }
   }
 
   public toString(): string {
-    return `Face<${this.parentImage.url}#${this.boundingBox}`
+    return `Face<${this.parentImage.url}#${this.box.join(',')}`
   }
 
   public embedding(): nj.NdArray

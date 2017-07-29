@@ -3,9 +3,8 @@ import {
   PythonBridge,
 }                 from 'python-bridge'
 
-export type Point       = [number, number]
 export type BoundingBox = [number, number, number, number, number]
-export type Landmark    = [Point, Point, Point, Point, Point]
+export type Landmark    = number[]
 
 const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
 
@@ -19,13 +18,13 @@ export class PythonFacenet {
     //
   }
 
-  /**
-   * XXX: we need not to care about session.close()(?)
-   */
-  public async init(): Promise<void> {
-    await this.initFacenet()
-    await this.initMtcnn()
-  }
+  // /**
+  //  * XXX: we need not to care about session.close()(?)
+  //  */
+  // public async init(): Promise<void> {
+  //   await this.initFacenet()
+  //   await this.initMtcnn()
+  // }
 
   public async initPythonBridge(): Promise<void> {
     if (this.python) {

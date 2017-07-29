@@ -1,6 +1,9 @@
 import * as nj    from 'numjs'
 
-import { Face }           from './face'
+import {
+  Face,
+  FacialLandmarkPoints,
+}                         from './face'
 import { Image }          from './image'
 import { PythonFacenet }  from './python-facenet'
 
@@ -12,10 +15,12 @@ export class Facenet {
   constructor() {
     // Do not put this.puthonFacenet initialization here,
     // because it will force us to call quit() with init()
+    this.pythonFacenet = new PythonFacenet()
   }
 
   public async init(): Promise<void> {
-    this.pythonFacenet = new PythonFacenet()
+    await this.initFacenet()
+    await this.initMtcnn()
   }
 
   public async initFacenet(): Promise<void> {
@@ -37,23 +42,51 @@ export class Facenet {
   public async align(image: Image): Promise<Face[]> {
     const data = image.data()
                       .tolist() as any as number[][]
-    console.log(await this.pythonFacenet.align(data)) // XXX
+    // console.log(await this.pythonFacenet.align(data)) // XXX
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
+
+    const xyLandmarks = this.transformLandmarks(landmarks)
 
     const faceList: Face[] = []
     for (const i in boundingBoxes) {
       const box = boundingBoxes[i]
       const confidence = box[4]
-      const landmark = landmarks[i]
+      const mark = xyLandmarks[i]
       faceList.push(new Face(
         image,
         box,
-        landmark,
+        mark,
         confidence,
       ))
     }
 
     return faceList
+  }
+
+  public transformLandmarks(landmarks: number[][]): FacialLandmarkPoints[] {
+    // landmarks has a strange data structure:
+    // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
+    const tLandmarks = nj.array(landmarks.reduce((a, b) => a.concat(b), []))
+                          .reshape(10, -1)
+                          .T as nj.NdArray<number>
+
+    const faceNum = tLandmarks.shape[0]
+
+    const xyLandmarks = nj.zeros(tLandmarks.shape)
+    const xLandmarks = xyLandmarks.slice(null as any, [null,  xyLandmarks.shape[1], 2] as any)
+    const yLandmarks = xyLandmarks.slice(null as any, [1,     xyLandmarks.shape[1], 2] as any)
+    xLandmarks.assign(
+      nj.array(tLandmarks).slice(null as any, [null, 5] as any),
+      false,
+    )
+    yLandmarks.assign(
+      nj.array(tLandmarks).slice(null as any, [5, 10] as any),
+      false,
+    )
+
+    const pairedLandmarks = xyLandmarks.reshape(faceNum, 5, 2) as nj.NdArray<number>
+
+    return pairedLandmarks.tolist() as any as FacialLandmarkPoints[]
   }
 
   /**
