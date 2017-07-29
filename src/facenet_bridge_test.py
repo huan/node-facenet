@@ -3,9 +3,13 @@ test
 """
 import json
 import os
+from typing import (
+    Any,
+    Iterable,
+)
 
-from scipy.misc import imread
-import pytest
+from scipy.misc import imread   # type: ignore
+import pytest                   # type: ignore
 # pylint: disable=W0621
 
 from facenet_bridge import (
@@ -15,7 +19,7 @@ from facenet_bridge import (
 
 
 @pytest.fixture(scope='module')
-def mtcnn_bridge():
+def mtcnn_bridge() -> Iterable[MtcnnBridge]:
     """ doc """
     bridge = MtcnnBridge()
     bridge.init()
@@ -23,7 +27,7 @@ def mtcnn_bridge():
 
 
 @pytest.fixture(scope='module')
-def facenet_bridge():
+def facenet_bridge() -> Iterable[FacenetBridge]:
     """ doc """
     bridge = FacenetBridge()
     bridge.init()
@@ -31,7 +35,7 @@ def facenet_bridge():
 
 
 @pytest.fixture(scope='module')
-def image_with_two_faces():
+def image_with_two_faces() -> Iterable[Any]:
     """ doc """
     file_path = os.path.dirname(os.path.abspath(__file__))
     fixture_file = os.path.abspath(os.path.normpath(
@@ -49,7 +53,7 @@ def image_with_two_faces():
 
 
 @pytest.fixture(scope='module')
-def image_aligned_face():
+def image_aligned_face() -> Iterable[Any]:
     """ doc """
     file_path = os.path.dirname(os.path.abspath(__file__))
     fixture_file = os.path.abspath(os.path.normpath(
@@ -66,7 +70,10 @@ def image_aligned_face():
     yield image
 
 
-def test_mtcnn_bridge(mtcnn_bridge, image_with_two_faces) -> None:
+def test_mtcnn_bridge(
+        mtcnn_bridge: MtcnnBridge,
+        image_with_two_faces: Any
+) -> None:
     """ doc """
     image_array = image_with_two_faces.tolist()
     image_json_text = json.dumps(image_array)
@@ -76,7 +83,10 @@ def test_mtcnn_bridge(mtcnn_bridge, image_with_two_faces) -> None:
     assert landmarks.shape == (2, 5, 2), 'should get two set of landmarks'
 
 
-def test_facenet_bridge(facenet_bridge, image_aligned_face) -> None:
+def test_facenet_bridge(
+        facenet_bridge: FacenetBridge,
+        image_aligned_face: Any,
+) -> None:
     """ doc """
     image_array = image_aligned_face.tolist()
     image_json_text = json.dumps(image_array)

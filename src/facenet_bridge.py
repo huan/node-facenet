@@ -13,12 +13,12 @@ import align.detect_face    # type: ignore
 import facenet              # type: ignore
 
 
-def json_parse(text: str):
+def json_parse(text: str) -> Any:
     """ json """
     return json.loads(text)
 
 
-def numpize(array):
+def numpize(array: Any) -> Any:
     """ numpy """
     return np.array(array, dtype=np.uint8)  # important to define dtype!
 
@@ -90,7 +90,7 @@ class FacenetBridge(object):
 
         return model_path
 
-    def embedding(self, image_array_json_string: str) -> None:
+    def embedding(self, image_array_json_string: str) -> Any:
         """
         Get embedding
         """
