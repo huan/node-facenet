@@ -22,7 +22,14 @@ export class Facenet {
 
   public async init(): Promise<void> {
     this.pythonFacenet = new PythonFacenet()
-    await this.pythonFacenet.init()
+  }
+
+  public async initFacenet(): Promise<void> {
+    await this.pythonFacenet.initFacenet()
+  }
+
+  public async initMtcnn(): Promise<void> {
+    await this.pythonFacenet.initMtcnn()
   }
 
   public async quit(): Promise<void> {
@@ -36,6 +43,7 @@ export class Facenet {
   public async align(image: Image): Promise<Face[]> {
     const data = image.data()
                       .tolist() as any as number[][]
+    console.log(await this.pythonFacenet.align(data)) // XXX
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
 
     const faceList: Face[] = []

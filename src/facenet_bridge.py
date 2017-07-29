@@ -2,16 +2,25 @@
 facenet-bridge
 """
 import errno
-import os
 import json
+import os
 from typing import Any
 
 import tensorflow as tf     # type: ignore
 import numpy as np          # type: ignore
-from scipy import misc      # type: ignore
 
 import align.detect_face    # type: ignore
 import facenet              # type: ignore
+
+
+def json_parse(text: str):
+    """ json """
+    return json.loads(text)
+
+
+def numpize(array):
+    """ numpy """
+    return np.array(array, dtype=np.uint8)  # important to define dtype!
 
 
 class FacenetBridge(object):
@@ -54,14 +63,14 @@ class FacenetBridge(object):
         Get facenet model path from package.json
         """
         file_path = os.path.dirname(os.path.abspath(__file__))
-        file1 = os.path.join(file_path, '..', 'package.json')
-        file2 = os.path.join(file_path, '..', '..', 'package.json')
+        try_file1 = os.path.join(file_path, '..', 'package.json')
+        try_file2 = os.path.join(file_path, '..', '..', 'package.json')
 
         try:
-            with open(file1) as data_file:
+            with open(try_file1) as data_file:
                 data = json.load(data_file)
         except FileNotFoundError:
-            with open(file2) as data_file:
+            with open(try_file2) as data_file:
                 data = json.load(data_file)
 
         model_path = os.path.abspath(os.path.normpath(
@@ -81,21 +90,24 @@ class FacenetBridge(object):
 
         return model_path
 
-    def embedding(self, file: str) -> None:
+    def embedding(self, image_array_json_string: str) -> None:
         """
         Get embedding
         """
-        img = misc.imread(file)
-        if img.ndim == 2:
-            img = facenet.to_rgb(img)
-        img = facenet.prewhiten(img)
+        image = numpize(
+            json_parse(image_array_json_string)
+        )
 
-        w, h = img.shape
-        images = np.empty((1, w, h, 3), dtype=np.uint8)
-        images[0] = img
+        if image.ndim == 2:
+            image = facenet.to_rgb(image)
+        image = facenet.prewhiten(image)
+
+        w, h, _ = image.shape
+        image_list = np.empty((1, w, h, 3), dtype=np.uint8)
+        image_list[0] = image
 
         feed_dict = {
-            self.placeholder_input:         images,
+            self.placeholder_input:         image_list,
             self.placeholder_phase_train:   False,
         }
         # Use the facenet model to calcualte embeddings
@@ -113,7 +125,7 @@ class MtcnnBridge():
     """
     def __init__(self) -> None:
         self.graph = self.session = None            # type: Any
-        self.pnet = self.rnet = self.onet = None   # type: Any
+        self.pnet = self.rnet = self.onet = None    # type: Any
 
     def init(self) -> None:
         """ doc """
@@ -126,9 +138,11 @@ class MtcnnBridge():
                 self.pnet, self.rnet, self.onet = \
                     align.detect_face.create_mtcnn(self.session, None)
 
-    def align(self, file: str) -> Any:
+    def align(self, image_array_json_text: str) -> Any:
         """ doc """
-        image = misc.imread(file)
+        image = numpize(
+            json_parse(image_array_json_text)
+        )
 
         minsize = 20    # minimum size of face
         threshold = [0.6, 0.7, 0.7]  # three steps's threshold

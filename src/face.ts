@@ -53,6 +53,10 @@ export class Face {
     }
   }
 
+  public toString(): string {
+    return `Face<${this.parentImage.url}#${this.boundingBox}`
+  }
+
   public embedding(): nj.NdArray
   public embedding(embedding: nj.NdArray): void
 
@@ -72,6 +76,7 @@ export class Face {
   }
 
   public image(): Image {
+    // TODO corp the face out of parent image
     return this.parentImage
   }
 

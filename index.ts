@@ -1,4 +1,6 @@
 import { Facenet }        from './src/facenet'
+import { Face }           from './src/face'
+import { Image }          from './src/image'
 import { PythonFacenet }  from './src/python-facenet'
 
 let VERSION: string
@@ -11,6 +13,8 @@ try {
 
 export {
   Facenet,
+  Face,
+  Image,
   PythonFacenet,
   VERSION,
 }
