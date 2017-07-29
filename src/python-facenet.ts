@@ -16,6 +16,21 @@ export class PythonFacenet {
   private mtcnnInited   = false
 
   constructor() {
+    //
+  }
+
+  /**
+   * XXX: we need not to care about session.close()(?)
+   */
+  public async init(): Promise<void> {
+    await this.initFacenet()
+    await this.initMtcnn()
+  }
+
+  public async initPythonBridge(): Promise<void> {
+    if (this.python) {
+      return
+    }
     this.python = pythonBridge({
       python: 'python3',
       env: {
@@ -28,18 +43,11 @@ export class PythonFacenet {
     })
   }
 
-  public async init(): Promise<void> {
-    await this.initFacenet()
-    await this.initMtcnn()
-  }
-
-  /**
-   * XXX: we need not to care about session.close()(?)
-   */
   public async initFacenet(): Promise<void> {
     if (this.facenetInited) {
       return
     }
+    await this.initPythonBridge()
 
     await this.python.ex`
       from facenet_bridge import FacenetBridge
@@ -53,6 +61,7 @@ export class PythonFacenet {
     if (this.mtcnnInited) {
       return
     }
+    await this.initPythonBridge()
 
     // we need not to care about session.close()(?)
     await this.python.ex`
@@ -70,29 +79,24 @@ export class PythonFacenet {
 
   public async align(data: number[][]): Promise<[BoundingBox[], Landmark[]]> {
     await this.initMtcnn()
-
-    console.log(data.length)
-    console.log(data[0].length)
-    console.log(data)
     const jsonText = JSON.stringify(data)
-    console.log(jsonText)
-    return await this.python`mtcnn_bridge.align(${jsonText})` // XXX
 
-    // let boundingBoxes: BoundingBox[]
-    // let landmarks: Landmark[]
-    // [boundingBoxes, landmarks] = await this.python`mtcnn_bridge.align(${jsonData})`
-    // return [boundingBoxes, landmarks]
+    let boundingBoxes: BoundingBox[]
+    let landmarks: Landmark[]
+    [boundingBoxes, landmarks] = await this.python`mtcnn_bridge.align(${jsonText})`
+    return [boundingBoxes, landmarks]
   }
 
   public async embedding(data: number[][]): Promise<number[]> {
     await this.initFacenet()
-
     const jsonData = JSON.stringify(data)
+
     const embedding: number[] = await this.python`facenet_bridge.embedding(${jsonData})`
     return embedding
   }
 
   public async json_parse(text: string): Promise<any> {
+    await this.initPythonBridge()
     await this.python.ex`from facenet_bridge import json_parse`
     return await this.python`json_parse(${text})`
   }

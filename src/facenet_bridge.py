@@ -4,7 +4,11 @@ facenet-bridge
 import errno
 import json
 import os
-from typing import Any
+from typing import (
+    Any,
+    List,
+    Tuple,
+)
 
 import tensorflow as tf     # type: ignore
 import numpy as np          # type: ignore
@@ -90,7 +94,7 @@ class FacenetBridge(object):
 
         return model_path
 
-    def embedding(self, image_array_json_string: str) -> Any:
+    def embedding(self, image_array_json_string: str) -> List[Any]:
         """
         Get embedding
         """
@@ -116,7 +120,8 @@ class FacenetBridge(object):
             feed_dict=feed_dict,
         )
 
-        return embeddings
+        # Return the only row
+        return embeddings[0].tolist()
 
 
 class MtcnnBridge():
@@ -138,7 +143,7 @@ class MtcnnBridge():
                 self.pnet, self.rnet, self.onet = \
                     align.detect_face.create_mtcnn(self.session, None)
 
-    def align(self, image_array_json_text: str) -> Any:
+    def align(self, image_array_json_text: str) -> Tuple[List[Any], List[Any]]:
         """ doc """
         image = numpize(
             json_parse(image_array_json_text)
@@ -167,4 +172,6 @@ class MtcnnBridge():
         landmarks = landmarks.reshape(-1, 5, 2)[indices_desc]
 
         bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
-        return bounding_boxes, landmarks
+        landmarks = np.around(landmarks)
+
+        return bounding_boxes.tolist(), landmarks.tolist()

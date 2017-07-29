@@ -1,9 +1,3 @@
-// import { promisify } from 'util'
-
-// import * as ndarray from 'ndarray'
-
-// const distance  = require('ndarray-distance')
-// const getPixels = require('get-pixels')
 import * as nj    from 'numjs'
 
 import { Face }           from './face'

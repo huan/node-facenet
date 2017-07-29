@@ -1,17 +1,16 @@
 #!/usr/bin/env ts-node
-
+import * as path          from 'path'
+import * as nj            from 'numjs'
 const t = require('tap')  // tslint:disable:no-shadowed-variable
 
-import { PythonFacenet } from './python-facenet'
+import { PythonFacenet }  from './python-facenet'
 
 t.test('PythonFacenet smoke testing', { timeout: 60 * 1000 }, async (t: any) => {
   const pf = new PythonFacenet()
-  await pf.init()
-  await pf.quit()
-  t.pass('should init() successful then quit()')
+  t.ok(pf, 'should be instanciated')
 })
 
-t.only('JSON bridge', async (t: any) => {
+t.test('JSON bridge', async (t: any) => {
   const DATA1 = [[1, 2], [3, 4], [5, 6]]
   const DATA2 = {
     a: [[1, 2], [3, 4], [5, 6]],
@@ -29,4 +28,41 @@ t.only('JSON bridge', async (t: any) => {
   t.deepEqual(ret3, DATA3, 'should be equal after processed by python bridge #3')
 
   pf.quit()
+})
+
+t.test('align()', async (t: any) => {
+  const pf = new PythonFacenet()
+  await pf.initMtcnn()
+
+  const IMAGE_FILE = path.resolve(__dirname, '../tests/fixtures/two-faces.jpg')
+  const image = nj.images.read(IMAGE_FILE)
+                        .tolist() as any as number[][]
+
+  const [boundingBoxes, landmarks] = await pf.align(image)
+  const numFaces = boundingBoxes.length
+  const numMarks = landmarks.length
+  const confidence = boundingBoxes[0][4]
+
+  t.equal(numFaces, 2, 'should get two faces')
+  t.equal(numMarks, 2, 'should get two set of marks')
+  t.ok(confidence > 0 && confidence < 1, 'shoud get confidencee between 0 to 1')
+  await pf.quit()
+})
+
+t.test('embedding()', async (t: any) => {
+  const pf = new PythonFacenet()
+  await pf.initFacenet()
+
+  const IMAGE_FILE = path.resolve(__dirname, '../tests/fixtures/aligned-face.png')
+  const image = nj.images.read(IMAGE_FILE)
+                        .tolist() as any as number[][]
+
+  const embedding = await pf.embedding(image)
+
+  t.equal(embedding.length, 128, 'should get 128 dim embedding')
+  const valid = embedding
+                .map(i => i > -0.5 && i < 0.5)
+                .reduce((total, cur) => total && cur, true)
+  t.ok(valid, 'should get vector normalized between -0.5 to 0.5')
+  await pf.quit()
 })
