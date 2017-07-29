@@ -16,11 +16,17 @@ export class Facenet {
   private pythonFacenet: PythonFacenet
 
   constructor() {
-    this.pythonFacenet = new PythonFacenet()
+    // Do not put this.puthonFacenet initialization here,
+    // because it will force us to call quit() with init()
   }
 
   public async init(): Promise<void> {
+    this.pythonFacenet = new PythonFacenet()
     await this.pythonFacenet.init()
+  }
+
+  public async quit(): Promise<void> {
+    await this.pythonFacenet.quit()
   }
 
   /**

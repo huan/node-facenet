@@ -1,17 +1,18 @@
 #!/usr/bin/env ts-node
 
 import * as nj from 'numjs'
-const { test } = require('tap')
+const t = require('tap')  // tslint:disable:no-shadowed-variable
 
 import { Facenet } from './facenet'
 
-test('Facenet', async (t: any) => {
-  t.ok(Facenet, 'ok')
-  t.pass('TODO')
-  t.end()
+t.test('Facenet smoke testing', async (t: any) => {
+  const f = new Facenet()
+  // await f.init()
+  // await f.quit()
+  t.ok(f, 'should inited a Facenet instance')
 })
 
-test('distance()', (t: any) => {
+t.test('distance()', async (t: any) => {
   const f = new Facenet()
 
   const a = nj.array([0, 3])

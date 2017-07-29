@@ -1,6 +1,9 @@
 """
 facenet-bridge
 """
+import errno
+import os
+import json
 from typing import Any
 
 import tensorflow as tf     # type: ignore
@@ -15,7 +18,7 @@ class FacenetBridge(object):
     """
     Bridge of Facenet
     """
-    MODEL_DIR = 'models/facenet/20170512-110547/'
+    FACENET_MODEL = None   # type: str
 
     def __init__(self) -> None:
         self.graph = self.session = None        # type: Any
@@ -23,6 +26,11 @@ class FacenetBridge(object):
         self.placeholder_input = None           # type: Any
         self.placeholder_phase_train = None     # type: Any
         self.placeholder_embeddings = None      # type: Any
+
+        try:
+            self.FACENET_MODEL = os.environ['FACENET_MODEL']     # type: str
+        except KeyError:
+            self.FACENET_MODEL = FacenetBridge.get_model_path()
 
     def init(self) -> None:
         """ doc """
@@ -32,13 +40,46 @@ class FacenetBridge(object):
         # pylint: disable=not-context-manager
         with self.graph.as_default():
             with self.session.as_default():
-                facenet.load_model(self.MODEL_DIR)
+                facenet.load_model(self.FACENET_MODEL)
 
         self.placeholder_input = self.graph.get_tensor_by_name('input:0')
         self.placeholder_phase_train = \
             self.graph.get_tensor_by_name('phase_train:0')
         self.placeholder_embeddings = \
             self.graph.get_tensor_by_name('embeddings:0')
+
+    @staticmethod
+    def get_model_path() -> str:
+        """
+        Get facenet model path from package.json
+        """
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        file1 = os.path.join(file_path, '..', 'package.json')
+        file2 = os.path.join(file_path, '..', '..', 'package.json')
+
+        try:
+            with open(file1) as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            with open(file2) as data_file:
+                data = json.load(data_file)
+
+        model_path = os.path.abspath(os.path.normpath(
+            os.path.join(
+                file_path,
+                '..',
+                data['facenet']['env']['PYTHON_FACENET_MODEL_PATH'],
+            )
+        ))
+
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(
+                errno.ENOENT,
+                os.strerror(errno.ENOENT),
+                model_path
+            )
+
+        return model_path
 
     def embedding(self, file: str) -> None:
         """
@@ -113,24 +154,3 @@ class MtcnnBridge():
 
         bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
         return bounding_boxes, landmarks
-
-
-# facenet_bridge = FacenetBridge()
-# facenet_bridge.init()
-# ALIGNED = '/datasets/lfw/lfw_mtcnnpy_160/Abel_Aguilar/Abel_Aguilar_0001.png'
-# embedding = facenet_bridge.embedding(ALIGNED)
-# print(embedding)
-
-# mtcnn_bridge = MtcnnBridge()
-# mtcnn_bridge.init()
-# IMAGE = '/datasets/vgg-face/raw/Adam_Buxton/BlogAdamandJulian.jpg'
-# # IMAGE = '/datasets/vgg-face/raw/Adam_Buxton/characters.jpg'
-# boxes, marks = mtcnn_bridge.align(IMAGE)
-# print(boxes)
-# print(marks)
-
-# for top, left, bottom, right in bounding_boxes[:, 0:4]:
-#     print(
-#         'width: %d, height: %d, area: %d'
-#         %(right - left, bottom - top, (right - left) * (bottom - top))
-#     )

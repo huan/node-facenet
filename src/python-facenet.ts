@@ -7,6 +7,8 @@ export type Point       = [number, number]
 export type BoundingBox = [number, number, number, number, number]
 export type Landmark    = [Point, Point, Point, Point, Point]
 
+const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
+
 export class PythonFacenet {
   private python: PythonBridge
 
@@ -14,8 +16,11 @@ export class PythonFacenet {
     this.python = pythonBridge({
       python: 'python3',
       env: {
-        PYTHONPATH: `${__dirname}/../../python-facenet/src/`,
-        TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
+        PYTHONPATH: [
+          `${__dirname}/../../python-facenet/src/`,
+          `${__dirname}/`,
+        ].join(':'),
+        TF_CPP_MIN_LOG_LEVEL,
       },
     })
   }
