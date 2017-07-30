@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { log }            from 'brolog'
+log.level('silly')
 
 import { ArgumentParser } from 'argparse'
 import * as gm from 'gm'
@@ -26,25 +27,25 @@ function randomColor(): string {
 }
 
 async function main(args: Args) {
-  log.info('Facenet', `v${VERSION}`)
+  log.info('CLI', `Facenet v${VERSION}`)
   // console.dir(args)
   const f = new Facenet()
-  log.info('Facenet', 'Initializing...')
+  log.info('CLI', 'MTCNN Initializing...')
   let start = Date.now()
   await f.initMtcnn()
-  log.info('Facenet', 'Initialized after %f seconds', (Date.now() - start) / 1000)
+  log.info('CLI', 'Facenet Initialized after %f seconds', (Date.now() - start) / 1000)
 
   try {
     const imageFile = args.input
 
-    log.info('Facenet', 'Opening image', args.input)
+    log.info('CLI', 'Opening image', args.input)
     const image = new Image(imageFile)
 
-    log.info('Facenet', 'Aligning...')
+    log.info('CLI', 'MTCNN Aligning...')
     start = Date.now()
     const faceList = await f.align(image)
-    log.info('Facenet', 'Aligned after %f seconds', (Date.now() - start) / 1000)
-    log.info('Facenet', 'Found %d faces', faceList.length)
+    log.info('CLI', 'Aligned after %f seconds', (Date.now() - start) / 1000)
+    log.info('CLI', 'Found %d faces', faceList.length)
     // console.log(faceList)
 
     const newImage = gm(imageFile)
@@ -78,8 +79,8 @@ async function main(args: Args) {
       if (err) {
         throw err
       }
-      log.info('Facenet', 'Saved aligned image to', args.output)
-      log.info('Facenet', 'Have a nice day!')
+      log.info('CLI', 'Saved aligned image to', args.output)
+      log.info('CLI', 'Have a nice day!')
     })
   } catch (e) {
     console.error(e)

@@ -1,3 +1,4 @@
+import { log }    from 'brolog'
 import * as nj    from 'numjs'
 
 import {
@@ -40,10 +41,14 @@ export class Facenet {
    * @param image
    */
   public async align(image: Image): Promise<Face[]> {
+    log.verbose('Facenet', 'align()')
+
     const data = image.data()
                       .tolist() as any as number[][]
 
+    log.silly('Facenet', 'align() pythonFacenet.align(data) ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
+    log.silly('Facenet', 'align() pythonFacenet.align(data) done')
 
     const xyLandmarks = this.transformLandmarks(landmarks)
 
