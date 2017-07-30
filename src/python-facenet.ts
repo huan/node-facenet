@@ -1,3 +1,4 @@
+import * as nj    from 'numjs'
 import {
   pythonBridge,
   PythonBridge,
@@ -18,7 +19,21 @@ export class PythonFacenet {
   private mtcnnInited   = false
 
   constructor() {
-    //
+    let PYTHONPATH = [
+      `${__dirname}/../../python-facenet/src/`,
+      `${__dirname}/`,
+    ].join(':')
+    if (process.env['PYTHONPATH']) {
+      PYTHONPATH += ':' + process.env['PYTHONPATH']
+    }
+
+    this.python = pythonBridge({
+      python: 'python3',
+      env: {
+        PYTHONPATH,
+        TF_CPP_MIN_LOG_LEVEL,
+      },
+    })
   }
 
   // /**
@@ -29,27 +44,14 @@ export class PythonFacenet {
   //   await this.initMtcnn()
   // }
 
-  public async initPythonBridge(): Promise<void> {
-    if (this.python) {
-      return
-    }
-    this.python = pythonBridge({
-      python: 'python3',
-      env: {
-        PYTHONPATH: [
-          `${__dirname}/../../python-facenet/src/`,
-          `${__dirname}/`,
-        ].join(':'),
-        TF_CPP_MIN_LOG_LEVEL,
-      },
-    })
-  }
+  // public async initPythonBridge(): Promise<void> {
+  // }
 
   public async initFacenet(): Promise<void> {
     if (this.facenetInited) {
       return
     }
-    await this.initPythonBridge()
+    // await this.initPythonBridge()
 
     await this.python.ex`
       from facenet_bridge import FacenetBridge
@@ -63,7 +65,7 @@ export class PythonFacenet {
     if (this.mtcnnInited) {
       return
     }
-    await this.initPythonBridge()
+    // await this.initPythonBridge()
 
     // we need not to care about session.close()(?)
     await this.python.ex`
@@ -83,13 +85,24 @@ export class PythonFacenet {
    *
    * @param data
    */
-  public async align(data: number[][]): Promise<[BoundingBox[], Landmark[]]> {
+  public async align(data: number[][][]): Promise<[BoundingBox[], Landmark[]]> {
     await this.initMtcnn()
-    const jsonText = JSON.stringify(data)
+    // const jsonText = JSON.stringify(data)
+
+    const row     = data.length
+    const column  = data[0].length
+    const depth   = data[0][0].length
+
+    const flattenData = nj.array(data).flatten().tolist() as number[]
+
+    const typedData = new Uint8Array(flattenData)
+    const base64Text = new Buffer(typedData).toString('base64')
 
     let boundingBoxes: BoundingBox[]
     let landmarks: Landmark[]
-    [boundingBoxes, landmarks] = await this.python`mtcnn_bridge.align(${jsonText})`
+    [boundingBoxes, landmarks] = await this.python
+      `mtcnn_bridge.align(${base64Text}, ${row}, ${column}, ${depth})`
+
     return [boundingBoxes, landmarks]
   }
 
@@ -97,17 +110,39 @@ export class PythonFacenet {
    *
    * @param data
    */
-  public async embedding(data: number[][]): Promise<number[]> {
+  public async embedding(data: number[][][]): Promise<number[]> {
     await this.initFacenet()
-    const jsonData = JSON.stringify(data)
 
-    const embedding: number[] = await this.python`facenet_bridge.embedding(${jsonData})`
+    const row     = data.length
+    const column  = data[0].length
+    const depth   = data[0][0].length
+
+    const flattenData = nj.array(data).flatten().tolist() as number[]
+
+    const typedData = new Uint8Array(flattenData)
+    const base64Text = new Buffer(typedData).toString('base64')
+
+    const embedding: number[] = await this.python
+      `facenet_bridge.embedding(${base64Text}, ${row}, ${column}, ${depth})`
+
     return embedding
   }
 
-  public async json_parse(text: string): Promise<any> {
-    await this.initPythonBridge()
-    await this.python.ex`from facenet_bridge import json_parse`
-    return await this.python`json_parse(${text})`
+  // public async json_parse(text: string): Promise<any> {
+  //   await this.initPythonBridge()
+  //   await this.python.ex`from facenet_bridge import json_parse`
+  //   return await this.python`json_parse(${text})`
+  // }
+
+  public async base64_to_image(
+    text:   string,
+    row:    number,
+    col:    number,
+    depth:  number,
+  ): Promise<number[][][]> {
+    // await this.initPythonBridge()
+    await this.python.ex`from facenet_bridge import base64_to_image`
+    return await this.python`base64_to_image(${text}, ${row}, ${col}, ${depth})`
   }
+
 }

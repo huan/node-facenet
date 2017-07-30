@@ -44,7 +44,7 @@ export class Facenet {
     log.verbose('Facenet', 'align()')
 
     const data = image.data()
-                      .tolist() as any as number[][]
+                      .tolist() as any as number[][][]
 
     log.silly('Facenet', 'align() pythonFacenet.align(data) ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
@@ -66,6 +66,29 @@ export class Facenet {
     }
 
     return faceList
+  }
+
+  /**
+   * Get the 128 dims embeding from image(s)
+   */
+  public async embedding(face: Face): Promise<FeatureVector> {
+    const data = face.image()
+                    .resize(160, 160)
+                    .data()
+                    .tolist() as any as number[][][]
+    const embedding = await this.pythonFacenet.embedding(data)
+
+    const njEmb =  nj.array(embedding)
+    face.embedding(njEmb)
+    return njEmb
+  }
+
+  public distance(v1: FeatureVector, v2: FeatureVector): number {
+    const l2 = v1.subtract(v2)
+                  .pow(2)
+                  .sum()
+    return nj.sqrt(l2)
+            .get(0)
   }
 
   public transformLandmarks(landmarks: number[][]): FacialLandmarkPoints[] {
@@ -94,26 +117,4 @@ export class Facenet {
     return pairedLandmarks.tolist() as any as FacialLandmarkPoints[]
   }
 
-  /**
-   * Get the 128 dims embeding from image(s)
-   */
-  public async embedding(face: Face): Promise<FeatureVector> {
-    const data = face.image()
-                    .resize(160, 160)
-                    .data()
-                    .tolist() as any as number[][]
-    const embedding = await this.pythonFacenet.embedding(data)
-
-    const njEmb =  nj.array(embedding)
-    face.embedding(njEmb)
-    return njEmb
-  }
-
-  public distance(v1: FeatureVector, v2: FeatureVector): number {
-    const l2 = v1.subtract(v2)
-                  .pow(2)
-                  .sum()
-    return nj.sqrt(l2)
-            .get(0)
-  }
 }

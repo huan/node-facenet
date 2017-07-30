@@ -8,6 +8,7 @@ import { Facenet } from './facenet'
 t.test('Facenet smoke testing', async (t: any) => {
   const f = new Facenet()
   t.ok(f, 'should inited a Facenet instance')
+  f.quit()
 })
 
 t.test('distance()', async (t: any) => {
@@ -17,6 +18,7 @@ t.test('distance()', async (t: any) => {
   const b = nj.array([4, 0])
   const c = f.distance(a, b)
   t.equal(c, 5, 'should get 5 for triangle 3&4&5')
+  f.quit()
 })
 
 t.test('transformLandmarks()', async (t: any) => {
@@ -80,4 +82,6 @@ t.test('transformLandmarks()', async (t: any) => {
   t.deepEqual(pairedLandmarks1, EXPECTED_1, 'should transform landmarks with dim #1 right')
   t.deepEqual(pairedLandmarks2, EXPECTED_2, 'should transform landmarks with dim #2 right')
   t.deepEqual(pairedLandmarks3, EXPECTED_3, 'should transform landmarks with dim #3 right')
+
+  f.quit()
 })

@@ -73,7 +73,7 @@ def image_aligned_face() -> Iterable[Any]:
     yield image
 
 
-def test_base64(image_aligned_face) -> None:
+def test_base64(image_aligned_face: Any) -> None:
     """ base64 """
     row, col, depth = shape = image_aligned_face.shape
     image_array = image_aligned_face.flatten().tolist()
