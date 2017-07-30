@@ -16,6 +16,7 @@
     "@types/argparse": "^1.0.30",
     "@types/node": "^8.0.15",
     "@types/numjs": "^0.14.0",
+    "nyc": "^11.1.0",
     "shx": "^0.2.2",
     "tap": "^10.7.0",
     "ts-node": "^3.0.4",
@@ -24,6 +25,7 @@
   },
   "scripts": {
     "clean": "shx rm -fr dist/*",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dist": "npm run clean && tsc",
     "lint": "npm run lint:ts && npm run lint:py",
     "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
@@ -33,7 +35,8 @@
     "start": "echo started",
     "test": "npm run test:ts && npm run test:py",
     "test:ts": "npm run lint && tap src/**/*.spec.ts tests/**/*.spec.ts",
-    "test:py": "PYTHONPATH='src/:../python-facenet/src/' pytest"
+    "test:py": "PYTHONPATH='src/:../python-facenet/src/' pytest",
+    "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node smoke-testing.js"
   },
   "repository": {
     "type": "git",
