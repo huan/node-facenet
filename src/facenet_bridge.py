@@ -42,7 +42,7 @@ def base64_to_image(
     image = image_array.reshape(row, col, depth)
     # We have to return a list instead of np.array
     # because np.array can not be json serialized to python-bridge.
-    return image.tolist()
+    return image
 
 
 class FacenetBridge(object):
@@ -123,7 +123,6 @@ class FacenetBridge(object):
         Get embedding
         """
         image = base64_to_image(image_base64, row, col, depth)
-        image = np.array(image, dtype=np.uint8)
 
         if image.ndim == 2:
             image = facenet.to_rgb(image)
@@ -179,7 +178,6 @@ class MtcnnBridge():
     ) -> Tuple[List[Any], List[Any]]:
         """ doc """
         image = base64_to_image(image_base64, row, col, depth)
-        image = np.array(image, dtype=np.uint8)
 
         bounding_boxes, landmarks = align.detect_face.detect_face(
             image,

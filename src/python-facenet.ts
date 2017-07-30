@@ -83,47 +83,34 @@ export class PythonFacenet {
 
   /**
    *
-   * @param data
+   * @param image
    */
-  public async align(data: number[][][]): Promise<[BoundingBox[], Landmark[]]> {
+  public async align(image: nj.NdArray<Uint8Array>): Promise<[BoundingBox[], Landmark[]]> {
     await this.initMtcnn()
-    // const jsonText = JSON.stringify(data)
 
-    const row     = data.length
-    const column  = data[0].length
-    const depth   = data[0][0].length
-
-    const flattenData = nj.array(data).flatten().tolist() as number[]
-
-    const typedData = new Uint8Array(flattenData)
-    const base64Text = new Buffer(typedData).toString('base64')
+    const [row, col, depth] = image.shape
+    const base64Text = this.image_to_base64(image)
 
     let boundingBoxes: BoundingBox[]
     let landmarks: Landmark[]
     [boundingBoxes, landmarks] = await this.python
-      `mtcnn_bridge.align(${base64Text}, ${row}, ${column}, ${depth})`
+      `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
 
     return [boundingBoxes, landmarks]
   }
 
   /**
    *
-   * @param data
+   * @param image
    */
-  public async embedding(data: number[][][]): Promise<number[]> {
+  public async embedding(image: nj.NdArray<Uint8Array>): Promise<number[]> {
     await this.initFacenet()
 
-    const row     = data.length
-    const column  = data[0].length
-    const depth   = data[0][0].length
-
-    const flattenData = nj.array(data).flatten().tolist() as number[]
-
-    const typedData = new Uint8Array(flattenData)
-    const base64Text = new Buffer(typedData).toString('base64')
+    const [row, col, depth] = image.shape
+    const base64Text = this.image_to_base64(image)
 
     const embedding: number[] = await this.python
-      `facenet_bridge.embedding(${base64Text}, ${row}, ${column}, ${depth})`
+      `facenet_bridge.embedding(${base64Text}, ${row}, ${col}, ${depth})`
 
     return embedding
   }
@@ -141,8 +128,39 @@ export class PythonFacenet {
     depth:  number,
   ): Promise<number[][][]> {
     // await this.initPythonBridge()
-    await this.python.ex`from facenet_bridge import base64_to_image`
-    return await this.python`base64_to_image(${text}, ${row}, ${col}, ${depth})`
+    await this.python.ex
+      `from facenet_bridge import base64_to_image`
+
+    return await this.python
+      `base64_to_image(${text}, ${row}, ${col}, ${depth}).tolist()`
   }
 
+  /**
+   * Deal with big file(e.g. 4000 x 4000 JPEG)
+   * the following method will cause NODEJS HEAP MEMORY OUT(>1.5GB)
+   *
+   * MEMORY OUT 1: image.flatten()
+   * MEMORY OUT 2: [].concat.apply([], arrays);
+   * MEMORY OUT 3: image.reshape()
+   *
+   * @param image
+   */
+  public image_to_base64(image: nj.NdArray<Uint8Array>): string {
+    const [row, col, depth] = image.shape
+
+    const typedData = new Uint8ClampedArray(row * col * depth)
+
+    let n = 0
+    for (let i = 0; i < row; i++) {
+      for (let j = 0; j < col; j++) {
+        for (let k = 0; k < depth; k++) {
+          typedData[n++] = image.get(i, j, k) as any as number
+        }
+      }
+    }
+
+    const base64Text = Buffer.from(typedData.buffer)
+                            .toString('base64')
+    return base64Text
+  }
 }

@@ -44,7 +44,6 @@ export class Facenet {
     log.verbose('Facenet', 'align()')
 
     const data = image.data()
-                      .tolist() as any as number[][][]
 
     log.silly('Facenet', 'align() pythonFacenet.align(data) ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
@@ -75,7 +74,6 @@ export class Facenet {
     const data = face.image()
                     .resize(160, 160)
                     .data()
-                    .tolist() as any as number[][][]
     const embedding = await this.pythonFacenet.embedding(data)
 
     const njEmb =  nj.array(embedding)

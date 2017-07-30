@@ -4,7 +4,7 @@
 import * as crypto  from 'crypto'
 import * as nj      from 'numjs'
 
-export type ImageData = nj.NdArray<Uint32Array>
+export type ImageData = nj.NdArray<Uint8Array>
 
 export class Image {
   public url: string
@@ -29,13 +29,13 @@ export class Image {
 
   public data(): ImageData {
     if (!this._data) {
-      this._data = nj.images.read(this.url)
+      this._data = nj.images.read(this.url) as any as nj.NdArray<Uint8Array>
     }
     return this._data
   }
 
   public resize(width: number, height: number): Image {
-    const data = nj.images.resize(this.data(), height, width)
+    const data = nj.images.resize(this.data() as any, height, width) as any as nj.NdArray<Uint8Array>
     return new Image(data)
   }
 
