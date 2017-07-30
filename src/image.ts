@@ -29,13 +29,13 @@ export class Image {
 
   public data(): ImageData {
     if (!this._data) {
-      this._data = nj.images.read(this.url) as any as nj.NdArray<Uint8Array>
+      this._data = nj.images.read(this.url) as any as ImageData
     }
     return this._data
   }
 
   public resize(width: number, height: number): Image {
-    const data = nj.images.resize(this.data() as any, height, width) as any as nj.NdArray<Uint8Array>
+    const data = nj.images.resize(this.data() as any, height, width) as any as ImageData
     return new Image(data)
   }
 

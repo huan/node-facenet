@@ -1,0 +1,6 @@
+flake8
+mypy
+pylint
+pytest
+tensorflow
+

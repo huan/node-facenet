@@ -17,6 +17,7 @@ cache:
 
 install:
   - npm install
+  - pip3 install -r requirements.txt
 
 script:
   - echo $TRAVIS_OS_NAME
