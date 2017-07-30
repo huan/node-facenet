@@ -2,5 +2,6 @@ flake8
 mypy
 pylint
 pytest
+scipy
 tensorflow
 
