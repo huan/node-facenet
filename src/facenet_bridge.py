@@ -163,14 +163,6 @@ class MtcnnBridge():
             factor,
         )
 
-        # bounding_boxes = np.insert(bounding_boxes, 4, areas, axis=1)
-        width = bounding_boxes[:, 2] - bounding_boxes[:, 0]
-        height = bounding_boxes[:, 3] - bounding_boxes[:, 1]
-        areas = width * height
-        indices_desc = np.argsort(areas)[::-1]
-        bounding_boxes = bounding_boxes[indices_desc]
-        landmarks = landmarks.reshape(-1, 5, 2)[indices_desc]
-
         bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
         landmarks = np.around(landmarks)
 

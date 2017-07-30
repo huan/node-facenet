@@ -37,11 +37,14 @@ async function main(args: Args) {
   try {
     const imageFile = args.input
 
+    log.info('Facenet', 'Opening image', args.input)
     const image = new Image(imageFile)
+
     log.info('Facenet', 'Aligning...')
     start = Date.now()
     const faceList = await f.align(image)
     log.info('Facenet', 'Aligned after %f seconds', (Date.now() - start) / 1000)
+    log.info('Facenet', 'Found %d faces', faceList.length)
     // console.log(faceList)
 
     const newImage = gm(imageFile)
@@ -75,7 +78,8 @@ async function main(args: Args) {
       if (err) {
         throw err
       }
-      console.log('ok!')
+      log.info('Facenet', 'Saved aligned image to', args.output)
+      log.info('Facenet', 'Have a nice day!')
     })
   } catch (e) {
     console.error(e)

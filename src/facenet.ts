@@ -42,12 +42,10 @@ export class Facenet {
   public async align(image: Image): Promise<Face[]> {
     const data = image.data()
                       .tolist() as any as number[][]
-    // console.log(await this.pythonFacenet.align(data)) // XXX
+
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
 
-    console.log('landmarks', landmarks)
     const xyLandmarks = this.transformLandmarks(landmarks)
-    console.log('xyLandmarks', xyLandmarks)
 
     const faceList: Face[] = []
     for (const i in boundingBoxes) {

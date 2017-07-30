@@ -7,7 +7,6 @@ export type BoundingBox = [
   number, number, number, number, // x1, y1, x2, y2
   number                          // confidence
 ]
-// XXX: Landmark type is not right
 export type Landmark    = number[]
 
 const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
