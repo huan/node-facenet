@@ -1,6 +1,7 @@
 """
 facenet-bridge
 """
+import base64
 import errno
 import json
 import os
@@ -17,14 +18,31 @@ import align.detect_face    # type: ignore
 import facenet              # type: ignore
 
 
-def json_parse(text: str) -> Any:
-    """ json """
-    return json.loads(text)
+# def json_parse(text: str) -> Any:
+#     """ json """
+#     return json.loads(text)
 
 
-def numpize(array: Any) -> Any:
-    """ numpy """
-    return np.array(array, dtype=np.uint8)  # important to define dtype!
+# def numpize(array: Any) -> Any:
+#     """ numpy """
+#     return np.array(array, dtype=np.uint8)  # important to define dtype!
+
+
+def base64_to_image(
+        base64text: str,
+        row: int,
+        col: int,
+        depth: int
+) -> Any:
+    """ base64 """
+    image_bytes = base64.b64decode(base64text)
+    image_view = memoryview(image_bytes)
+    # important to define dtype!
+    image_array = np.array(image_view, dtype=np.uint8)
+    image = image_array.reshape(row, col, depth)
+    # We have to return a list instead of np.array
+    # because np.array can not be json serialized to python-bridge.
+    return image.tolist()
 
 
 class FacenetBridge(object):
@@ -94,24 +112,29 @@ class FacenetBridge(object):
 
         return model_path
 
-    def embedding(self, image_array_json_string: str) -> List[Any]:
+    def embedding(
+            self,
+            image_base64: str,
+            row: int,
+            col: int,
+            depth: int,
+    ) -> List[float]:
         """
         Get embedding
         """
-        image = numpize(
-            json_parse(image_array_json_string)
-        )
+        image = base64_to_image(image_base64, row, col, depth)
+        image = np.array(image, dtype=np.uint8)
 
         if image.ndim == 2:
             image = facenet.to_rgb(image)
         image = facenet.prewhiten(image)
 
-        w, h, _ = image.shape
-        image_list = np.empty((1, w, h, 3), dtype=np.uint8)
-        image_list[0] = image
+        # height, width, _ = image.shape
+        # image_list = np.empty((1, height, width, 3), dtype=np.uint8)
+        # image_list[0] = image
 
         feed_dict = {
-            self.placeholder_input:         image_list,
+            self.placeholder_input:         image[np.newaxis, :],
             self.placeholder_phase_train:   False,
         }
         # Use the facenet model to calcualte embeddings
@@ -132,6 +155,10 @@ class MtcnnBridge():
         self.graph = self.session = None            # type: Any
         self.pnet = self.rnet = self.onet = None    # type: Any
 
+        self.minsize = 20                   # minimum size of face
+        self.threshold = [0.6, 0.7, 0.7]    # three steps's threshold
+        self.factor = 0.709                 # scale factor
+
     def init(self) -> None:
         """ doc """
         self.graph = tf.Graph()
@@ -143,24 +170,25 @@ class MtcnnBridge():
                 self.pnet, self.rnet, self.onet = \
                     align.detect_face.create_mtcnn(self.session, None)
 
-    def align(self, image_array_json_text: str) -> Tuple[List[Any], List[Any]]:
+    def align(
+            self,
+            image_base64: str,
+            row: int,
+            col: int,
+            depth: int,
+    ) -> Tuple[List[Any], List[Any]]:
         """ doc """
-        image = numpize(
-            json_parse(image_array_json_text)
-        )
-
-        minsize = 20    # minimum size of face
-        threshold = [0.6, 0.7, 0.7]  # three steps's threshold
-        factor = 0.709  # scale factor
+        image = base64_to_image(image_base64, row, col, depth)
+        image = np.array(image, dtype=np.uint8)
 
         bounding_boxes, landmarks = align.detect_face.detect_face(
             image,
-            minsize,
+            self.minsize,
             self.pnet,
             self.rnet,
             self.onet,
-            threshold,
-            factor,
+            self.threshold,
+            self.factor,
         )
 
         bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
