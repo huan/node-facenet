@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { log }            from 'brolog'
 
 import { ArgumentParser } from 'argparse'
 import * as gm from 'gm'
@@ -25,15 +26,22 @@ function randomColor(): string {
 }
 
 async function main(args: Args) {
+  log.info('Facenet', `v${VERSION}`)
   // console.dir(args)
   const f = new Facenet()
-  await f.init()
+  log.info('Facenet', 'Initializing...')
+  let start = Date.now()
+  await f.initMtcnn()
+  log.info('Facenet', 'Initialized after %f seconds', (Date.now() - start) / 1000)
 
   try {
     const imageFile = args.input
 
     const image = new Image(imageFile)
+    log.info('Facenet', 'Aligning...')
+    start = Date.now()
     const faceList = await f.align(image)
+    log.info('Facenet', 'Aligned after %f seconds', (Date.now() - start) / 1000)
     // console.log(faceList)
 
     const newImage = gm(imageFile)

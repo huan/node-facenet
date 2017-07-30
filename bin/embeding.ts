@@ -17,7 +17,7 @@ async function main(args: Args) {
   log.info('Facenet', 'Initializing...')
   const start = Date.now()
   await f.init()
-  log.info('Facenet', 'Initialized after %f seconds', Math.floor((Date.now() - start) / 1000) / 1000)
+  log.info('Facenet', 'Initialized after %f seconds', Math.floor((Date.now() - start) / 1000))
 
   try {
     const imageFile = args.image_file

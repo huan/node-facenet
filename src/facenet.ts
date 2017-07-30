@@ -45,7 +45,9 @@ export class Facenet {
     // console.log(await this.pythonFacenet.align(data)) // XXX
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
 
+    console.log('landmarks', landmarks)
     const xyLandmarks = this.transformLandmarks(landmarks)
+    console.log('xyLandmarks', xyLandmarks)
 
     const faceList: Face[] = []
     for (const i in boundingBoxes) {

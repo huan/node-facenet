@@ -3,7 +3,11 @@ import {
   PythonBridge,
 }                 from 'python-bridge'
 
-export type BoundingBox = [number, number, number, number, number]
+export type BoundingBox = [
+  number, number, number, number, // x1, y1, x2, y2
+  number                          // confidence
+]
+// XXX: Landmark type is not right
 export type Landmark    = number[]
 
 const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
@@ -76,6 +80,10 @@ export class PythonFacenet {
     this.mtcnnInited = this.facenetInited = false
   }
 
+  /**
+   *
+   * @param data
+   */
   public async align(data: number[][]): Promise<[BoundingBox[], Landmark[]]> {
     await this.initMtcnn()
     const jsonText = JSON.stringify(data)
@@ -86,6 +94,10 @@ export class PythonFacenet {
     return [boundingBoxes, landmarks]
   }
 
+  /**
+   *
+   * @param data
+   */
   public async embedding(data: number[][]): Promise<number[]> {
     await this.initFacenet()
     const jsonData = JSON.stringify(data)
