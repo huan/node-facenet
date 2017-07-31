@@ -27,15 +27,35 @@ export interface FacialLandmark {
 }
 
 export class Face {
+  public static id = 0
+  public id: number
+
   public facialLandmark:  FacialLandmark
   public boundingBox:     BoundingBox
 
-  private parentImage:    FaceImage
-  private box:            number[]
-  private _embedding:     FaceEmbedding
+  public get embedding(): FaceEmbedding {
+    if (!this._embedding) {
+      throw new Error('no embedding yet!')
+    }
+    return this._embedding
+  }
+
+  public set embedding(embedding: FaceEmbedding) {
+    if (this._embedding) {
+      throw new Error('already had embedding!')
+    } else if (embedding.shape[0] !== 128) {
+      throw new Error('embedding dim is not 128!')
+    }
+    this._embedding = embedding
+  }
+
+  private _embedding: FaceEmbedding
+
+  public parentImage: FaceImage
+  private box:        number[]
 
   constructor() {
-    //
+    this.id = ++Face.id
   }
 
   public init(
@@ -65,34 +85,15 @@ export class Face {
   }
 
   public toString(): string {
-    return `Face<${this.parentImage.url}#${this.box.join(',')}`
-  }
-
-  public embedding(): FaceEmbedding
-  public embedding(embedding: FaceEmbedding): void
-
-  public embedding(embedding?: FaceEmbedding): void | FaceEmbedding {
-    if (embedding) {
-      if (this._embedding) {
-        throw new Error('already had embedding!')
-      }
-      this._embedding = embedding
-    } else if (!this._embedding) {
-      throw new Error('no embedding yet!')
-    }
-    if (this._embedding.shape[0] !== 128) {
-      throw new Error('embedding dim is not 128!')
-    }
-    return this._embedding
+    return `Face<${this.parentImage.url}#${this.box.join(',')}#${this._embedding}`
   }
 
   public image(): FaceImage {
-    // TODO corp the face out of parent image
-    return this.parentImage
+    const data = this.parentImage.data
+
+    const {x1, y1, x2, y2} = this.boundingBox
+    const [r1, c1, r2, c2] = [y1, x1, y2, x2]
+    const img = data.hi(r2, c2).lo(r1, c1) as any
+    return new FaceImage(img)
   }
-
-  // public save(imageType: 'png' | 'jpg') {
-
-  // }
-
 }

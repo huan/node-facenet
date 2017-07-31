@@ -14,32 +14,43 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 > See: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
 
-## Inspiration
-
-This repository is heavily inspired by the following implementations:
-
-* [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
-* [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
-
 ## Credits
 
 * Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
 * Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
-* Python & Tensorflow Library using Facenet: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
+* Python & Tensorflow Library implementing Facenet: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
-## Tutorials
+## Example
 
-* [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
+TL;DR: Talk is cheap, Show me the code!
 
-## Todo
+```ts
+const facenet = new Facenet()
 
-1. [x] NPM Module: `facenet`
-1. [x] Docker Image: `zixia/facenet`
-1. [ ] TensorFlow Sereving
-1. [ ] OpenAPI Specification(Swagger)
-1. [ ] Examples
+// Load image from file
+const image = new FaceImage(`${__dirname}/../tests/fixtures/two-faces.jpg`)
 
-## Usage
+// Do Face Alignment, return faces
+const faceList = await facenet.align(image)
+
+for (const face of faceList) {
+  // Calculate Face Embedding, return feature vector
+  const embedding = await facenet.embedding(face)
+  assert(face.embedding === embedding)
+
+  console.log('bounding box:',  face.boundingBox)
+  console.log('landmarks:',     face.facialLandmark)
+  console.log('embedding:',     face.embedding)
+}
+```
+
+Full source code can be found at here: <https://github.com/zixia/facenet/blob/master/examples/demo.ts>
+
+Try it by run:
+
+```shell
+$ npm run demo
+```
 
 ### align
 
@@ -57,6 +68,41 @@ Output the 128 dim embedding vector of the face image.
 $ ts-node bin/embedding.ts face_image
 ```
 
+## API
+
+### Facenet
+
+```ts
+const facenet = new Facenet()
+facenet.quit()
+```
+
+#### 1. Facenet#align(image: FaceImage): Promise<Face[]>
+
+Do face alignment for the image, return a list of faces.
+
+#### 2. Facenet#embedding(face: Face): Promise<FaceEmbedding>
+
+Get the embedding for a face.
+
+### Image
+
+```ts
+const image = new Image('tests/fixtures/two-faces.jpg')
+image.resize(160, 160)
+image.save('/tmp/test.jpg')
+```
+
+### Face
+
+#### 1. Face#embedding: FaceEmbedding
+
+Get the 128 dim embedding vector for this face.(After alignment)
+
+```ts
+console.log(face.embedding)
+```
+
 ## Develop
 
 ```shell
@@ -64,72 +110,10 @@ npm install
 npm test
 ```
 
-## Example
-
-Show me the code!
-
-```ts
-import { Facenet } from 'facenet'
-
-async function main() {
-  // Load image from file
-  const image = new Image('/tmp/friends.jpg')
-
-  // Face Alignment
-  const faceList = await facenet.align(image)
-
-  faceList.forEach(face => {
-    // Face Embedding
-    const embedding = facenet.embedding(face)
-    assert(face.embedding() === embeding)
-
-    console.log(
-      face.boundingBox,
-      face.facialLandmark,
-      face.embedding(),
-    )
-  })
-}
-
-main()
-.catch(console.error)
-```
-
-## API
-
-### Facenet
-
-```ts
-const facenet = new Facenet()
-```
-
-#### 1. Facenet#align(image: Image): Promise<Face[]>
-
-Do face alignment for the image.
-
-#### 2. Facenet#embedding(face: Face): Promise<FaceEmbedding>
-
-Get embedding for the face.
-
-### Image
-
-```ts
-const image = new Image('/tmp/friends.jpg')
-```
-
-### Face
-
-#### 1. Face#embedding(): FaceEmbedding
-
-Get the 128 dim embedding vector for this face.(After alignment)
-
-```ts
-const embedding = face.embedding()
-```
-
 ## Resources
 
 ### Machine Learning
+* [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
 * [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 * [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
 * [A tensorflow implementation of "Deep Convolutional Generative Adversarial Networks](http://carpedm20.github.io/faces/)
@@ -155,6 +139,21 @@ const embedding = face.embedding()
 * [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
 * [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
 * [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
+
+## Todo
+
+1. [x] NPM Module: `facenet`
+1. [x] Docker Image: `zixia/facenet`
+1. [ ] TensorFlow Sereving
+1. [ ] OpenAPI Specification(Swagger)
+1. [x] Examples
+
+## Inspiration
+
+This repository is heavily inspired by the following implementations:
+
+* [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
+* [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
 
 Author
 ------

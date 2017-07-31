@@ -19,7 +19,7 @@ test('Facenet.image() with rgb jpg', async (t: any) => {
     ],
   ]
   const img = new FaceImage(FILE)
-  t.deepEqual(img.data().tolist(), EXPECTED_VALUE, 'should get values of jpg')
+  t.deepEqual(img.data.tolist(), EXPECTED_VALUE, 'should get values of jpg')
 })
 
 test('Facenet.image() with rgba png', async (t: any) => {
@@ -40,7 +40,7 @@ test('Facenet.image() with rgba png', async (t: any) => {
   // const alpha = img.slice(null, null, [3, 4])
   //                 .flatten()
   //                 .tolist()
-  t.deepEqual(img.data().tolist(), EXPECTED_VALUE, 'should get values of png')
+  t.deepEqual(img.data.tolist(), EXPECTED_VALUE, 'should get values of png')
 })
 
 test('Facenet.image() with gray jpeg', async (t: any) => {
@@ -48,5 +48,5 @@ test('Facenet.image() with gray jpeg', async (t: any) => {
   const EXPECTED_VALUE = [ [ 0, 255 ], [ 255, 0 ] ]
 
   const img = new FaceImage(FILE)
-  t.deepEqual(img.data().tolist(), EXPECTED_VALUE, 'should get values of gray jpeg')
+  t.deepEqual(img.data.tolist(), EXPECTED_VALUE, 'should get values of gray jpeg')
 })

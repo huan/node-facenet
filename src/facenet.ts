@@ -42,10 +42,8 @@ export class Facenet {
   public async align(image: FaceImage): Promise<Face[]> {
     log.verbose('Facenet', 'align()')
 
-    const data = image.data()
-
     log.silly('Facenet', 'align() pythonFacenet.align(data) ...')
-    const [boundingBoxes, landmarks] = await this.pythonFacenet.align(data)
+    const [boundingBoxes, landmarks] = await this.pythonFacenet.align(image.data)
     log.silly('Facenet', 'align() pythonFacenet.align(data) done')
 
     const xyLandmarks = this.transformLandmarks(landmarks)
@@ -73,14 +71,14 @@ export class Facenet {
    * Get the 128 dims embeding from image(s)
    */
   public async embedding(face: Face): Promise<FaceEmbedding> {
-    const data = face.image()
+    const image = face.image()
                     .resize(160, 160)
-                    .data()
-    const embedding = await this.pythonFacenet.embedding(data)
+
+    const embedding = await this.pythonFacenet.embedding(image.data)
 
     const njEmbedding =  nj.array(embedding)
     // Set embedding to face
-    face.embedding(njEmbedding)
+    face.embedding = njEmbedding
 
     return njEmbedding
   }
