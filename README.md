@@ -64,6 +64,20 @@ npm install
 npm test
 ```
 
+## API
+
+### Facenet
+
+#### 1. align(image: Image): Promise<Face[]>
+
+#### 2. embedding(face: Face): Promise<FaceEmbedding>
+
+### Image
+
+### Face
+
+#### 1. 
+
 ## Resources
 
 ### Machine Learning
