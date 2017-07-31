@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "OpenAPI for FaceNet",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
