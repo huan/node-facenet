@@ -1,4 +1,6 @@
 import * as path  from 'path'
+
+import { log }    from 'brolog'
 import * as nj    from 'numjs'
 import {
   pythonBridge,
@@ -18,11 +20,15 @@ export class PythonFacenet {
   private mtcnnInited   = false
 
   constructor() {
+    log.verbose('PythonFacenet', 'constructor()')
+
     this.initVenv()
     this.python3 = this.initBridge()
   }
 
   public initVenv(): void {
+    log.verbose('PythonFacenet', 'initVenv()')
+
     const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
     const PATH        = path.normalize(`${VIRTUAL_ENV}/bin:${process.env['PATH']}`)
     const PYTHONHOME  = undefined
@@ -35,6 +41,8 @@ export class PythonFacenet {
   }
 
   public initBridge(): PythonBridge {
+    log.verbose('PythonFacenet', 'initBridge()')
+
     const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
 
     let PYTHONPATH = [
@@ -59,33 +67,48 @@ export class PythonFacenet {
   }
 
   public async initFacenet(): Promise<void> {
+    log.verbose('PythonFacenet', 'initFacenet()')
+
     if (this.facenetInited) {
       return
     }
 
+    const start = Date.now()
     await this.python3.ex`
       from facenet_bridge import FacenetBridge
       facenet_bridge = FacenetBridge()
       facenet_bridge.init()
     `
+    log.silly('PythonFacenet', 'initFacenet() facenet_bridge.init() cost %d milliseconds',
+                                Date.now() - start,
+            )
+
     this.facenetInited = true
   }
 
   public async initMtcnn(): Promise<void> {
+    log.verbose('PythonFacenet', 'initMtcnn()')
+
     if (this.mtcnnInited) {
       return
     }
 
+    const start = Date.now()
     // we need not to care about session.close()(?)
     await this.python3.ex`
       from facenet_bridge import MtcnnBridge
       mtcnn_bridge = MtcnnBridge()
       mtcnn_bridge.init()
     `
+    log.silly('PythonFacenet', 'initMtcnn() mtcnn_bridge.init() cost milliseconds.',
+                                Date.now() - start,
+            )
+
     this.mtcnnInited = true
   }
 
   public async quit(): Promise<void> {
+    log.verbose('PythonFacenet', 'quit()')
     await this.python3.end()
     this.mtcnnInited = this.facenetInited = false
   }
@@ -95,6 +118,7 @@ export class PythonFacenet {
    * @param image
    */
   public async align(image: nj.NdArray<Uint8Array>): Promise<[BoundingBox[], Landmark[]]> {
+    log.verbose('PythonFacenet', 'align(%s)', image.shape)
     await this.initMtcnn()
 
     const [row, col, depth] = image.shape
@@ -102,8 +126,14 @@ export class PythonFacenet {
 
     let boundingBoxes: BoundingBox[]
     let landmarks: Landmark[]
+
+    const start = Date.now();
     [boundingBoxes, landmarks] = await this.python3
       `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
+
+    log.silly('PythonFacenet', 'align() mtcnn_bridge.align() cost %d milliseconds',
+                                Date.now() - start,
+            )
 
     return [boundingBoxes, landmarks]
   }
@@ -113,13 +143,21 @@ export class PythonFacenet {
    * @param image
    */
   public async embedding(image: nj.NdArray<Uint8Array>): Promise<number[]> {
+    log.verbose('PythonFacenet', 'embedding(%s)', image.shape)
+
     await this.initFacenet()
 
     const [row, col, depth] = image.shape
     const base64Text = this.image_to_base64(image)
 
+    const start = Date.now();
+
     const embedding: number[] = await this.python3
       `facenet_bridge.embedding(${base64Text}, ${row}, ${col}, ${depth})`
+
+    log.silly('PythonFacenet', 'embedding() facenet_bridge.embedding() cost %d milliseconds',
+                          Date.now() - start,
+            )
 
     return embedding
   }

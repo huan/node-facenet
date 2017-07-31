@@ -2,7 +2,7 @@
 
 const { test } = require('tap')
 
-import { Image } from './image'
+import { FaceImage } from './face-image'
 
 test('Facenet.image() with rgb jpg', async (t: any) => {
   const FILE = 'tests/fixtures/rgb-bwg.jpg'
@@ -18,7 +18,7 @@ test('Facenet.image() with rgb jpg', async (t: any) => {
       [ 127, 127, 127],
     ],
   ]
-  const img = new Image(FILE)
+  const img = new FaceImage(FILE)
   t.deepEqual(img.data().tolist(), EXPECTED_VALUE, 'should get values of jpg')
 })
 
@@ -36,7 +36,7 @@ test('Facenet.image() with rgba png', async (t: any) => {
       [   0,   0,   0,   0],
     ],
   ]
-  const img = new Image(FILE)
+  const img = new FaceImage(FILE)
   // const alpha = img.slice(null, null, [3, 4])
   //                 .flatten()
   //                 .tolist()
@@ -47,6 +47,6 @@ test('Facenet.image() with gray jpeg', async (t: any) => {
   const FILE = 'tests/fixtures/bw-gray.jpg'
   const EXPECTED_VALUE = [ [ 0, 255 ], [ 255, 0 ] ]
 
-  const img = new Image(FILE)
+  const img = new FaceImage(FILE)
   t.deepEqual(img.data().tolist(), EXPECTED_VALUE, 'should get values of gray jpeg')
 })

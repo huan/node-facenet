@@ -5,7 +5,7 @@ import { log }            from 'brolog'
 
 import {
   Facenet,
-  Image,
+  FaceImage,
   VERSION,
 }                         from '../'
 
@@ -22,7 +22,7 @@ async function main(args: Args) {
   try {
     const imageFile = args.image_file
 
-    const image = new Image(imageFile)
+    const image = new FaceImage(imageFile)
     start = Date.now()
     const faceList = await f.align(image)
     log.info('CLI', 'Facenet Align(%fs): found %d faces',

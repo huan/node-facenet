@@ -7,7 +7,7 @@ import * as gm from 'gm'
 
 import {
   Facenet,
-  Image,
+  FaceImage,
   VERSION,
 }                         from '../'
 
@@ -39,7 +39,7 @@ async function main(args: Args) {
     const imageFile = args.input
 
     log.info('CLI', 'Opening image', args.input)
-    const image = new Image(imageFile)
+    const image = new FaceImage(imageFile)
 
     log.info('CLI', 'MTCNN Aligning...')
     start = Date.now()

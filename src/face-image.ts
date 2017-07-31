@@ -4,15 +4,15 @@
 import * as crypto  from 'crypto'
 import * as nj      from 'numjs'
 
-export type ImageData = nj.NdArray<Uint8Array>
+export type FaceImageData = nj.NdArray<Uint8Array>
 
-export class Image {
+export class FaceImage {
   public url: string
 
-  private _data: ImageData
+  private _data: FaceImageData
 
   constructor(
-    urlOrData: string | ImageData,
+    urlOrData: string | FaceImageData,
   ) {
     if (typeof urlOrData === 'string') {
       this.url = urlOrData
@@ -27,19 +27,19 @@ export class Image {
     return `Image<${this.url}>`
   }
 
-  public data(): ImageData {
+  public data(): FaceImageData {
     if (!this._data) {
-      this._data = nj.images.read(this.url) as any as ImageData
+      this._data = nj.images.read(this.url) as any as FaceImageData
     }
     return this._data
   }
 
-  public resize(width: number, height: number): Image {
-    const data = nj.images.resize(this.data() as any, height, width) as any as ImageData
-    return new Image(data)
+  public resize(width: number, height: number): FaceImage {
+    const data = nj.images.resize(this.data() as any, height, width) as any as FaceImageData
+    return new FaceImage(data)
   }
 
-  public calcMd5(data: ImageData): string {
+  public calcMd5(data: FaceImageData): string {
     return crypto
             .createHash('md5')
             .update(new Buffer(data.tolist()))

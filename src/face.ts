@@ -3,7 +3,7 @@
  */
 import * as nj from 'numjs'
 
-import { Image } from './image'
+import { FaceImage } from './face-image'
 
 export type Point = [number, number]
 export type FacialLandmarkPoints = [Point, Point, Point, Point, Point]
@@ -30,7 +30,7 @@ export class Face {
   public facialLandmark:  FacialLandmark
   public boundingBox:     BoundingBox
 
-  private parentImage:    Image
+  private parentImage:    FaceImage
   private box:            number[]
   private _embedding:     FaceEmbedding
 
@@ -39,7 +39,7 @@ export class Face {
   }
 
   public init(
-    parentImage: Image,
+    parentImage: FaceImage,
     box: number[],        // Bounding Box
     marks: FacialLandmarkPoints,  // Facial Landmark
     confidence: number,
@@ -86,7 +86,7 @@ export class Face {
     return this._embedding
   }
 
-  public image(): Image {
+  public image(): FaceImage {
     // TODO corp the face out of parent image
     return this.parentImage
   }

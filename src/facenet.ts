@@ -6,7 +6,7 @@ import {
   FaceEmbedding,
   FacialLandmarkPoints,
 }                         from './face'
-import { Image }          from './image'
+import { FaceImage }      from './face-image'
 import { PythonFacenet }  from './python-facenet'
 
 export class Facenet {
@@ -39,7 +39,7 @@ export class Facenet {
    * Alignment the image, get faces list, ordered with biggest first
    * @param image
    */
-  public async align(image: Image): Promise<Face[]> {
+  public async align(image: FaceImage): Promise<Face[]> {
     log.verbose('Facenet', 'align()')
 
     const data = image.data()
