@@ -36,7 +36,7 @@
     "start": "echo started",
     "test": "npm run test:ts && npm run test:py",
     "test:ts": "npm run lint && tap src/**/*.spec.ts tests/**/*.spec.ts",
-    "test:py": "PYTHONPATH='src/:python/facenet/src/' pytest src",
+    "test:py": "PYTHONPATH='src/:python/facenet/src/' pytest src/ tests/",
     "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node smoke-testing.js"
   },
   "repository": {

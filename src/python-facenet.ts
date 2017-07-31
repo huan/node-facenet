@@ -1,3 +1,4 @@
+import * as path  from 'path'
 import * as nj    from 'numjs'
 import {
   pythonBridge,
@@ -10,8 +11,6 @@ export type BoundingBox = [
 ]
 export type Landmark    = number[]
 
-const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
-
 export class PythonFacenet {
   private python: PythonBridge
 
@@ -19,6 +18,25 @@ export class PythonFacenet {
   private mtcnnInited   = false
 
   constructor() {
+    this.initVenv()
+    this.python = this.initBridge()
+  }
+
+  public initVenv(): void {
+    const VIRTUAL_ENV = path.normalize(`${__dirname}/../python`)
+    const PATH        = path.normalize(`${VIRTUAL_ENV}/bin:${process.env['PATH']}`)
+    const PYTHONHOME  = undefined
+
+    Object.assign(process.env, {
+      VIRTUAL_ENV,
+      PATH,
+      PYTHONHOME,
+    })
+  }
+
+  public initBridge(): PythonBridge {
+    const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
+
     let PYTHONPATH = [
       `${__dirname}/../../python-facenet/src/`,
       `${__dirname}/`,
@@ -27,13 +45,15 @@ export class PythonFacenet {
       PYTHONPATH += ':' + process.env['PYTHONPATH']
     }
 
-    this.python = pythonBridge({
+    const bridge = pythonBridge({
       python: 'python3',
       env: {
         PYTHONPATH,
         TF_CPP_MIN_LOG_LEVEL,
       },
     })
+
+    return bridge
   }
 
   // /**
