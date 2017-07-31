@@ -58,10 +58,11 @@
     "CHANGELOG",
     "LICENSE",
     "README.md",
-    "package.json",
     "dist/bin",
     "dist/index.*",
-    "dist/src"
+    "dist/src",
+    "package.json",
+    "src/"
   ],
   "facenet": {
     "env": {
