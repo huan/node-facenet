@@ -73,6 +73,6 @@ package-lock.json
 __pycache__/
 .mypy_cache/
 
-python/
+python3/
 models/
 

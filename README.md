@@ -64,19 +64,66 @@ npm install
 npm test
 ```
 
+## Example
+
+Show me the code!
+
+```ts
+import { Facenet } from 'facenet'
+
+async function main() {
+  const image = new Image('/tmp/friends.jpg')
+
+  // Face Alignment
+  const faceList = await facenet.align(image)
+
+  faceList.forEach(face => {
+    // Face Embedding
+    const embedding = facenet.embedding()
+
+    console.log(
+      face.boundingBox,
+      face.facialLandmark,
+      face.embedding()
+    )
+  })
+}
+
+main()
+.catch(console.error)
+```
+
 ## API
 
 ### Facenet
 
-#### 1. align(image: Image): Promise<Face[]>
+```ts
+const facenet = new Facenet()
+```
 
-#### 2. embedding(face: Face): Promise<FaceEmbedding>
+#### 1. Facenet#align(image: Image): Promise<Face[]>
+
+Do face alignment for the image.
+
+#### 2. Facenet#embedding(face: Face): Promise<FaceEmbedding>
+
+Get embedding for the face.
 
 ### Image
 
+```ts
+const image = new Image('/tmp/friends.jpg')
+```
+
 ### Face
 
-#### 1. 
+#### 1. Face#embedding(): FaceEmbedding
+
+Get the 128 dim embedding vector for this face.(After alignment)
+
+```ts
+const embedding = face.embedding()
+```
 
 ## Resources
 

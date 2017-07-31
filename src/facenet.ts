@@ -3,12 +3,11 @@ import * as nj    from 'numjs'
 
 import {
   Face,
+  FaceEmbedding,
   FacialLandmarkPoints,
 }                         from './face'
 import { Image }          from './image'
 import { PythonFacenet }  from './python-facenet'
-
-export type FaceEmbedding = nj.NdArray<number>  // 128 dim
 
 export class Facenet {
   private pythonFacenet: PythonFacenet

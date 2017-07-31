@@ -1,6 +1,6 @@
-sudo: required
-dist: trusty
 language: node_js
+dist: trusty
+sudo: required
 
 node_js:
   - "7"
@@ -17,17 +17,18 @@ cache:
 
 install:
   - npm install
+  - if [ "$TRAVIS_OS_NAME" == 'osx' ]; then brew install python3.6; fi
   - pip3 install -r requirements.txt
 
 script:
   - echo $TRAVIS_OS_NAME
+  - python3 --version
   - node --version
   - npm --version
-  - python3 --version
   - npm run lint
   - npm run dist
-  - npm test
-  - npm run test:npm && echo 'Npm packing test is passed'
+  - npm run test:py
+  # - npm run test:npm && echo 'Npm packing test is passed'
 
 notifications:
   webhooks:
