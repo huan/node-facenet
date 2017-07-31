@@ -126,6 +126,8 @@ class FacenetBridge(object):
 
         if image.ndim == 2:
             image = facenet.to_rgb(image)
+        image = image[:, :, 0:3]    # get rid of Alpha Channel from PNG
+
         image = facenet.prewhiten(image)
 
         # height, width, _ = image.shape
@@ -178,6 +180,7 @@ class MtcnnBridge():
     ) -> Tuple[List[Any], List[Any]]:
         """ doc """
         image = base64_to_image(image_base64, row, col, depth)
+        image = image[:, :, 0:3]
 
         bounding_boxes, landmarks = align.detect_face.detect_face(
             image,
