@@ -55,8 +55,8 @@ export class PythonFacenet {
     }
 
     const bridge = pythonBridge({
-      // python: `${__dirname}/../python3/bin/python3`,
-      python: 'python3',
+      python: `${__dirname}/../python3/bin/python3`,
+      // python: 'python3',
       env: {
         PYTHONPATH,
         TF_CPP_MIN_LOG_LEVEL,
