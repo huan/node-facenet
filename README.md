@@ -18,13 +18,15 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 * Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
 * Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
-* Python & Tensorflow Library implementing Facenet: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
+* TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
 ## Example
 
 TL;DR: Talk is cheap, Show me the code!
 
 ```ts
+import { Facenet, FaceImage } from 'facenet'
+
 const facenet = new Facenet()
 
 // Load image from file
@@ -73,6 +75,8 @@ $ ts-node bin/embedding.ts face_image
 ### Facenet
 
 ```ts
+import { Facenet } from 'facenet'
+
 const facenet = new Facenet()
 facenet.quit()
 ```
@@ -85,22 +89,26 @@ Do face alignment for the image, return a list of faces.
 
 Get the embedding for a face.
 
-### Image
+### FaceImage
 
 ```ts
-const image = new Image('tests/fixtures/two-faces.jpg')
+import { FaceImage } from 'facenet'
+
+const image = new FaceImage('tests/fixtures/two-faces.jpg')
 image.resize(160, 160)
 image.save('/tmp/test.jpg')
 ```
 
 ### Face
 
-#### 1. Face#embedding: FaceEmbedding
-
 Get the 128 dim embedding vector for this face.(After alignment)
 
 ```ts
-console.log(face.embedding)
+import { Face } from 'facenet'
+
+console.log('bounding box:',  face.boundingBox)
+console.log('landmarks:',     face.facialLandmark)
+console.log('embedding:',     face.embedding)
 ```
 
 ## Develop
