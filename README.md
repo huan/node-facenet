@@ -62,6 +62,7 @@ python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/m
 * [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
 * [Useful Python Modules: Flake8](https://dancallahan.info/journal/python-flake8/)
 * [PEP 8 - Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
+* [Python 3.6 venv — Creation of virtual environments](https://docs.python.org/3.6/library/venv.html)
 
 ##### Typing
 

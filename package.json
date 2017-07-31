@@ -29,13 +29,14 @@
     "dist": "npm run clean && tsc",
     "lint": "npm run lint:ts && npm run lint:py",
     "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
-    "lint:py": "PYTHONPATH='src/:../python-facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
+    "lint:py": "PYTHONPATH='src/:python/facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs --python-version=3.5 src/*.py",
+    "postinstall": "python3 -m venv python && source python/activate && pip3 install -r requirements.txt && git clone https://github.com/davidsandberg/facenet.git",
     "start": "echo started",
     "test": "npm run test:ts && npm run test:py",
     "test:ts": "npm run lint && tap src/**/*.spec.ts tests/**/*.spec.ts",
-    "test:py": "PYTHONPATH='src/:../python-facenet/src/' pytest",
+    "test:py": "PYTHONPATH='src/:python/facenet/src/' pytest src",
     "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node smoke-testing.js"
   },
   "repository": {
@@ -63,7 +64,7 @@
   ],
   "facenet": {
     "env": {
-      "PYTHON_FACENET_MODEL_PATH": "../python-facenet/models/facenet/20170512-110547/",
+      "PYTHON_FACENET_MODEL_PATH": "models/",
       "PYTHON_FACENET_MODEL_URL": "https://drive.google.com/file/d/0B5MzpY9kBtDVOTVnU3NIaUdySFE"
     }
   }

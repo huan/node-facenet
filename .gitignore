@@ -59,6 +59,7 @@ typings/
 
 t/
 t.*
+.t.*
 dist/
 .vscode/.ropeproject/
 package-lock.json
@@ -70,3 +71,8 @@ package-lock.json
 *.so
 .cache/
 __pycache__/
+.mypy_cache/
+
+python/
+models/
+

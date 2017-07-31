@@ -10,8 +10,8 @@ from typing import (
 )
 
 import numpy as np              # type: ignore
-from scipy.misc import imread   # type: ignore
 import pytest                   # type: ignore
+from scipy.misc import imread   # type: ignore
 # pylint: disable=W0621
 
 from facenet_bridge import (

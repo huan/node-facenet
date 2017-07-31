@@ -1,7 +1,10 @@
 flake8
 mypy
+pillow
 pylint
 pytest
+opencv-python
 scipy
+sklearn
 tensorflow
 
