@@ -11,7 +11,6 @@ t.test('PythonFacenet smoke testing', async (t: any) => {
 
   const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
   t.equal(process.env['VIRTUAL_ENV'], VIRTUAL_ENV, 'should no PYTHONHOME')
-
   t.notOk(process.env['PYTHONHOME'], 'should no PYTHONHOME')
 
   pf.quit()

@@ -11,7 +11,7 @@ export type BoundingBox = [
   number, number, number, number, // x1, y1, x2, y2
   number                          // confidence
 ]
-export type Landmark    = number[]
+export type Landmark = number[]
 
 export class PythonFacenet {
   private python3: PythonBridge
@@ -31,13 +31,13 @@ export class PythonFacenet {
 
     const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
     const PATH        = path.normalize(`${VIRTUAL_ENV}/bin:${process.env['PATH']}`)
-    const PYTHONHOME  = undefined
 
     Object.assign(process.env, {
       VIRTUAL_ENV,
       PATH,
-      PYTHONHOME,
     })
+
+    delete process.env['PYTHONHOME']
   }
 
   public initBridge(): PythonBridge {
