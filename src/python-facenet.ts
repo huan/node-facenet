@@ -41,11 +41,13 @@ export class PythonFacenet {
       `${__dirname}/../python3/facenet/src/`,
       `${__dirname}/`,
     ].join(':')
+
     if (process.env['PYTHONPATH']) {
       PYTHONPATH += ':' + process.env['PYTHONPATH']
     }
 
     const bridge = pythonBridge({
+      // python: `${__dirname}/../python3/bin/python3`,
       python: 'python3',
       env: {
         PYTHONPATH,

@@ -2,8 +2,11 @@
 
 const { test } = require('tap')
 
+import { Face }   from './face'
+
 test('Face smoke testing', async (t: any) => {
-  t.pass('faint')
+  const f = new Face()
+  t.ok(f, 'should be instanciated')
 })
 
 export {}

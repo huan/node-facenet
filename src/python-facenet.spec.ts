@@ -5,9 +5,15 @@ const t = require('tap')  // tslint:disable:no-shadowed-variable
 
 import { PythonFacenet }  from './python-facenet'
 
-t.test('PythonFacenet smoke testing', { timeout: 60 * 1000 }, async (t: any) => {
+t.test('PythonFacenet smoke testing', async (t: any) => {
   const pf = new PythonFacenet()
   t.ok(pf, 'should be instanciated')
+
+  const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
+  t.equal(process.env['VIRTUAL_ENV'], VIRTUAL_ENV, 'should no PYTHONHOME')
+
+  t.notOk(process.env['PYTHONHOME'], 'should no PYTHONHOME')
+
   pf.quit()
 })
 

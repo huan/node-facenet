@@ -33,6 +33,5 @@ test('tensorflow smoke testing', async (t: any) => {
     try {
       python.end()
     } catch (e) { /* */ }
-    t.end()
   }
 })

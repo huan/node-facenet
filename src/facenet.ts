@@ -54,11 +54,11 @@ export class Facenet {
     for (const i in boundingBoxes) {
       const box = boundingBoxes[i]
       const confidence = box[4]
-      const mark = xyLandmarks[i]
+      const marks = xyLandmarks[i]
       faceList.push(new Face(
         image,
         box,
-        mark,
+        marks,
         confidence,
       ))
     }
@@ -75,9 +75,11 @@ export class Facenet {
                     .data()
     const embedding = await this.pythonFacenet.embedding(data)
 
-    const njEmb =  nj.array(embedding)
-    face.embedding(njEmb)
-    return njEmb
+    const njEmbedding =  nj.array(embedding)
+    // Set embedding to face
+    face.embedding(njEmbedding)
+
+    return njEmbedding
   }
 
   public distance(v1: FaceEmbedding, v2: FaceEmbedding): number {

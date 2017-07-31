@@ -3,7 +3,6 @@ dist: trusty
 sudo: required
 
 node_js:
-  - "7"
   - "8"
 
 os:
@@ -16,9 +15,8 @@ cache:
 
 
 install:
-  - npm install
   - if [ "$TRAVIS_OS_NAME" == 'osx' ]; then brew install python3.6; fi
-  - pip3 install -r requirements.txt
+  - npm install
 
 script:
   - echo $TRAVIS_OS_NAME

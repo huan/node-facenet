@@ -34,16 +34,16 @@ export class Face {
 
   constructor(
     public parentImage: Image,
-    private box: number[],         // Bounding Box
-    mark: FacialLandmarkPoints,  // Facial Landmark
+    private box: number[],        // Bounding Box
+    marks: FacialLandmarkPoints,  // Facial Landmark
     confidence: number,
   ) {
     this.facialLandmark = {
-      leftEye:          mark[0],
-      rightEye:         mark[1],
-      nose:             mark[2],
-      leftMouthCorner:  mark[3],
-      rightMouthCorner: mark[4],
+      leftEye:          marks[0],
+      rightEye:         marks[1],
+      nose:             marks[2],
+      leftMouthCorner:  marks[3],
+      rightMouthCorner: marks[4],
     }
 
     this.boundingBox = {

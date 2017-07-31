@@ -72,6 +72,7 @@ Show me the code!
 import { Facenet } from 'facenet'
 
 async function main() {
+  // Load image from file
   const image = new Image('/tmp/friends.jpg')
 
   // Face Alignment
@@ -79,12 +80,13 @@ async function main() {
 
   faceList.forEach(face => {
     // Face Embedding
-    const embedding = facenet.embedding()
+    const embedding = facenet.embedding(face)
+    assert(face.embedding() === embeding)
 
     console.log(
       face.boundingBox,
       face.facialLandmark,
-      face.embedding()
+      face.embedding(),
     )
   })
 }
