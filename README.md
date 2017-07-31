@@ -21,42 +21,58 @@ This repository is heavily inspired by the following implementations:
 * [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
 * [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
 
-# Under Construction
+## Credits
 
-## Please come back after 2 weeks.
+* Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
+* Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
+* Python & Tensorflow Library using Facenet: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
-### Todo
+## Tutorials
 
-1. [ ] NPM Module: `facenet`
-1. [ ] Docker Image: `zixia/facenet`
+* [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
+
+## Todo
+
+1. [x] NPM Module: `facenet`
+1. [x] Docker Image: `zixia/facenet`
 1. [ ] TensorFlow Sereving
 1. [ ] OpenAPI Specification(Swagger)
 1. [ ] Examples
 
+## Usage
 
-#### Train
+### align
 
-```shell
-python src/classifier.py TRAIN /facenet/training-images-mtcnn-182/ /facenet/models/facenet/20170512-110547/20170512-110547.pb /facenet/models/my_classifier.pkl --batch_size 1000
-```
-
-#### Classify
+Draw a rectangle with five landmarks on all faces in the image.
 
 ```shell
-python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/models/facenet/20170512-110547/20170512-110547.pb /facenet/models/my_classifier.pkl --batch_size 1000
+$ ts-node bin/align.ts input_image output_image
 ```
 
-### Tutorials
+### embedding
 
-* [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
+Output the 128 dim embedding vector of the face image.
 
-### Resources
+```shell
+$ ts-node bin/embedding.ts face_image
+```
 
+## Develop
+
+```shell
+npm install
+npm test
+```
+
+## Resources
+
+### Machine Learning
 * [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 * [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
 * [A tensorflow implementation of "Deep Convolutional Generative Adversarial Networks](http://carpedm20.github.io/faces/)
+* [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
 
-#### Python
+### Python
 
 * [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 * [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
@@ -64,30 +80,18 @@ python src/classifier.py CLASSIFY /facenet/training-images-mtcnn-182/ /facenet/m
 * [PEP 8 - Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
 * [Python 3.6 venv — Creation of virtual environments](https://docs.python.org/3.6/library/venv.html)
 
-##### Typing
+#### Typing
 
 * [Mypy syntax cheat sheet (Python 3)](mypy.readthedocs.io/en/latest/cheat_sheet_py3.html)
 * [Python 3 Type Hints and Static Analysis](https://code.tutsplus.com/tutorials/python-3-type-hints-and-static-analysis--cms-25731)
 * [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
 
-#### Discussion
+#### NumJS
 
 * [Stackoverflow: numpy-like package for node](https://stackoverflow.com/questions/31412537/numpy-like-package-for-node)
 * [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
 * [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
 * [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
-
-#### Algorithm
-
-* [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
-
-
-## Develop
-
-```shell
-apt install mypy flake8
-pip install flake8-commas  # missing trailing comma
-```
 
 Author
 ------

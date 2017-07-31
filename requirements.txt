@@ -7,4 +7,4 @@ opencv-python
 scipy
 sklearn
 tensorflow
-
+typing
