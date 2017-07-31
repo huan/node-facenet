@@ -53,7 +53,7 @@ async function main(args: Args) {
       const mark = face.facialLandmark
       const color = randomColor()
       const box = face.boundingBox
-      const base = Math.floor((box.x2 - box.x1 + box.y2 - box.y1) / 100) + 1
+      const base = Math.floor((box.x2 - box.x1 + box.y2 - box.y1) / 50) + 1
       newImage.fill('none')
               .stroke(color, base * 1)
               .drawRectangle(
@@ -61,7 +61,7 @@ async function main(args: Args) {
                 box.y1,
                 box.x2,
                 box.y2,
-                base * 3,
+                base * 5,
               )
 
       Object.keys(mark).forEach(k => {
