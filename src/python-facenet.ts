@@ -12,18 +12,18 @@ export type BoundingBox = [
 export type Landmark    = number[]
 
 export class PythonFacenet {
-  private python: PythonBridge
+  private python3: PythonBridge
 
   private facenetInited = false
   private mtcnnInited   = false
 
   constructor() {
     this.initVenv()
-    this.python = this.initBridge()
+    this.python3 = this.initBridge()
   }
 
   public initVenv(): void {
-    const VIRTUAL_ENV = path.normalize(`${__dirname}/../python`)
+    const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
     const PATH        = path.normalize(`${VIRTUAL_ENV}/bin:${process.env['PATH']}`)
     const PYTHONHOME  = undefined
 
@@ -38,7 +38,7 @@ export class PythonFacenet {
     const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
 
     let PYTHONPATH = [
-      `${__dirname}/../../python-facenet/src/`,
+      `${__dirname}/../python3/facenet/src/`,
       `${__dirname}/`,
     ].join(':')
     if (process.env['PYTHONPATH']) {
@@ -56,24 +56,12 @@ export class PythonFacenet {
     return bridge
   }
 
-  // /**
-  //  * XXX: we need not to care about session.close()(?)
-  //  */
-  // public async init(): Promise<void> {
-  //   await this.initFacenet()
-  //   await this.initMtcnn()
-  // }
-
-  // public async initPythonBridge(): Promise<void> {
-  // }
-
   public async initFacenet(): Promise<void> {
     if (this.facenetInited) {
       return
     }
-    // await this.initPythonBridge()
 
-    await this.python.ex`
+    await this.python3.ex`
       from facenet_bridge import FacenetBridge
       facenet_bridge = FacenetBridge()
       facenet_bridge.init()
@@ -85,10 +73,9 @@ export class PythonFacenet {
     if (this.mtcnnInited) {
       return
     }
-    // await this.initPythonBridge()
 
     // we need not to care about session.close()(?)
-    await this.python.ex`
+    await this.python3.ex`
       from facenet_bridge import MtcnnBridge
       mtcnn_bridge = MtcnnBridge()
       mtcnn_bridge.init()
@@ -97,7 +84,7 @@ export class PythonFacenet {
   }
 
   public async quit(): Promise<void> {
-    await this.python.end()
+    await this.python3.end()
     this.mtcnnInited = this.facenetInited = false
   }
 
@@ -113,7 +100,7 @@ export class PythonFacenet {
 
     let boundingBoxes: BoundingBox[]
     let landmarks: Landmark[]
-    [boundingBoxes, landmarks] = await this.python
+    [boundingBoxes, landmarks] = await this.python3
       `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
 
     return [boundingBoxes, landmarks]
@@ -129,7 +116,7 @@ export class PythonFacenet {
     const [row, col, depth] = image.shape
     const base64Text = this.image_to_base64(image)
 
-    const embedding: number[] = await this.python
+    const embedding: number[] = await this.python3
       `facenet_bridge.embedding(${base64Text}, ${row}, ${col}, ${depth})`
 
     return embedding
@@ -148,10 +135,10 @@ export class PythonFacenet {
     depth:  number,
   ): Promise<number[][][]> {
     // await this.initPythonBridge()
-    await this.python.ex
+    await this.python3.ex
       `from facenet_bridge import base64_to_image`
 
-    return await this.python
+    return await this.python3
       `base64_to_image(${text}, ${row}, ${col}, ${depth}).tolist()`
   }
 
