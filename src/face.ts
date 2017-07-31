@@ -7,6 +7,7 @@ import { Image } from './image'
 
 export type Point = [number, number]
 export type FacialLandmarkPoints = [Point, Point, Point, Point, Point]
+export type FaceEmbedding = nj.NdArray<number>  // 128 dim
 
 export interface BoundingBox {
   y1:  number,
@@ -29,7 +30,7 @@ export class Face {
   public facialLandmark:  FacialLandmark
   public boundingBox:     BoundingBox
 
-  private _embedding: nj.NdArray
+  private _embedding:     FaceEmbedding
 
   constructor(
     public parentImage: Image,
@@ -58,10 +59,10 @@ export class Face {
     return `Face<${this.parentImage.url}#${this.box.join(',')}`
   }
 
-  public embedding(): nj.NdArray
-  public embedding(embedding: nj.NdArray): void
+  public embedding(): FaceEmbedding
+  public embedding(embedding: FaceEmbedding): void
 
-  public embedding(embedding?: nj.NdArray): void | nj.NdArray {
+  public embedding(embedding?: FaceEmbedding): void | FaceEmbedding {
     if (embedding) {
       if (this._embedding) {
         throw new Error('already had embedding!')
