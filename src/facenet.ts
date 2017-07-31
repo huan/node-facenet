@@ -55,12 +55,15 @@ export class Facenet {
       const box = boundingBoxes[i]
       const confidence = box[4]
       const marks = xyLandmarks[i]
-      faceList.push(new Face(
+
+      const face = new Face()
+      face.init(
         image,
         box,
         marks,
         confidence,
-      ))
+      )
+      faceList.push(face)
     }
 
     return faceList

@@ -30,14 +30,23 @@ export class Face {
   public facialLandmark:  FacialLandmark
   public boundingBox:     BoundingBox
 
+  private parentImage:    Image
+  private box:            number[]
   private _embedding:     FaceEmbedding
 
-  constructor(
-    public parentImage: Image,
-    private box: number[],        // Bounding Box
+  constructor() {
+    //
+  }
+
+  public init(
+    parentImage: Image,
+    box: number[],        // Bounding Box
     marks: FacialLandmarkPoints,  // Facial Landmark
     confidence: number,
-  ) {
+  ): void {
+    this.parentImage = parentImage
+    this.box = box
+
     this.facialLandmark = {
       leftEye:          marks[0],
       rightEye:         marks[1],
