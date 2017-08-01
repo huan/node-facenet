@@ -5,12 +5,13 @@ const { test } = require('tap')
 const pythonBridge = require('python-bridge')
 
 test('tensorflow smoke testing', async (t: any) => {
-
+  const env = process.env
+  Object.assign(env, {
+    TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
+  })
   const python = pythonBridge({
     python: 'python3',
-    env: {
-      TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
-    },
+    env,
   })
 
   try {

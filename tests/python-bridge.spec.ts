@@ -26,10 +26,12 @@ test('python 3 version test', async (t: any) => {
 })
 
 test('math test', async (t: any) => {
+  const env = process.env
+  Object.assign(env, {
+    TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
+  })
   const python = pythonBridge({
-    env: {
-      TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
-    },
+    env,
   })
 
   try {
