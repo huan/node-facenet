@@ -16,7 +16,7 @@ cache:
 
 install:
   - if [ "$TRAVIS_OS_NAME" == 'osx' ]; then brew install python3; fi
-  - npm install
+  - npm install --unsafe-perm
 
 script:
   - echo $TRAVIS_OS_NAME

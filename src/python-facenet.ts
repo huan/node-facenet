@@ -59,16 +59,18 @@ export class PythonFacenet {
       PYTHONPATH += ':' + process.env['PYTHONPATH']
     }
 
-    const bridge = pythonBridge({
-      // python: path.normalize(`${__dirname}/../python3/bin/python3`),
-      python: 'python3',
-      env: {
+    // fixed in the new pythonBridge npm version > 1.0.4
+    const env = process.env as any as { [key: string]: string; }
+    Object.assign(env, {
         PYTHONPATH,
         TF_CPP_MIN_LOG_LEVEL,
-      },
     })
 
-    console.log(process.env)
+    const bridge = pythonBridge({
+      python: 'python3',
+      env,
+    })
+
     return bridge
   }
 
