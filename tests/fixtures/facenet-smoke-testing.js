@@ -20,4 +20,7 @@ async function main() {
 
 main()
 .then(process.exit)
-.catch(console.error)
+.catch(e => {
+  console.error(e)
+  process.exit(1)
+})
