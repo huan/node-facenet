@@ -57,7 +57,7 @@ $ npm run demo
 
 ### align
 
-Draw a rectangle with five landmarks on all faces in the image.
+Draw a rectangle with five landmarks on all faces in the input\_image, save it to output\_image.
 
 ```shell
 $ ts-node bin/align.ts input_image output_image
@@ -73,8 +73,22 @@ $ ts-node bin/embedding.ts face_image
 
 ## Requirement
 
-| Neural Network Model | Task |   Ram  |
-| ---                  | ---       |   ---  |
+### OS
+
+Now I'm developing under Ubuntu 17.04
+
+Should support all platforms including Linux/Mac/Win32 in the future version.
+
+### Dependency
+
+1. Node.js >= 6
+1. Tensorflow >= 1.2
+1. Python >=3.5
+
+### Ram
+
+| Neural Network Model | Task                |  Ram  |
+| ---                  | ---                 |  ---  |
 | MTCNN                | Facenet#align()     | 100MB |
 | Facenet              | Facenet#embedding() | 1GB   |
 
