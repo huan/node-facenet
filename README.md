@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet)
 
-FaceNet Node.js Module for easy face recognition, verification and clustering.
+FaceNet Node.js Module for easy face recognition, verification, and clustering.
 
 <img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
 
@@ -12,13 +12,11 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
 
-> See: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
-
 ## Credits
 
-* Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
-* Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
-* TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
+1. Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
+1. Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
+1. TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
 ## Example
 
@@ -52,6 +50,9 @@ Full source code can be found at here: <https://github.com/zixia/facenet/blob/ma
 Try it by run:
 
 ```shell
+$ git clone git@github.com:zixia/facenet.git
+$ cd facenet
+$ npm install
 $ npm run demo
 ```
 
@@ -60,7 +61,7 @@ $ npm run demo
 Draw a rectangle with five landmarks on all faces in the input\_image, save it to output\_image.
 
 ```shell
-$ ts-node bin/align.ts input_image output_image
+$ ./node_modules/.bin/ts-node bin/align.ts input_image output_image
 ```
 
 ### embedding
@@ -68,7 +69,7 @@ $ ts-node bin/align.ts input_image output_image
 Output the 128 dim embedding vector of the face image.
 
 ```shell
-$ ts-node bin/embedding.ts face_image
+$ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 ```
 
 ## Requirement
@@ -161,8 +162,11 @@ model-20170512-110547.meta
 ## Develop
 
 ```shell
-npm install
-npm test
+$ git clone git@github.com:zixia/facenet.git
+$ cd facenet
+$ npm install
+$ npm test
+$ npm run demo
 ```
 
 ## Resources
