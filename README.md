@@ -91,11 +91,11 @@ Should support all platforms including Linux/Mac/Win32 in the future version.
 | Neural Network Model | Task                |  Ram  |
 | ---                  | ---                 |  ---  |
 | MTCNN                | Facenet#align()     | 100MB |
-| Facenet              | Facenet#embedding() | 1GB   |
+| Facenet              | Facenet#embedding() | 2GB   |
 
 If you are dealing with very large images(like 3000x3000 pixels), there will need additional 1GB of memory.
 
-So I believe that Facenet will need at least 2GB memory, >=4GB is recommended.
+So I believe that Facenet will need at least 2GB memory, and >=4GB is recommended.
 
 ## API
 

@@ -14,7 +14,7 @@ export type BoundingBox = [
 export type Landmark = number[]
 
 export class PythonFacenet {
-  private python3: PythonBridge
+  public python3: PythonBridge
 
   private facenetInited = false
   private mtcnnInited   = false
@@ -60,7 +60,6 @@ export class PythonFacenet {
       PYTHONPATH += ':' + process.env['PYTHONPATH']
     }
 
-    // fixed in the new pythonBridge npm version > 1.0.4
     Object.assign(process.env, {
         PYTHONPATH,
         TF_CPP_MIN_LOG_LEVEL,
@@ -68,7 +67,6 @@ export class PythonFacenet {
 
     const bridge = pythonBridge({
       python: 'python3',
-      // env:    process.env,
     })
 
     return bridge
@@ -117,6 +115,10 @@ export class PythonFacenet {
 
   public async quit(): Promise<void> {
     log.verbose('PythonFacenet', 'quit()')
+    if (!this.python3) {
+      throw new Error('no phthon3 bridge inited yet!')
+    }
+
     await this.python3.end()
     this.mtcnnInited = this.facenetInited = false
   }

@@ -7,11 +7,7 @@ import { PythonFacenet }  from '../'
 
 t.test('tensorflow module import', async (t: any) => {
   const pf = new PythonFacenet()
-  pf.initVenv()
-
-  const python = pythonBridge({
-    python: 'python3',
-  })
+  const python = pf.python3
 
   try {
     await python.ex`
@@ -21,11 +17,6 @@ t.test('tensorflow module import', async (t: any) => {
   } catch (e) {
     t.fail(e)
   } finally {
-    try {
-      await python.end()
-    } catch (e) {
-      t.fail(e)
-    }
     await pf.quit()
   }
 })
