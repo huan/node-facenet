@@ -62,7 +62,6 @@ t.*
 .t.*
 dist/
 .vscode/.ropeproject/
-package-lock.json
 
 *.py[cod]
 *$py.class
