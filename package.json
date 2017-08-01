@@ -61,10 +61,11 @@
     "CHANGELOG",
     "LICENSE",
     "README.md",
+    "package.json",
+    "requirements.txt",
     "dist/bin",
     "dist/index.*",
     "dist/src",
-    "package.json",
     "src/"
   ],
   "facenet": {
