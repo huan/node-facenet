@@ -10,9 +10,12 @@ async function main() {
     console.log(`Facenet v${VERSION} smoking test passed.`)
   } catch (e) {
     console.error(e)
+    // Error!
+    return 1
   } finally {
     f.quit()
   }
+  return 0
 }
 
-main()
+process.exit(main())
