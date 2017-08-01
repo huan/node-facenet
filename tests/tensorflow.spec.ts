@@ -1,11 +1,11 @@
 #!/usr/bin/env ts-node
-const { test } = require('tap')
+const t = require('tap')  // tslint:disable:no-shadowed-variable
 
 import { pythonBridge }   from 'python-bridge'
 
 import { PythonFacenet }  from '../'
 
-test('tensorflow smoke testing', async (t: any) => {
+t.test('tensorflow smoke testing', async (t: any) => {
   const pf = new PythonFacenet()
   pf.initVenv()
 
@@ -31,7 +31,9 @@ test('tensorflow smoke testing', async (t: any) => {
     t.fail(e.message)
   } finally {
     try {
-      python.end()
-    } catch (e) { /* */ }
+      await python.end()
+    } catch (e) {
+      t.fail(e)
+    }
   }
 })

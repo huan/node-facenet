@@ -19,13 +19,14 @@ export class PythonFacenet {
   private facenetInited = false
   private mtcnnInited   = false
 
-  private SRC           = __dirname
-  private VIRTUAL_ENV   = path.normalize(`${__dirname}/../python3`)
+  private SRC   = __dirname
+  // python -m venv $VENV: the directory of vent
+  private VENV  = path.normalize(`${__dirname}/../python3`)
 
   constructor() {
     log.verbose('PythonFacenet', 'constructor() SRC=%s, VIRTUAL_ENV=%s',
                               this.SRC,
-                              this.VIRTUAL_ENV,
+                              this.VENV,
               )
 
     this.initVenv()
@@ -35,10 +36,10 @@ export class PythonFacenet {
   public initVenv(): void {
     log.verbose('PythonFacenet', 'initVenv()')
 
-    const PATH        = `${this.VIRTUAL_ENV}/bin:` + process.env['PATH']
+    const PATH = `${this.VENV}/bin:` + process.env['PATH']
 
     Object.assign(process.env, {
-      VIRTUAL_ENV: this.VIRTUAL_ENV,
+      VIRTUAL_ENV: this.VENV,
       PATH,
     })
 
@@ -51,7 +52,7 @@ export class PythonFacenet {
     const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
 
     let PYTHONPATH = [
-      `${this.VIRTUAL_ENV}/facenet/src`,
+      `${this.VENV}/facenet/src`,
       this.SRC,
     ].join(':')
 
