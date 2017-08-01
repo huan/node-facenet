@@ -1,14 +1,14 @@
 {
   "name": "facenet",
   "version": "0.1.33",
-  "description": "OpenAPI for FaceNet",
+  "description": "FaceNet is for easy face recognition, verification, and clustering.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
     "argparse": "^1.0.9",
     "brolog": "^1.1.34",
     "gm": "^1.23.0",
-    "numjs": "^0.14.0",
+    "numjs": "^0.14.1",
     "python-bridge": "^1.0.3"
   },
   "devDependencies": {
@@ -49,7 +49,11 @@
   },
   "keywords": [
     "facenet",
-    "openface"
+    "openface",
+    "face",
+    "recognition",
+    "verification",
+    "clustering"
   ],
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
