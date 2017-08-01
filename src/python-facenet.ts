@@ -60,15 +60,14 @@ export class PythonFacenet {
     }
 
     // fixed in the new pythonBridge npm version > 1.0.4
-    const env = process.env
-    Object.assign(env, {
+    Object.assign(process.env, {
         PYTHONPATH,
         TF_CPP_MIN_LOG_LEVEL,
     })
 
     const bridge = pythonBridge({
       python: 'python3',
-      env,
+      // env:    process.env,
     })
 
     return bridge

@@ -173,6 +173,7 @@ npm test
 * [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
 * [A tensorflow implementation of "Deep Convolutional Generative Adversarial Networks](http://carpedm20.github.io/faces/)
 * [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
+* [Average Face : OpenCV ( C++ / Python ) Tutorial](https://www.learnopencv.com/average-face-opencv-c-python-tutorial/) 
 
 ### Python
 

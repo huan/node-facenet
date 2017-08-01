@@ -1,29 +1,16 @@
 #!/usr/bin/env ts-node
-import * as path from 'path'
 const { test } = require('tap')
 
-const pythonBridge = require('python-bridge')
+import { pythonBridge }   from 'python-bridge'
+
+import { PythonFacenet }  from '../'
 
 test('tensorflow smoke testing', async (t: any) => {
-  const VIRTUAL_ENV   = path.normalize(`${__dirname}/../python3`)
-
-  let PYTHONPATH = [
-    `${VIRTUAL_ENV}/facenet/src`,
-  ].join(':')
-
-  if (process.env['PYTHONPATH']) {
-    PYTHONPATH += ':' + process.env['PYTHONPATH']
-  }
-
-  const env = process.env
-  Object.assign(env, {
-    PYTHONPATH,
-    TF_CPP_MIN_LOG_LEVEL: '2',  // suppress tensorflow warnings
-  })
+  const pf = new PythonFacenet()
+  pf.initVenv()
 
   const python = pythonBridge({
     python: 'python3',
-    env,
   })
 
   try {
