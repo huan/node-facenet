@@ -5,6 +5,31 @@ import { pythonBridge }   from 'python-bridge'
 
 import { PythonFacenet }  from '../'
 
+t.test('tensorflow module import', async (t: any) => {
+  const pf = new PythonFacenet()
+  pf.initVenv()
+
+  const python = pythonBridge({
+    python: 'python3',
+  })
+
+  try {
+    await python.ex`
+      import tensorflow as tf
+    `
+    t.pass('should import successful')
+  } catch (e) {
+    t.fail(e)
+  } finally {
+    try {
+      await python.end()
+    } catch (e) {
+      t.fail(e)
+    }
+    await pf.quit()
+  }
+})
+
 t.test('tensorflow smoke testing', async (t: any) => {
   const pf = new PythonFacenet()
   pf.initVenv()
@@ -26,7 +51,6 @@ t.test('tensorflow smoke testing', async (t: any) => {
     const c = await python`1.0 * sess.run(c)`
     t.equal(c, 30, 'should get 5 * 6 = 30')
     await python.ex`sess.close()`
-
   } catch (e) {
     t.fail(e.message)
   } finally {
