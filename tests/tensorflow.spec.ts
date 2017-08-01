@@ -35,5 +35,6 @@ t.test('tensorflow smoke testing', async (t: any) => {
     } catch (e) {
       t.fail(e)
     }
+    await pf.quit()
   }
 })

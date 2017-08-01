@@ -14,7 +14,6 @@ t.test('python 3 version test', async (t: any) => {
     const [major, minor] = await python`sys.version_info`
     t.ok(major >= 3, 'should be at least v3')
     console.log('minor version = ' + minor)
-    console.error('minor version = ' + minor)
     t.ok(minor >= 5, 'should get minor version >= 5')
   } catch (e) {
     t.fail(e.message)
