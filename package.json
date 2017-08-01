@@ -40,7 +40,7 @@
     "test": "npm run test:py && npm run test:ts",
     "test:ts": "tap --timeout=300 src/**/*.spec.ts tests/**/*.spec.ts",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
-    "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node smoke-testing.js",
+    "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/facenet-smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node facenet-smoke-testing.js",
     "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt"
   },
   "repository": {
@@ -67,9 +67,9 @@
     "README.md",
     "package.json",
     "requirements.txt",
-    "dist/bin",
+    "dist/bin/",
     "dist/index.*",
-    "dist/src",
+    "dist/src/",
     "src/"
   ],
   "facenet": {

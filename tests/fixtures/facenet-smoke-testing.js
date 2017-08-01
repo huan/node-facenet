@@ -18,4 +18,6 @@ async function main() {
   return 0
 }
 
-process.exit(main())
+main()
+.then(process.exit)
+.catch(console.error)
