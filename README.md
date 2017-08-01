@@ -81,9 +81,9 @@ Should support all platforms including Linux/Mac/Win32 in the future version.
 
 ### Dependency
 
-1. Node.js >= 6
+1. Node.js >= 6 (**8** is recommend)
 1. Tensorflow >= 1.2
-1. Python >=3.5
+1. Python >=3.5 (**3.6** is recommend)
 
 ### Ram
 
