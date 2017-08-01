@@ -49,5 +49,3 @@ t.test('list test', async (t: any) => {
     await python.end()
   }
 })
-
-export {}
