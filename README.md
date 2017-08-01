@@ -1,8 +1,8 @@
-# facenet
+# FaceNet Node.js Module
 
 [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet)
 
-FaceNet OpenAPI Specification & Docker Microservices & TensorFlow Serving & Node.js Module
+FaceNet Node.js Module for easy face recognition, verification and clustering.
 
 <img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
 
@@ -22,7 +22,7 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 ## Example
 
-TL;DR: Talk is cheap, Show me the code!
+TL;DR: Talk is cheap, show me the code!
 
 ```ts
 import { Facenet, FaceImage } from 'facenet'
@@ -30,7 +30,8 @@ import { Facenet, FaceImage } from 'facenet'
 const facenet = new Facenet()
 
 // Load image from file
-const image = new FaceImage(`${__dirname}/../tests/fixtures/two-faces.jpg`)
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+const image = new FaceImage(imageFile)
 
 // Do Face Alignment, return faces
 const faceList = await facenet.align(image)
@@ -70,6 +71,17 @@ Output the 128 dim embedding vector of the face image.
 $ ts-node bin/embedding.ts face_image
 ```
 
+## Requirement
+
+| Neural Network Model | Task |   Ram  |
+| ---                  | ---       |   ---  |
+| MTCNN                | Facenet#align()     | 100MB |
+| Facenet              | Facenet#embedding() | 1GB   |
+
+If you are dealing with very large images(like 3000x3000 pixels), there will need additional 1GB of memory.
+
+So I believe that Facenet will need at least 2GB memory, >=4GB is recommended.
+
 ## API
 
 ### Facenet
@@ -96,7 +108,7 @@ import { FaceImage } from 'facenet'
 
 const image = new FaceImage('tests/fixtures/two-faces.jpg')
 image.resize(160, 160)
-image.save('/tmp/test.jpg')
+image.save('/tmp/image.jpg')
 ```
 
 ### Face
@@ -109,6 +121,27 @@ import { Face } from 'facenet'
 console.log('bounding box:',  face.boundingBox)
 console.log('landmarks:',     face.facialLandmark)
 console.log('embedding:',     face.embedding)
+
+face.image.save('/tmp/face.jpg')
+```
+
+## Environment Variables
+
+### FACENET_MODEL
+
+FaceNet neural network model files, set to other version of model as you like.
+
+Default is set to `models/` directory inside project directory. The pre-trained models is come from [20170512-110547, 0.992, MS-Celeb-1M, Inception ResNet v1](https://github.com/davidsandberg/facenet/wiki), which will be download & save automatically by `postinstall` script.
+
+```shell
+$ pwd
+/home/zixia/git/facenet
+
+$ ls models/
+20170512-110547.pb
+model-20170512-110547.ckpt-250000.index
+model-20170512-110547.ckpt-250000.data-00000-of-00001
+model-20170512-110547.meta
 ```
 
 ## Develop

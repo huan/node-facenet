@@ -5,7 +5,8 @@ import { log }      from 'brolog'
 import {
   Facenet,
   FaceImage,
-}                   from '../'  // from 'facenet'
+}                   from '../'
+// import { Facenet } from 'facenet'
 
 async function main() {
   // Instanciate FaceNet
@@ -13,7 +14,8 @@ async function main() {
 
   try {
     // Load image from file
-    const image = new FaceImage(`${__dirname}/../tests/fixtures/two-faces.jpg`)
+    const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+    const image = new FaceImage(imageFile)
 
     // Do Face Alignment, return faces
     const faceList = await facenet.align(image)
@@ -21,12 +23,14 @@ async function main() {
     for (const face of faceList) {
       // Calculate Face Embedding, return feature vector
       const embedding = await facenet.embedding(face)
-      assert(face.embedding === embedding)
+      assert(face.embedding === embedding,
+            'Save embedding to face. Also return it for convenience')
 
-      const filename = `${face.parentImage.id}-${face.id}.jpg`
-      face.image().save(filename)
+      const faceFile = `${face.parentImage.id}-${face.id}.jpg`
+      face.image().save(faceFile)
 
-      console.log('face file:', filename)
+      console.log('image file:',    imageFile)
+      console.log('face file:',     faceFile)
       console.log('bounding box:',  face.boundingBox)
       console.log('landmarks:',     face.facialLandmark)
       console.log('embedding:',     face.embedding)

@@ -58,10 +58,7 @@ class FacenetBridge(object):
         self.placeholder_phase_train = None     # type: Any
         self.placeholder_embeddings = None      # type: Any
 
-        try:
-            self.FACENET_MODEL = os.environ['FACENET_MODEL']     # type: str
-        except KeyError:
-            self.FACENET_MODEL = FacenetBridge.get_model_path()
+        self.FACENET_MODEL = FacenetBridge.get_model_path()
 
     def init(self) -> None:
         """ doc """
@@ -95,13 +92,18 @@ class FacenetBridge(object):
             with open(try_file2) as data_file:
                 data = json.load(data_file)
 
-        model_path = os.path.abspath(os.path.normpath(
-            os.path.join(
-                file_path,
-                '..',
-                data['facenet']['env']['PYTHON_FACENET_MODEL_PATH'],
+        try:
+            model_path = os.environ['FACENET_MODEL']    # type: str
+        except KeyError:
+            model_path = os.path.abspath(
+                os.path.normpath(
+                    os.path.join(
+                        file_path,
+                        '..',
+                        data['facenet']['env']['PYTHON_FACENET_MODEL_PATH'],
+                    )
+                )
             )
-        ))
 
         if not os.path.exists(model_path):
             raise FileNotFoundError(
@@ -126,13 +128,9 @@ class FacenetBridge(object):
 
         if image.ndim == 2:
             image = facenet.to_rgb(image)
-        image = image[:, :, 0:3]    # get rid of Alpha Channel from PNG
 
-        image = facenet.prewhiten(image)
-
-        # height, width, _ = image.shape
-        # image_list = np.empty((1, height, width, 3), dtype=np.uint8)
-        # image_list[0] = image
+        # get rid of Alpha Channel from PNG(if any) and prewhiten
+        image = facenet.prewhiten(image[:, :, 0:3])
 
         feed_dict = {
             self.placeholder_input:         image[np.newaxis, :],
@@ -180,10 +178,9 @@ class MtcnnBridge():
     ) -> Tuple[List[Any], List[Any]]:
         """ doc """
         image = base64_to_image(image_base64, row, col, depth)
-        image = image[:, :, 0:3]
 
         bounding_boxes, landmarks = align.detect_face.detect_face(
-            image,
+            image[:, :, 0:3],   # get rid of alpha channel(if any)
             self.minsize,
             self.pnet,
             self.rnet,

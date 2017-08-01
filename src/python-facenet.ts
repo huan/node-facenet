@@ -19,8 +19,14 @@ export class PythonFacenet {
   private facenetInited = false
   private mtcnnInited   = false
 
+  private SRC           = __dirname
+  private VIRTUAL_ENV   = path.normalize(`${__dirname}/../python3`)
+
   constructor() {
-    log.verbose('PythonFacenet', 'constructor()')
+    log.verbose('PythonFacenet', 'constructor() SRC=%s, VIRTUAL_ENV=%s',
+                              this.SRC,
+                              this.VIRTUAL_ENV,
+              )
 
     this.initVenv()
     this.python3 = this.initBridge()
@@ -29,11 +35,10 @@ export class PythonFacenet {
   public initVenv(): void {
     log.verbose('PythonFacenet', 'initVenv()')
 
-    const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
-    const PATH        = path.normalize(`${VIRTUAL_ENV}/bin:${process.env['PATH']}`)
+    const PATH        = `${this.VIRTUAL_ENV}/bin:` + process.env['PATH']
 
     Object.assign(process.env, {
-      VIRTUAL_ENV,
+      VIRTUAL_ENV: this.VIRTUAL_ENV,
       PATH,
     })
 
@@ -46,8 +51,8 @@ export class PythonFacenet {
     const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
 
     let PYTHONPATH = [
-      `${__dirname}/../python3/facenet/src/`,
-      `${__dirname}/`,
+      `${this.VIRTUAL_ENV}/facenet/src`,
+      this.SRC,
     ].join(':')
 
     if (process.env['PYTHONPATH']) {
@@ -55,14 +60,15 @@ export class PythonFacenet {
     }
 
     const bridge = pythonBridge({
-      python: `${__dirname}/../python3/bin/python3`,
-      // python: 'python3',
+      // python: path.normalize(`${__dirname}/../python3/bin/python3`),
+      python: 'python3',
       env: {
         PYTHONPATH,
         TF_CPP_MIN_LOG_LEVEL,
       },
     })
 
+    console.log(process.env)
     return bridge
   }
 

@@ -10,8 +10,9 @@ t.test('PythonFacenet smoke testing', async (t: any) => {
   t.ok(pf, 'should be instanciated')
 
   const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
-  t.equal(process.env['VIRTUAL_ENV'], VIRTUAL_ENV, 'should no PYTHONHOME')
-  t.notOk(process.env['PYTHONHOME'], 'should no PYTHONHOME')
+  t.equal(process.env['VIRTUAL_ENV'], VIRTUAL_ENV,              'should set VIRTUAL_ENV right')
+  t.ok((process.env['PATH'] as string).startsWith(VIRTUAL_ENV), 'should set VIRTUAL_ENV right')
+  t.notOk(process.env['PYTHONHOME'],                            'should have no PYTHONHOME')
 
   pf.quit()
 })
