@@ -27,7 +27,7 @@
     "clean": "shx rm -fr dist/*",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "demo": "ts-node examples/demo.ts",
-    "dist": "npm run clean && tsc",
+    "dist": "npm run clean && tsc && shx cp src/*.py dist/src/",
     "download:facenet": " cd python3 && git clone https://github.com/davidsandberg/facenet.git && cd -",
     "download:models": "mkdir models && cd models && curl -L https://github.com/zixia/facenet/releases/download/v0.1.9/model-20170512.tar.bz2 | tar jxv && cd -",
     "lint": "npm run lint:ts && npm run lint:py",
