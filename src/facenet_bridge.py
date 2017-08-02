@@ -5,6 +5,7 @@ import base64
 import errno
 import json
 import os
+from pathlib import PurePath
 from typing import (
     Any,
     List,
@@ -81,29 +82,33 @@ class FacenetBridge(object):
         """
         Get facenet model path from package.json
         """
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        try_file1 = os.path.join(file_path, '..', 'package.json')
-        try_file2 = os.path.join(file_path, '..', '..', 'package.json')
-
-        try:
-            with open(try_file1) as data_file:
-                data = json.load(data_file)
-        except FileNotFoundError:
-            with open(try_file2) as data_file:
-                data = json.load(data_file)
-
         try:
             model_path = os.environ['FACENET_MODEL']    # type: str
+            return model_path
         except KeyError:
-            model_path = os.path.abspath(
-                os.path.normpath(
-                    os.path.join(
-                        file_path,
-                        '..',
-                        data['facenet']['env']['PYTHON_FACENET_MODEL_PATH'],
-                    )
-                )
+            pass
+
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        path_split = PurePath(file_path).parts
+        is_dist = path_split[-2:-1][0] == 'dist'    # the parent directory name
+        if is_dist:
+            module_root = os.path.join(file_path, '..', '..')
+        else:
+            module_root = os.path.join(file_path, '..')
+
+        module_root = os.path.abspath(
+            os.path.normpath(
+                module_root
             )
+        )
+
+        package = os.path.join(module_root, 'package.json')
+        with open(package) as data:
+            package_json = json.load(data)
+
+        python_facenet_model_path = \
+            package_json['facenet']['env']['PYTHON_FACENET_MODEL_PATH']
+        model_path = os.path.join(module_root, python_facenet_model_path)
 
         if not os.path.exists(model_path):
             raise FileNotFoundError(

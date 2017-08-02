@@ -1,11 +1,13 @@
-import * as path  from 'path'
+import * as path            from 'path'
 
-import { log }    from 'brolog'
-import * as nj    from 'numjs'
+import { log }   from 'brolog'
+import * as nj   from 'numjs'
 import {
   pythonBridge,
   PythonBridge,
-}                 from 'python-bridge'
+}                from 'python-bridge'
+
+import { MODULE_ROOT }  from './config'
 
 export type BoundingBox = [
   number, number, number, number, // x1, y1, x2, y2
@@ -19,22 +21,19 @@ export class PythonFacenet {
   private facenetInited = false
   private mtcnnInited   = false
 
-  private SRC   = __dirname
+  private SRC_DIRNAME   = __dirname
   // python -m venv $VENV: the directory of vent
-  private VENV  = path.normalize(`${__dirname}/../python3`)
+  private VENV = path.join(MODULE_ROOT, 'python3')
 
   constructor() {
-    log.verbose('PythonFacenet', 'constructor() SRC=%s, VIRTUAL_ENV=%s',
-                              this.SRC,
-                              this.VENV,
-              )
+    log.verbose('PythonFacenet', 'constructor() SRC=%s', this.SRC_DIRNAME)
 
     this.initVenv()
     this.python3 = this.initBridge()
   }
 
   public initVenv(): void {
-    log.verbose('PythonFacenet', 'initVenv()')
+    log.verbose('PythonFacenet', `initVenv() to ${this.VENV}`)
 
     const PATH = `${this.VENV}/bin:` + process.env['PATH']
 
@@ -53,7 +52,7 @@ export class PythonFacenet {
 
     let PYTHONPATH = [
       `${this.VENV}/facenet/src`,
-      this.SRC,
+      this.SRC_DIRNAME,
     ].join(':')
 
     if (process.env['PYTHONPATH']) {
