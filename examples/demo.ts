@@ -5,7 +5,7 @@ import { log }      from 'brolog'
 import {
   Facenet,
   FaceImage,
-}                   from 'facenet'
+}                   from '../'  // from 'facenet'
 
 async function main() {
   // Instanciate FaceNet
