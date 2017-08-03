@@ -60,6 +60,7 @@ TODO:
 
 #### 1. Files
 
+```
 X(file1)  <-- 0.5 --> X(file2)
    ^                    ^
    |
@@ -67,7 +68,7 @@ X(file1)  <-- 0.5 --> X(file2)
    |
    v                    v
 Y(file1)  <-- 0.4 --> Y(file2)
-
+```
 
 ## Requirement
 
