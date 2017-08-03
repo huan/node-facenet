@@ -50,6 +50,25 @@ $ npm install
 $ npm run demo
 ```
 
+### Output
+
+#### 1. Console
+
+```shell
+TODO:
+```
+
+#### 1. Files
+
+X(file1)  <-- 0.5 --> X(file2)
+   ^                    ^
+   |
+   1.1
+   |
+   v                    v
+Y(file1)  <-- 0.4 --> Y(file2)
+
+
 ## Requirement
 
 ### OS
