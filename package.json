@@ -68,6 +68,7 @@
     "README.md",
     "package.json",
     "requirements.txt",
+    "bin/",
     "dist/",
     "src/"
   ],
