@@ -72,6 +72,10 @@
     "dist/",
     "src/"
   ],
+  "bin": {
+    "facenet-align": "dist/bin/align.js",
+    "facenet-embedding": "dist/bin/embedding.js"
+  },
   "facenet": {
     "env": {
       "PYTHON_FACENET_MODEL_PATH": "models/",

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 python::version() {
   echo $(python3 -c 'import sys; print(sys.version_info)')

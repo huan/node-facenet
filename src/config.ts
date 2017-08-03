@@ -1,7 +1,7 @@
 import * as path from 'path'
 
 export function parentDirectory(): string {
-  const parentDir = __dirname.split(path.delimiter) // [... 'node_modules', 'facenet', 'dist', 'src']
+  const parentDir = __dirname.split(path.sep) // [... 'node_modules', 'facenet', 'dist', 'src']
                               .slice(-2, -1)[0]     // 'dist'
   return parentDir
 }
