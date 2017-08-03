@@ -68,9 +68,7 @@
     "README.md",
     "package.json",
     "requirements.txt",
-    "dist/bin/",
-    "dist/index.*",
-    "dist/src/",
+    "dist/",
     "src/"
   ],
   "facenet": {
