@@ -24,6 +24,7 @@
     "typescript": "^2.4.2"
   },
   "scripts": {
+    "check-version": "./bin/check-version.sh",
     "clean": "shx rm -fr dist/*",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "demo": "ts-node examples/demo.ts",
@@ -35,7 +36,7 @@
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/*.py",
-    "postinstall": "npm run venv && npm run download:facenet && npm run download:models",
+    "postinstall": "npm run check-version && npm run venv && npm run download:facenet && npm run download:models",
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run test:py && npm run test:ts",
     "test:ts": "tap --timeout=300 src/**/*.spec.ts tests/**/*.spec.ts",

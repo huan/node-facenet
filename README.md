@@ -1,8 +1,8 @@
-# FaceNet Node.js Module
+# FaceNet
 
 [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet)
 
-FaceNet Node.js Module for easy face recognition, verification, and clustering.
+Easy face recognition, verification, and clustering.
 
 <img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
 
@@ -11,12 +11,6 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. directly learns a mapping from face images to a compact Euclidean space where distances directly correspond to a measure of face similarity.
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
-
-## Credits
-
-1. Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
-1. Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
-1. TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
 ## Example
 
@@ -56,22 +50,6 @@ $ npm install
 $ npm run demo
 ```
 
-### align
-
-Draw a rectangle with five landmarks on all faces in the input\_image, save it to output\_image.
-
-```shell
-$ ./node_modules/.bin/ts-node bin/align.ts input_image output_image
-```
-
-### embedding
-
-Output the 128 dim embedding vector of the face image.
-
-```shell
-$ ./node_modules/.bin/ts-node bin/embedding.ts face_image
-```
-
 ## Requirement
 
 ### OS
@@ -99,7 +77,7 @@ So I believe that Facenet will need at least 2GB memory, and >=4GB is recommende
 
 ## API
 
-### Facenet
+### 1. Facenet
 
 ```ts
 import { Facenet } from 'facenet'
@@ -116,17 +94,7 @@ Do face alignment for the image, return a list of faces.
 
 Get the embedding for a face.
 
-### FaceImage
-
-```ts
-import { FaceImage } from 'facenet'
-
-const image = new FaceImage('tests/fixtures/two-faces.jpg')
-image.resize(160, 160)
-image.save('/tmp/image.jpg')
-```
-
-### Face
+### 2. Face
 
 Get the 128 dim embedding vector for this face.(After alignment)
 
@@ -138,6 +106,16 @@ console.log('landmarks:',     face.facialLandmark)
 console.log('embedding:',     face.embedding)
 
 face.image.save('/tmp/face.jpg')
+```
+
+### 3. FaceImage
+
+```ts
+import { FaceImage } from 'facenet'
+
+const image = new FaceImage('tests/fixtures/two-faces.jpg')
+image.resize(160, 160)
+image.save('/tmp/image.jpg')
 ```
 
 ## Environment Variables
@@ -168,6 +146,26 @@ $ npm install
 $ npm test
 $ npm run demo
 ```
+
+## Command Line Interface
+
+
+### align
+
+Draw a rectangle with five landmarks on all faces in the input\_image, save it to output\_image.
+
+```shell
+$ ./node_modules/.bin/ts-node bin/align.ts input_image output_image
+```
+
+### embedding
+
+Output the 128 dim embedding vector of the face image.
+
+```shell
+$ ./node_modules/.bin/ts-node bin/embedding.ts face_image
+```
+
 
 ## Resources
 
@@ -214,6 +212,12 @@ This repository is heavily inspired by the following implementations:
 
 * [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
 * [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
+
+## Credits
+
+1. Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
+1. Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
+1. TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
 Author
 ------
