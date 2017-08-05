@@ -123,7 +123,6 @@ t.*
 /dist/
 .vscode/.ropeproject/
 
-*.py[cod]
 *$py.class
 
 # C extensions
@@ -133,4 +132,4 @@ t.*
 python3/
 models/
 
-*.jpg
+/*.jpg
