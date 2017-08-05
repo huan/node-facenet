@@ -72,35 +72,34 @@ $ cd facenet
 $ npm install
 $ npm run demo
 
+image file: /home/zixia/git/facenet/examples/../tests/fixtures/two-faces.jpg
+face file: 1-1.jpg
 bounding box: {
-  x1: 385,
-  y1: 95,
-  x2: 564,
-  y2: 324,
-}
-landmarks: {
-  leftEye: [ 441, 181 ],
-  rightEye: [ 515, 208 ],
-  nose: [ 459, 239 ],
-  leftMouthCorner: [ 417, 262 ],
-  rightMouthCorner: [ 482, 285 ] 
-}
-embedding: array([-0.03595,-0.00314, 0.07261, ..., 0.16612, 0.07395,-0.03289])
-
-bounding box: {
-  x1: 171,
-  y1: 87,
-  x2: 365,
-  y2: 340,
+  p1: { x: 360, y: 95 }, 
+  p2: { x: 589, y: 324 } 
 }
 landmarks: { 
-  leftEye: [ 230, 186 ],
-  rightEye: [ 316, 197 ],
-  nose: [ 269, 257 ],
-  leftMouthCorner: [ 223, 273 ],
-  rightMouthCorner: [ 303, 281 ] 
+  leftEye:  { x: 441, y: 181 },
+  rightEye: { x: 515, y: 208 },
+  nose:     { x: 459, y: 239 },
+  leftMouthCorner:  { x: 417, y: 262 },
+  rightMouthCorner: { x: 482, y: 285 } 
 }
-embedding: array([ 0.05341,-0.08628, 0.01802, ..., 0.07718, 0.11645,-0.01623])
+embedding: array([ 0.02453, 0.03973, 0.05397, ..., 0.10603, 0.15305,-0.07288])
+
+face file: 1-2.jpg
+bounding box: { 
+  p1: { x: 142, y: 87 }, 
+  p2: { x: 395, y: 340 } 
+}
+landmarks: { 
+  leftEye:  { x: 230, y: 186 },
+  rightEye: { x: 316, y: 197 },
+  nose:     { x: 269, y: 257 },
+  leftMouthCorner:  { x: 223, y: 273 },
+  rightMouthCorner: { x: 303, y: 281 } 
+}
+embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
 ```
 
 ## Requirement
