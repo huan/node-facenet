@@ -25,7 +25,7 @@ The follow examples will give you some intuitions for using the code.
 
 1. Face is in the green rectangle.
 1. Similarity between faces showed as a number in the middle of line.
-1. 0.73 is an experiential threshold for the distance, to identify if two faces belong to the same person.
+1. To identify if two faces belong to the same person, we could use an experiential threshold for the distance: 0.73.
 
 ```shell
 $ git clone git@github.com:zixia/facenet.git
