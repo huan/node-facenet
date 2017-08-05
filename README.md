@@ -82,13 +82,14 @@ $ cd facenet
 $ npm install
 $ npm run demo
 
-bounding box: { x1: 385,
+bounding box: {
+  x1: 385,
   y1: 95,
   x2: 564,
   y2: 324,
-  confidence: 0.9999637603759766 
 }
-landmarks: { leftEye: [ 441, 181 ],
+landmarks: {
+  leftEye: [ 441, 181 ],
   rightEye: [ 515, 208 ],
   nose: [ 459, 239 ],
   leftMouthCorner: [ 417, 262 ],
@@ -101,7 +102,6 @@ bounding box: {
   y1: 87,
   x2: 365,
   y2: 340,
-  confidence: 0.9998635053634644 
 }
 landmarks: { 
   leftEye: [ 230, 186 ],
