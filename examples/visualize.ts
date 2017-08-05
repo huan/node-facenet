@@ -41,11 +41,14 @@ async function main() {
     }
 
     for (let row = 0; row < 3; row++) {
-      let line = Array(row + 1).join(
+      let line = Array(row + 2).join(
         Array(5 + 1).join(' '),
       )
-      for (let col = row; col < 3; col++) {
-        const dist = await facenet.distance(faceList[row], faceList[col])
+      for (let col = row + 1; col < 3; col++) {
+        const dist = await facenet.distance(
+          faceList[row].embedding,
+          faceList[col].embedding,
+        )
         line += printf('%.2f ', dist)
       }
       log.info('DIST', line)

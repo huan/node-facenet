@@ -100,28 +100,13 @@ export class Facenet {
     return njEmbedding
   }
 
-  public async distance(f1: Face, f2: Face): Promise<number> {
-    let v1, v2
-
-    try {
-      v1 = f1.embedding
-    } catch (e) {
-      v1 = await this.embedding(f1)
-    }
-
-    try {
-      v2 = f2.embedding
-    } catch (e) {
-      v2 = await this.embedding(f2)
-    }
-
+  public distance(v1: nj.NdArray<number>, v2: nj.NdArray<number>): number {
     const l2 = v1.subtract(v2)
                   .pow(2)
                   .sum()
     return nj.sqrt(l2)
             .get(0)
   }
-
   public transformLandmarks(landmarks: number[][]): FacialLandmarkPoints[] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
