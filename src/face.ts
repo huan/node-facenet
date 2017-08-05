@@ -5,8 +5,8 @@ import * as nj from 'numjs'
 
 import { FaceImage } from './face-image'
 
-export type Point = [number, number]
-export type FacialLandmarkPoints = [Point, Point, Point, Point, Point]
+export type Point = [number, number]  // [x, y]
+export type FacialLandmarkPoints = [Point, Point, Point, Point, Point]  // [x1, y1, x2, y2, confidence]
 export type FaceEmbedding = nj.NdArray<number>  // 128 dim
 
 export interface BoundingBox {
@@ -14,7 +14,7 @@ export interface BoundingBox {
   x1:  number,
   x2:  number,
   y2:  number,
-  confidence?: number,
+  // confidence?: number,
 }
 
 export interface FacialLandmark {
@@ -32,6 +32,7 @@ export class Face {
 
   public facialLandmark:  FacialLandmark
   public boundingBox:     BoundingBox
+  public confidence:      number
 
   public get embedding(): FaceEmbedding {
     if (!this._embedding) {
@@ -64,8 +65,9 @@ export class Face {
     marks: FacialLandmarkPoints,  // Facial Landmark
     confidence: number,
   ): void {
-    this.parentImage = parentImage
-    this.box = box
+    this.box          = box
+    this.confidence   = confidence
+    this.parentImage  = parentImage
 
     this.facialLandmark = {
       leftEye:          marks[0],
@@ -75,17 +77,14 @@ export class Face {
       rightMouthCorner: marks[4],
     }
 
-    this.boundingBox = this.adjustBox(box, confidence)
+    this.boundingBox = this.adjustBox(box)
   }
 
   public toString(): string {
     return `Face<${this.parentImage.url}#${this.box.join(',')}#${this._embedding}`
   }
 
-  public adjustBox(
-    box: number[],
-    confidence: number,
-  ): BoundingBox {
+  public adjustBox(box: number[]): BoundingBox {
     let x1 = box[0]
     let y1 = box[1]
     let x2 = box[2]
@@ -120,10 +119,26 @@ export class Face {
       y1:  Math.round(y1),
       x2:  Math.round(x2),
       y2:  Math.round(y2),
-      confidence,
     }
 
     return boundingBox
+  }
+
+  public center(): Point {
+    const b = this.boundingBox
+    const x = (b.x2 - b.x1) / 2 + b.x1
+    const y = (b.y2 - b.y1) / 2 + b.y1
+    return [x, y]
+  }
+
+  public width(): number {
+    const b = this.boundingBox
+    return b.x2 - b.x1
+  }
+
+  public height(): number {
+    const b = this.boundingBox
+    return b.y2 - b.y1
   }
 
   public image(): FaceImage {

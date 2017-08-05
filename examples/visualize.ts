@@ -4,8 +4,10 @@ import * as gm      from 'gm'
 const printf        = require('printf')
 
 import {
+  Face,
   Facenet,
   FaceImage,
+  BoundingBox,
 }                   from '../'  // from 'facenet'
 
 async function main() {
@@ -16,6 +18,8 @@ async function main() {
     // Load image from file
     // const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
     const imageFile = `/home/zixia/Downloads/landing-twins-ricky-martin.jpg`
+    // const imageFile = `/home/zixia/Downloads/me-and-girls.jpg`
+    // const imageFile = '/datasets/facetest/friends-cast.jpg'
     const image = new FaceImage(imageFile)
 
     // Do Face Alignment, return faces
@@ -40,21 +44,31 @@ async function main() {
               )
     }
 
-    for (let row = 0; row < 3; row++) {
-      let line = Array(row + 2).join(
-        Array(5 + 1).join(' '),
-      )
-      for (let col = row + 1; col < 3; col++) {
-        const dist = await facenet.distance(
+    for (let row = 0; row < faceList.length; row++) {
+      for (let col = row + 1; col < faceList.length; col++) {
+        let dist = await facenet.distance(
           faceList[row].embedding,
           faceList[col].embedding,
         )
-        line += printf('%.2f ', dist)
+        dist = printf('%.2f ', dist)
+
+        const r = region(faceList[row], faceList[col])
+
+        // console.log(r)
+
+        // newImage.fill('none')
+        //         .stroke('green', 1)
+        //         .drawRectangle(r.x1, r.y1, r.x2, r.y2)
+
+        newImage.region(r.x2 - r.x1, r.y2 - r.y1, r.x1, r.y1)
+                .gravity('Center')
+                .fill('green')
+                .fontSize(30)
+                .drawText(0, 0, printf('Similarity: %.2f ', dist))
       }
-      log.info('DIST', line)
     }
 
-    const visualizeFile = '/tmp/facenet-visulize.jpg'
+    const visualizeFile = '/tmp/facenet-visulize.png'
     newImage.noProfile().write(visualizeFile, err => {
       if (err) {
         throw err
@@ -65,6 +79,39 @@ async function main() {
   } finally {
     facenet.quit()
   }
+}
+
+function region(f1: Face, f2: Face): BoundingBox {
+
+  const c1 = f1.center()
+  const c2 = f2.center()
+
+  let x1, y1, x2, y2
+
+  if (c1[0] < c2[0]) {
+    x1 = c1[0] + f1.width() / 2
+    x2 = c2[0] - f2.width() / 2
+  } else {
+    x1 = c2[0] + f2.width() / 2
+    x2 = c1[0] - f1.width() / 2
+  }
+
+  if (c1[1] < c2[1]) {
+    y1 = c1[1] + f1.height() / 2
+    y2 = c2[1] - f2.height() / 2
+  } else {
+    y1 = c2[1] + f2.height() / 2
+    y2 = c1[1] - f1.height() / 2
+  }
+
+  if (x1 > x2) {
+    [x1, x2] = [x2, x1]
+  }
+  if (y1 > y2) {
+    [y1, y2] = [y2, y1]
+  }
+
+  return {x1, x2, y1, y2}
 }
 
 // log.level('silly')
