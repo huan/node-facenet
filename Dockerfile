@@ -12,16 +12,6 @@ RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
       vim \
   && rm -rf /var/lib/apt/lists/*
 
-ENV PYTHON_FACENET /python-facenet
-RUN  mkdir "$PYTHON_FACENET" \
-  && cd "$PYTHON_FACENET" \
-  && git clone https://github.com/davidsandberg/facenet.git . \
-  && pip install \
-          h5py \
-          opencv-python \
-  && echo "Python Facenet Installed."
-ENV PYTHONPATH "$PYTHON_FACENET/src"
-
 # Open API Specification - https://www.openapis.org/
 RUN mkdir /oas
 WORKDIR /oas
@@ -32,5 +22,5 @@ COPY . .
 
 EXPOSE 80
 
-VOLUME [ "/facenet" ]
+VOLUME [ "/app" ]
 CMD [ "npm", "start" ]

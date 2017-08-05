@@ -18,33 +18,13 @@ TL;DR: Talk is cheap, show me the code!
 
 ### 1. Visualize
 
-#### Input Image
-
-img
-
-#### Output Image
-
-img
-
-#### Reproduce
+![FaceNet Visualize Demo]()
 
 ```shell
 $ git clone git@github.com:zixia/facenet.git
 $ cd facenet
 $ npm install
 $ npm run visualize
-```
-
-#### 1. Files
-
-```
-X(file1)  <-- 0.5 --> X(file2)
-   ^                    ^
-   |
-   1.1
-   |
-   v                    v
-Y(file1)  <-- 0.4 --> Y(file2)
 ```
 
 ### 2. Basic API Usage
@@ -82,13 +62,14 @@ $ cd facenet
 $ npm install
 $ npm run demo
 
-bounding box: { x1: 385,
+bounding box: {
+  x1: 385,
   y1: 95,
   x2: 564,
   y2: 324,
-  confidence: 0.9999637603759766 
 }
-landmarks: { leftEye: [ 441, 181 ],
+landmarks: {
+  leftEye: [ 441, 181 ],
   rightEye: [ 515, 208 ],
   nose: [ 459, 239 ],
   leftMouthCorner: [ 417, 262 ],
@@ -101,7 +82,6 @@ bounding box: {
   y1: 87,
   x2: 365,
   y2: 340,
-  confidence: 0.9998635053634644 
 }
 landmarks: { 
   leftEye: [ 230, 186 ],
@@ -264,21 +244,22 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 
 ## Todo
 
-1. [x] NPM Module: `facenet`
-1. [x] Docker Image: `zixia/facenet`
-1. [ ] Examples
-  1. [x] API Usage Demo
-  1. [ ] Triple Distance Visulization Demo
-  1. [ ] Performance Test(Align/Embedding/Batch)
-  1. [ ] Validation Test(LFW Accuracy)
-1. Neural Network Models
-  1. [x] Facenet
-  1. [x] Mtcnn
-  1. [ ] [Chinese Whispter](https://en.wikipedia.org/wiki/Chinese_Whispers_(clustering_method))
-  1. [ ] ~~Python `async` & `await`~~
-1. [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn/ChineseWhisper)
-1. [ ] TensorFlow Sereving
-1. [ ] OpenAPI Specification(Swagger)
+- [x] NPM Module: `facenet`
+- [x] Docker Image: `zixia/facenet`
+- [ ]Examples
+    - [x] API Usage Demo
+    - [ ] Triple Distance Visulization Demo
+    - [ ] Performance Test(Align/Embedding/Batch)
+    - [ ] Validation Test(LFW Accuracy)
+- [ ]Neural Network Models
+    - [x] Facenet
+    - [x] Mtcnn
+    - [ ] [Chinese Whispter](https://en.wikipedia.org/wiki/Chinese_Whispers_(clustering_method))
+    - [ ] Batch Support
+- [ ] ~~Python `async` & `await`~~
+- [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn/ChineseWhisper)
+- [ ] TensorFlow Sereving
+- [ ] OpenAPI Specification(Swagger)
 
 ## Inspiration
 

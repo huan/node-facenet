@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "FaceNet is for easy face recognition, verification, and clustering.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,7 +38,8 @@
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/*.py",
-    "postinstall": "npm run check-version && npm run venv && npm run download:facenet && npm run download:models",
+    "preinstall": "npm run check-version",
+    "postinstall": "npm run venv && npm run download:facenet && npm run download:models",
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run test:py && npm run test:ts",
     "test:ts": "tap --timeout=300 src/**/*.spec.ts tests/**/*.spec.ts",
