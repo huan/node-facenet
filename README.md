@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet)
 
-Easy face recognition, verification, and clustering.
+Easy face recognition, verification, and clustering for Node.js.
 
 <img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
 
