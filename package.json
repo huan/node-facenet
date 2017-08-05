@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "FaceNet is for easy face recognition, verification, and clustering.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
