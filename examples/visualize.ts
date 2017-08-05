@@ -16,10 +16,7 @@ async function main() {
 
   try {
     // Load image from file
-    // const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-    const imageFile = `/home/zixia/Downloads/landing-twins-ricky-martin.jpg`
-    // const imageFile = `/home/zixia/Downloads/me-and-girls.jpg`
-    // const imageFile = '/datasets/facetest/friends-cast.jpg'
+    const imageFile = `${__dirname}/../docs/images/landing-twins-ricky-martin.jpg`
     const image = new FaceImage(imageFile)
 
     // Do Face Alignment, return faces
@@ -63,13 +60,13 @@ async function main() {
         const c1 = faceList[row].center()
         const c2 = faceList[col].center()
 
-        newImage.region(image.width(), image.height())
-                .stroke('green', 1)
-                .fill('green')
+        newImage.region(image.width(), image.height(), 0, 0)
+                .stroke('none', 0)
+                .fill('grey')
                 .drawLine(c1.x, c1.y, c2.x, c2.y)
 
         newImage.region(r.p2.x - r.p1.x, r.p2.y - r.p1.y, r.p1.x, r.p1.y)
-                .gravity('center')
+                .gravity('Center')
                 .stroke('none', 0)
                 .fill('green')
                 .fontSize(20)
@@ -77,12 +74,12 @@ async function main() {
       }
     }
 
-    const visualizeFile = '/tmp/facenet-visulize.png'
+    const visualizeFile = 'facenet-visulized.jpg'
     newImage.noProfile().write(visualizeFile, err => {
       if (err) {
         throw err
       }
-      log.info('CLI', 'Saved aligned image to', visualizeFile)
+      log.info('CLI', 'Visualized image saved to: ', visualizeFile)
       log.info('CLI', 'Have a nice day!')
     })
   } finally {
