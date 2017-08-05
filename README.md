@@ -18,7 +18,10 @@ TL;DR: Talk is cheap, show me the code!
 
 ### 1. Visualize
 
-![FaceNet Visualize Demo]()
+![FaceNet Visualize Demo](https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg)
+
+1. Face is in the green rectangle.
+1. Similarity between faces showed as a number in the middle of line.
 
 ```shell
 $ git clone git@github.com:zixia/facenet.git
@@ -27,7 +30,7 @@ $ npm install
 $ npm run visualize
 ```
 
-### 2. Basic API Usage
+### 2. Basic API Demo
 
 ```ts
 import { Facenet, FaceImage } from 'facenet'
@@ -91,7 +94,6 @@ landmarks: {
   rightMouthCorner: [ 303, 281 ] 
 }
 embedding: array([ 0.05341,-0.08628, 0.01802, ..., 0.07718, 0.11645,-0.01623])
-
 ```
 
 ## Requirement
