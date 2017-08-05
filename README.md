@@ -4,7 +4,7 @@
 
 Easy face recognition, verification, and clustering for Node.js.
 
-<img src="https://zixia.github.io/facenet/images/facenet.jpg" alt="Google Facenet" width="30%">
+![Google Facenet](https://zixia.github.io/facenet/images/facenet.jpg)
 
 FaceNet is a deep convolutional network designed by Google, trained to solve face verification, recognition and clustering problem with efficiently at scale.
 
@@ -21,7 +21,7 @@ The follow examples will give you some intuitions for using the code.
 
 ### 1. Visualize for Intuition
 
-<img src="https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg" alt="FaceNet Visualization" width="100%">
+![FaceNet Visualization](https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg)
 
 1. Face is in the green rectangle.
 1. Similarity between faces showed as a number in the middle of line.
