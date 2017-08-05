@@ -14,23 +14,30 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 
 ## Example
 
-TL;DR: Talk is cheap, show me the code!
+The follow examples will give you some intuitions for using the code.
 
-### 1. Visualize
+1. **visualize** example will calculate the similarity between faces and draw them on the photo.
+1. **demo** exmaple will show you how to do `align` for face alignment and `embedding` to get face feature vector.
+
+### 1. Visualize for Intuition
 
 <img src="https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg" alt="FaceNet Visualization" width="100%">
 
 1. Face is in the green rectangle.
 1. Similarity between faces showed as a number in the middle of line.
+1. 0.73 is an experiential threshold for the distance, to identify if two faces belong to the same person.
 
 ```shell
 $ git clone git@github.com:zixia/facenet.git
 $ cd facenet
 $ npm install
 $ npm run visualize
+01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
 ```
 
-### 2. Basic API Demo
+### 2. Demo for API Usage
+
+TL;DR: Talk is cheap, show me the code!
 
 ```ts
 import { Facenet, FaceImage } from 'facenet'
