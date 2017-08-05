@@ -107,6 +107,7 @@ export class Facenet {
     return nj.sqrt(l2)
             .get(0)
   }
+
   public transformLandmarks(landmarks: number[][]): FacialLandmarkPoints[] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
