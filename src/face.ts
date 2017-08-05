@@ -75,17 +75,55 @@ export class Face {
       rightMouthCorner: marks[4],
     }
 
-    this.boundingBox = {
-      x1:  Math.round(box[0]),
-      y1:  Math.round(box[1]),
-      x2:  Math.round(box[2]),
-      y2:  Math.round(box[3]),
-      confidence,
-    }
+    this.boundingBox = this.adjustBox(box, confidence)
   }
 
   public toString(): string {
     return `Face<${this.parentImage.url}#${this.box.join(',')}#${this._embedding}`
+  }
+
+  public adjustBox(
+    box: number[],
+    confidence: number,
+  ): BoundingBox {
+    let x1 = box[0]
+    let y1 = box[1]
+    let x2 = box[2]
+    let y2 = box[3]
+
+    let width   = x2 - x1
+    let height  = y2 - y1
+
+    const halfDiff = Math.abs(width - height) / 2
+
+    if (width > height) {
+      y1 -= halfDiff
+      y2 += halfDiff
+      height = y2 - y1  // update
+    } else {
+      x1 -= halfDiff
+      x2 += halfDiff
+      width = x2 - x1   // update
+    }
+
+    // const margin = width / 10
+    // console.log('margin:', margin)
+
+    // x1 -= margin
+    // y1 -= margin
+
+    // x2 += margin
+    // y2 += margin
+
+    const boundingBox = {
+      x1:  Math.round(x1),
+      y1:  Math.round(y1),
+      x2:  Math.round(x2),
+      y2:  Math.round(y2),
+      confidence,
+    }
+
+    return boundingBox
   }
 
   public image(): FaceImage {

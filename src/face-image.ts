@@ -17,7 +17,7 @@ export class FaceImage {
       if (!this.url) {
         throw new Error('no url!')
       }
-      this._data = nj.images.read(this.url) as any as FaceImageData
+      this._data = nj.images.read(this.url) as FaceImageData
     }
     return this._data
   }
@@ -46,8 +46,16 @@ export class FaceImage {
 
   public resize(width: number, height: number): FaceImage {
     const [row, col] = [height, width]
-    const data = nj.images.resize(this.data as any, row, col) as any as FaceImageData
+    const data = nj.images.resize(this.data, row, col) as FaceImageData
     return new FaceImage(data)
+  }
+
+  public width(): number {
+    return this.data.shape[1] // cols
+  }
+
+  public height(): number {
+    return this.data.shape[1] // rows
   }
 
   public calcMd5(data: FaceImageData): string {
@@ -58,6 +66,6 @@ export class FaceImage {
   }
 
   public save(file: string): void {
-    nj.images.save(this.data as any, file)
+    nj.images.save(this.data, file)
   }
 }

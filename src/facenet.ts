@@ -1,5 +1,8 @@
-import { log }    from 'brolog'
-import * as nj    from 'numjs'
+import {
+  log,
+  // LogLevelName,
+}                         from 'brolog'
+import * as nj            from 'numjs'
 
 import {
   Face,
@@ -7,14 +10,18 @@ import {
   FacialLandmarkPoints,
 }                         from './face'
 import { FaceImage }      from './face-image'
+import { VERSION }        from './config'
 import { PythonFacenet }  from './python-facenet'
+
+// export interface FacenetOptions {
+//   log?: LogLevelName
+// }
 
 export class Facenet {
   private pythonFacenet: PythonFacenet
 
   constructor() {
-    // Do not put this.puthonFacenet initialization here,
-    // because it will force us to call quit() with init()
+    log.info('Facenet', `constructor() v${VERSION}`)
     this.pythonFacenet = new PythonFacenet()
   }
 
@@ -24,11 +31,17 @@ export class Facenet {
   }
 
   public async initFacenet(): Promise<void> {
+    log.info('Facenet', 'initFacenet()')
+    const start = Date.now()
     await this.pythonFacenet.initFacenet()
+    log.info('Facenet', 'initFacenet() cost %d milliseconds', Date.now() - start)
   }
 
   public async initMtcnn(): Promise<void> {
+    log.info('Facenet', 'initMtcnn()')
+    const start = Date.now()
     await this.pythonFacenet.initMtcnn()
+    log.info('Facenet', 'initMtcnn() cost %d milliseconds', Date.now() - start)
   }
 
   public async quit(): Promise<void> {
@@ -71,8 +84,12 @@ export class Facenet {
    * Get the 128 dims embeding from image(s)
    */
   public async embedding(face: Face): Promise<FaceEmbedding> {
-    const image = face.image()
-                    .resize(160, 160)
+    let image = face.image()
+    if (image.width() !== image.height()) {
+      throw new Error('should be a square image because facenet expected input image of 160x160')
+    }
+
+    image = image.resize(160, 160)
 
     const embedding = await this.pythonFacenet.embedding(image.data)
 
@@ -83,7 +100,21 @@ export class Facenet {
     return njEmbedding
   }
 
-  public distance(v1: FaceEmbedding, v2: FaceEmbedding): number {
+  public async distance(f1: Face, f2: Face): Promise<number> {
+    let v1, v2
+
+    try {
+      v1 = f1.embedding
+    } catch (e) {
+      v1 = await this.embedding(f1)
+    }
+
+    try {
+      v2 = f2.embedding
+    } catch (e) {
+      v2 = await this.embedding(f2)
+    }
+
     const l2 = v1.subtract(v2)
                   .pow(2)
                   .sum()
