@@ -18,7 +18,7 @@ TL;DR: Talk is cheap, show me the code!
 
 ### 1. Visualize
 
-![FaceNet Visualize Demo](https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg)
+<img src="https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg" alt="FaceNet Visualization" width="100%">
 
 1. Face is in the green rectangle.
 1. Similarity between faces showed as a number in the middle of line.
