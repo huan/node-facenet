@@ -52,25 +52,25 @@ async function main(args: Args) {
     for (const face of faceList) {
       const mark = face.facialLandmark
       const color = randomColor()
-      const box = face.boundingBox
-      const base = Math.floor((box.x2 - box.x1 + box.y2 - box.y1) / 50) + 1
+      const {p1, p2} = face.boundingBox
+      const base = Math.floor((p2.x - p1.x + p2.y - p1.y) / 50) + 1
       newImage.fill('none')
               .stroke(color, base * 1)
               .drawRectangle(
-                box.x1,
-                box.y1,
-                box.x2,
-                box.y2,
+                p1.x,
+                p1.y,
+                p2.x,
+                p2.y,
                 base * 5,
               )
 
       Object.keys(mark).forEach(k => {
-        const v = mark[k]
+        const p = mark[k]
         newImage.fill(color)
                 .stroke('none', 0)
                 .drawCircle(
-                  v[0], v[1],
-                  v[0] + base, v[1] + base,
+                  p.x, p.y,
+                  p.x + base, p.y + base,
                 )
       })
     }

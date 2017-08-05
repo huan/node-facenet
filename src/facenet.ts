@@ -7,7 +7,6 @@ import * as nj            from 'numjs'
 import {
   Face,
   FaceEmbedding,
-  FacialLandmarkPoints,
 }                         from './face'
 import { FaceImage }      from './face-image'
 import { VERSION }        from './config'
@@ -108,7 +107,7 @@ export class Facenet {
             .get(0)
   }
 
-  public transformLandmarks(landmarks: number[][]): FacialLandmarkPoints[] {
+  public transformLandmarks(landmarks: number[][]): number[][][] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
     const tLandmarks = nj.array(landmarks.reduce((a, b) => a.concat(b), []))
@@ -131,7 +130,7 @@ export class Facenet {
 
     const pairedLandmarks = xyLandmarks.reshape(faceNum, 5, 2) as nj.NdArray<number>
 
-    return pairedLandmarks.tolist() as any as FacialLandmarkPoints[]
+    return pairedLandmarks.tolist() as any as number[][][]
   }
 
 }

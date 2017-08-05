@@ -31,15 +31,15 @@ async function main() {
       await facenet.embedding(face)
 
       const color = 'green'
-      const box = face.boundingBox
-      const base = Math.floor((box.x2 - box.x1 + box.y2 - box.y1) / 50) + 1
+      const {p1, p2} = face.boundingBox
+      const base = Math.floor((p2.x - p1.x + p2.y - p1.y) / 50) + 1
       newImage.fill('none')
               .stroke(color, base * 1)
               .drawRectangle(
-                box.x1,
-                box.y1,
-                box.x2,
-                box.y2,
+                p1.x,
+                p1.y,
+                p2.x,
+                p2.y,
                 base * 5,
               )
     }
@@ -60,11 +60,20 @@ async function main() {
         //         .stroke('green', 1)
         //         .drawRectangle(r.x1, r.y1, r.x2, r.y2)
 
-        newImage.region(r.x2 - r.x1, r.y2 - r.y1, r.x1, r.y1)
-                .gravity('Center')
+        const c1 = faceList[row].center()
+        const c2 = faceList[col].center()
+
+        newImage.region(image.width(), image.height())
+                .stroke('green', 1)
                 .fill('green')
-                .fontSize(30)
-                .drawText(0, 0, printf('Similarity: %.2f ', dist))
+                .drawLine(c1.x, c1.y, c2.x, c2.y)
+
+        newImage.region(r.p2.x - r.p1.x, r.p2.y - r.p1.y, r.p1.x, r.p1.y)
+                .gravity('center')
+                .stroke('none', 0)
+                .fill('green')
+                .fontSize(20)
+                .drawText(0, 0, printf('%.2f ', dist))
       }
     }
 
@@ -88,20 +97,20 @@ function region(f1: Face, f2: Face): BoundingBox {
 
   let x1, y1, x2, y2
 
-  if (c1[0] < c2[0]) {
-    x1 = c1[0] + f1.width() / 2
-    x2 = c2[0] - f2.width() / 2
+  if (c1.x < c2.x) {
+    x1 = c1.x + f1.width() / 2
+    x2 = c2.x - f2.width() / 2
   } else {
-    x1 = c2[0] + f2.width() / 2
-    x2 = c1[0] - f1.width() / 2
+    x1 = c2.x + f2.width() / 2
+    x2 = c1.x - f1.width() / 2
   }
 
-  if (c1[1] < c2[1]) {
-    y1 = c1[1] + f1.height() / 2
-    y2 = c2[1] - f2.height() / 2
+  if (c1.y < c2.y) {
+    y1 = c1.y + f1.height() / 2
+    y2 = c2.y - f2.height() / 2
   } else {
-    y1 = c2[1] + f2.height() / 2
-    y2 = c1[1] - f1.height() / 2
+    y1 = c2.y + f2.height() / 2
+    y2 = c1.y - f1.height() / 2
   }
 
   if (x1 > x2) {
@@ -111,7 +120,20 @@ function region(f1: Face, f2: Face): BoundingBox {
     [y1, y2] = [y2, y1]
   }
 
-  return {x1, x2, y1, y2}
+  const p1 = {
+    x: x1,
+    y: y1,
+  }
+
+  const p2 = {
+    x: x2,
+    y: y2,
+  }
+
+  return {
+    p1,
+    p2,
+  }
 }
 
 // log.level('silly')
