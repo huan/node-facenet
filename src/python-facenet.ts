@@ -1,13 +1,15 @@
 import * as path            from 'path'
 
-import { log }   from 'brolog'
 import * as nj   from 'numjs'
 import {
   pythonBridge,
   PythonBridge,
 }                from 'python-bridge'
 
-import { MODULE_ROOT }  from './config'
+import {
+  log,
+  MODULE_ROOT,
+}                 from './config'
 
 export type BoundingBox = [
   number, number, number, number, // x1, y1, x2, y2

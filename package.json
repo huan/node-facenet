@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "argparse": "^1.0.9",
-    "brolog": "^1.1.34",
-    "numjs": "^0.14.2",
-    "python-bridge": "^1.0.3"
+    "argparse": "1.0.9",
+    "brolog": "1.1.34",
+    "numjs": "0.14.2",
+    "python-bridge": "1.0.3"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.30",

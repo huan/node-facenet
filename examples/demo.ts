@@ -1,10 +1,10 @@
 #!/usr/bin/env ts-node
 import * as assert  from 'assert'
-import { log }      from 'brolog'
 
 import {
   Facenet,
   FaceImage,
+  log,
 }                   from '../'  // from 'facenet'
 
 async function main() {

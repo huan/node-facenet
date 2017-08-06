@@ -1,4 +1,7 @@
-import { VERSION }          from './src/config'
+import {
+  log,
+  VERSION,
+}                           from './src/config'
 import { Facenet }          from './src/facenet'
 import {
   BoundingBox,
@@ -12,6 +15,7 @@ export {
   Face,
   FaceImage,
   Facenet,
+  log,
   PythonFacenet,
   VERSION,
 }

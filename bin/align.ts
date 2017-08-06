@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-import { log }            from 'brolog'
-log.level('silly')
 
 import { ArgumentParser } from 'argparse'
 import * as gm from 'gm'
@@ -8,8 +6,10 @@ import * as gm from 'gm'
 import {
   Facenet,
   FaceImage,
+  log,
   VERSION,
 }                         from '../'
+log.level('silly')
 
 function randomColor(): string {
   const hexStr = ['r', 'g', 'b'].map(_ => {
@@ -64,7 +64,7 @@ async function main(args: Args) {
                 base * 5,
               )
 
-      Object.keys(mark).forEach(k => {
+      Object.keys(mark).forEach((k) => {
         const p = mark[k]
         newImage.fill(color)
                 .stroke('none', 0)

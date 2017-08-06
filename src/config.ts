@@ -1,8 +1,12 @@
-import * as path from 'path'
+import * as path  from 'path'
 
-export function parentDirectory(): string {
-  const parentDir = __dirname.split(path.sep) // [... 'node_modules', 'facenet', 'dist', 'src']
-                              .slice(-2, -1)[0]     // 'dist'
+import { Brolog } from 'brolog'
+
+export const log = new Brolog()
+
+export function parentDirectory(): string {     // export for test
+  const parentDir = __dirname.split(path.sep)   // [... 'node_modules', 'facenet', 'dist', 'src']
+                              .slice(-2, -1)[0] // 'dist'
   return parentDir
 }
 

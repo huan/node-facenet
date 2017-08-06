@@ -1,13 +1,13 @@
 #!/usr/bin/env ts-node
-import { log }      from 'brolog'
 import * as gm      from 'gm'
 const printf        = require('printf')
 
 import {
+  BoundingBox,
   Face,
   Facenet,
   FaceImage,
-  BoundingBox,
+  log,
 }                   from '../'  // from 'facenet'
 
 async function main() {

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { ArgumentParser } from 'argparse'
-import { log }            from 'brolog'
 
 import {
   Facenet,
   FaceImage,
+  log,
   VERSION,
 }                         from '../'
 

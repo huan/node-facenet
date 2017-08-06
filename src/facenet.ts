@@ -1,7 +1,4 @@
-import {
-  log,
-  // LogLevelName,
-}                         from 'brolog'
+
 import * as nj            from 'numjs'
 
 import {
@@ -9,7 +6,10 @@ import {
   FaceEmbedding,
 }                         from './face'
 import { FaceImage }      from './face-image'
-import { VERSION }        from './config'
+import {
+  log,
+  VERSION,
+}                         from './config'
 import { PythonFacenet }  from './python-facenet'
 
 // export interface FacenetOptions {
