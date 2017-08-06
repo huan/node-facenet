@@ -1,10 +1,8 @@
 # FaceNet
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/zixia/facenet.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
-[![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet)
-
-Easy face recognition, verification, and clustering for Node.js.
+Easy face recognition, verification, and clustering for JavaScript/Node.js.
 
 ![Google Facenet](https://zixia.github.io/facenet/images/facenet.jpg)
 
@@ -14,14 +12,14 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
 
-## Example
+# Example
 
 The follow examples will give you some intuitions for using the code.
 
 1. **visualize** example will calculate the similarity between faces and draw them on the photo.
 1. **demo** exmaple will show you how to do `align` for face alignment and `embedding` to get face feature vector.
 
-### 1. Visualize for Intuition
+## 1. Visualize for Intuition
 
 ![FaceNet Visualization](https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg)
 
@@ -33,11 +31,12 @@ The follow examples will give you some intuitions for using the code.
 $ git clone git@github.com:zixia/facenet.git
 $ cd facenet
 $ npm install
-$ npm run visualize
+$ npm run example:visualize
+
 01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
 ```
 
-### 2. Demo for API Usage
+## 2. Demo for API Usage
 
 TL;DR: Talk is cheap, show me the code!
 
@@ -72,7 +71,7 @@ Try it by run:
 $ git clone git@github.com:zixia/facenet.git
 $ cd facenet
 $ npm install
-$ npm run demo
+$ npm run example:demo
 
 image file: /home/zixia/git/facenet/examples/../tests/fixtures/two-faces.jpg
 face file: 1-1.jpg
@@ -104,21 +103,26 @@ landmarks: {
 embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
 ```
 
-## Requirement
+# Install & Requirement
 
-### OS
+```shell
+$ npm install facenet
+```
 
-Now I'm developing under Ubuntu 17.04
+## OS
 
-Should support all platforms including Linux/Mac/Win32 in the future version.
+Supported:
+- [x] Linux
+- [x] Mac
+- [ ] Windows
 
-### Dependency
+## Dependency
 
-1. Node.js >= 6 (**8** is recommend)
+1. Node.js >= 7 (**8** is recommend)
 1. Tensorflow >= 1.2
 1. Python >=3.5 (**3.6** is recommend)
 
-### Ram
+## Ram
 
 | Neural Network Model | Task                |  Ram  |
 | ---                  | ---                 |  ---  |
@@ -129,9 +133,9 @@ If you are dealing with very large images(like 3000x3000 pixels), there will nee
 
 So I believe that Facenet will need at least 2GB memory, and >=4GB is recommended.
 
-## API
+# API
 
-### 1. Facenet
+## Facenet
 
 ```ts
 import { Facenet } from 'facenet'
@@ -140,15 +144,15 @@ const facenet = new Facenet()
 facenet.quit()
 ```
 
-#### 1. Facenet#align(image: FaceImage): Promise<Face[]>
+### 1. Facenet#align(image: FaceImage): Promise<Face[]>
 
 Do face alignment for the image, return a list of faces.
 
-#### 2. Facenet#embedding(face: Face): Promise<FaceEmbedding>
+### 2. Facenet#embedding(face: Face): Promise\<FaceEmbedding\>
 
 Get the embedding for a face.
 
-### 2. Face
+## Face
 
 Get the 128 dim embedding vector for this face.(After alignment)
 
@@ -162,7 +166,7 @@ console.log('embedding:',     face.embedding)
 face.image.save('/tmp/face.jpg')
 ```
 
-### 3. FaceImage
+## FaceImage
 
 ```ts
 import { FaceImage } from 'facenet'
@@ -172,9 +176,9 @@ image.resize(160, 160)
 image.save('/tmp/image.jpg')
 ```
 
-## Environment Variables
+# Environment Variables
 
-### FACENET_MODEL
+## FACENET_MODEL
 
 FaceNet neural network model files, set to other version of model as you like.
 
@@ -191,20 +195,25 @@ model-20170512-110547.ckpt-250000.data-00000-of-00001
 model-20170512-110547.meta
 ```
 
-## Develop
+# Docker
+
+[![Docker Pulls](https://img.shields.io/docker/pulls/zixia/facenet.svg?maxAge=2592000)](https://hub.docker.com/r/zixia/facenet/) [![Docker Stars](https://img.shields.io/docker/stars/zixia/facenet.svg?maxAge=2592000)](https://hub.docker.com/r/zixia/facenet/) [![Docker Layers](https://images.microbadger.com/badges/image/zixia/facenet.svg)](https://microbadger.com/#/images/zixia/facenet)
+
+# Develop
+
+[![Issue Stats](http://issuestats.com/github/zixia/facenet/badge/pr)](http://issuestats.com/github/zixia/facenet) [![Issue Stats](http://issuestats.com/github/zixia/facenet/badge/issue)](http://issuestats.com/github/zixia/facenet) [![Coverage Status](https://coveralls.io/repos/github/zixia/facenet/badge.svg?branch=master)](https://coveralls.io/github/zixia/facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/facenet.svg)](https://greenkeeper.io/)
 
 ```shell
 $ git clone git@github.com:zixia/facenet.git
 $ cd facenet
 $ npm install
 $ npm test
-$ npm run demo
 ```
 
-## Command Line Interface
+# Command Line Interface
 
 
-### align
+## align
 
 Draw a rectangle with five landmarks on all faces in the input\_image, save it to output\_image.
 
@@ -212,7 +221,7 @@ Draw a rectangle with five landmarks on all faces in the input\_image, save it t
 $ ./node_modules/.bin/ts-node bin/align.ts input_image output_image
 ```
 
-### embedding
+## embedding
 
 Output the 128 dim embedding vector of the face image.
 
@@ -221,9 +230,9 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 ```
 
 
-## Resources
+# Resources
 
-### Machine Learning
+## Machine Learning
 * [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
 * [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 * [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
@@ -231,7 +240,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 * [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
 * [Average Face : OpenCV ( C++ / Python ) Tutorial](https://www.learnopencv.com/average-face-opencv-c-python-tutorial/) 
 
-### Python
+## Python
 
 * [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 * [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
@@ -239,29 +248,29 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 * [PEP 8 - Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
 * [Python 3.6 venv — Creation of virtual environments](https://docs.python.org/3.6/library/venv.html)
 
-#### Typing
+### 1. Typing
 
 * [Mypy syntax cheat sheet (Python 3)](mypy.readthedocs.io/en/latest/cheat_sheet_py3.html)
 * [Python 3 Type Hints and Static Analysis](https://code.tutsplus.com/tutorials/python-3-type-hints-and-static-analysis--cms-25731)
 * [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
 
-#### NumJS
+### 1. NumJS
 
 * [Stackoverflow: numpy-like package for node](https://stackoverflow.com/questions/31412537/numpy-like-package-for-node)
 * [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
 * [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
 * [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
 
-## Todo
+# Todo
 
 - [x] NPM Module: `facenet`
 - [x] Docker Image: `zixia/facenet`
-- [ ]Examples
+- [ ] Examples
     - [x] API Usage Demo
     - [ ] Triple Distance Visulization Demo
     - [ ] Performance Test(Align/Embedding/Batch)
     - [ ] Validation Test(LFW Accuracy)
-- [ ]Neural Network Models
+- [ ] Neural Network Models
     - [x] Facenet
     - [x] Mtcnn
     - [ ] [Chinese Whispter](https://en.wikipedia.org/wiki/Chinese_Whispers_(clustering_method))
@@ -271,29 +280,41 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 - [ ] TensorFlow Sereving
 - [ ] OpenAPI Specification(Swagger)
 
-## Inspiration
+# Inspiration
 
 This repository is heavily inspired by the following implementations:
 
 * [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
 * [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
 
-## Credits
+# Credits
 
 1. Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
 1. Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
 1. TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
-Author
-------
+# Contribute
+
+## FaceNet Badge
+
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/facenet)
+
+```markdown
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/facenet)
+```
+
+# Author
+
 Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
+
+I'm an active angel investor, serial entrepreneur with strong technical background and rich social network experience.
 
 <a href="http://stackoverflow.com/users/1123955/zixia">
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
 </a>
 
-Copyright & License
--------------------
+# Copyright & License
+
 * Code & Docs © 2017 Huan LI \<zixia@zixia.net\>
 * Code released under the Apache-2.0 License
 * Docs released under Creative Commons
