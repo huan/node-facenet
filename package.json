@@ -7,7 +7,6 @@
   "dependencies": {
     "argparse": "^1.0.9",
     "brolog": "^1.1.34",
-    "gm": "^1.23.0",
     "numjs": "^0.14.2",
     "python-bridge": "^1.0.3"
   },
@@ -17,6 +16,7 @@
     "@types/node": "^8.0.15",
     "@types/numjs": "^0.14.1",
     "@types/printf": "^0.2.0",
+    "gm": "^1.23.0",
     "nyc": "^11.1.0",
     "printf": "^0.2.5",
     "shx": "^0.2.2",
@@ -29,10 +29,11 @@
     "check-version": "./bin/check-version.sh",
     "clean": "shx rm -fr dist/*",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "demo": "ts-node examples/demo.ts",
     "dist": "npm run clean && tsc && shx cp src/*.py dist/src/",
     "download:facenet": " cd python3 && git clone https://github.com/davidsandberg/facenet.git && cd -",
     "download:models": "mkdir models && cd models && curl -L https://github.com/zixia/facenet/releases/download/v0.1.9/model-20170512.tar.bz2 | tar jxv && cd -",
+    "example:demo": "ts-node examples/demo.ts",
+    "example:visualize": "ts-node examples/visualize",
     "lint": "npm run lint:ts && npm run lint:py",
     "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
@@ -45,8 +46,7 @@
     "test:ts": "tap --timeout=300 src/**/*.spec.ts tests/**/*.spec.ts",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
     "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/facenet-smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node facenet-smoke-testing.js",
-    "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt",
-    "visualize": "ts-node examples/visualize"
+    "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt"
   },
   "repository": {
     "type": "git",
@@ -85,5 +85,8 @@
       "PYTHON_FACENET_MODEL_PATH": "models/",
       "PYTHON_FACENET_MODEL_URL": "https://github.com/zixia/facenet/releases/download/v0.1.9/model-20170512.tar.bz2"
     }
+  },
+  "engines": {
+    "node": ">= 7"
   }
 }
