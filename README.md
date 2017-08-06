@@ -24,8 +24,8 @@ The follow examples will give you some intuitions for using the code.
 ![FaceNet Visualization](https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg)
 
 1. Face is in the green rectangle.
-1. Similarity between faces showed as a number in the middle of line.
-1. To identify if two faces belong to the same person, we could use an experiential threshold for the distance: 0.73.
+1. Similarity(distance) between faces showed as a number in the middle of the line.
+1. To identify if two faces belong to the same person, we could use an experiential threshold of distance: 0.73.
 
 ```shell
 $ git clone git@github.com:zixia/facenet.git
@@ -267,7 +267,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 - [x] Docker Image: `zixia/facenet`
 - [ ] Examples
     - [x] API Usage Demo
-    - [ ] Triple Distance Visulization Demo
+    - [x] Triple Distance Visulization Demo
     - [ ] Performance Test(Align/Embedding/Batch)
     - [ ] Validation Test(LFW Accuracy)
 - [ ] Neural Network Models

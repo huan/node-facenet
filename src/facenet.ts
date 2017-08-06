@@ -85,24 +85,26 @@ export class Facenet {
   public async embedding(face: Face): Promise<FaceEmbedding> {
     let image = face.image()
     if (image.width() !== image.height()) {
-      throw new Error('should be a square image because facenet expected input image of 160x160')
+      throw new Error('should be a square image because it will be resized to 160x160')
     }
 
-    image = image.resize(160, 160)
+    if (image.width() !== 160) {
+      image = image.resize(160, 160)
+    }
 
     const embedding = await this.pythonFacenet.embedding(image.data)
 
-    const njEmbedding =  nj.array(embedding)
     // Set embedding to face
-    face.embedding = njEmbedding
+    face.embedding =  nj.array(embedding)
 
-    return njEmbedding
+    return face.embedding
   }
 
   public distance(v1: nj.NdArray<number>, v2: nj.NdArray<number>): number {
     const l2 = v1.subtract(v2)
                   .pow(2)
                   .sum()
+
     return nj.sqrt(l2)
             .get(0)
   }

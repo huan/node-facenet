@@ -1,12 +1,15 @@
 {
     "typescript.tsdk": "./node_modules/typescript/lib"
   , "files.exclude": {
-      "node_modules/": true
-    , "dist/": true
-    , "package/": true
+      ".cache/": true
+    , ".mypy_cache/": true
     , ".vscode/.ropeproject/": true
     , "**/*.py[cod]": true
-    , ".mypy_cache/": true
+    , "dist/": true
+    , "models/": true
+    , "node_modules/": true
+    , "package/": true
+    , "python3": true
   }
   , "python.pythonPath": "python3"
   , "python.linting.enabled": true

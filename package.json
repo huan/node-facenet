@@ -43,7 +43,7 @@
     "postinstall": "npm run venv && npm run download:facenet && npm run download:models",
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run test:py && npm run test:ts",
-    "test:ts": "tap --timeout=300 src/**/*.spec.ts tests/**/*.spec.ts",
+    "test:ts": "tap --timeout=600 src/**/*.spec.ts tests/**/*.spec.ts",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
     "test:npm": "export TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/facenet-smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node facenet-smoke-testing.js",
     "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt"
@@ -55,10 +55,17 @@
   "keywords": [
     "facenet",
     "openface",
+    "deepface",
     "face",
     "recognition",
     "verification",
-    "clustering"
+    "clustering",
+    "machine",
+    "deep",
+    "learning",
+    "neural",
+    "network",
+    "tensorflow"
   ],
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
