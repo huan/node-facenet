@@ -69,7 +69,16 @@ class FacenetBridge(object):
         # pylint: disable=not-context-manager
         with self.graph.as_default():
             with self.session.as_default():
-                facenet.load_model(self.FACENET_MODEL)
+                model_dir = os.path.expanduser(self.FACENET_MODEL)
+                meta_file, ckpt_file = facenet.get_model_filenames(model_dir)
+                saver = tf.train.import_meta_graph(
+                    os.path.join(model_dir, meta_file),
+                )
+                saver.restore(
+                    tf.get_default_session(),
+                    os.path.join(model_dir, ckpt_file),
+                )
+                # facenet.load_model(self.FACENET_MODEL)
 
         self.placeholder_input = self.graph.get_tensor_by_name('input:0')
         self.placeholder_phase_train = \
