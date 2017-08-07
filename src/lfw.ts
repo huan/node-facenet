@@ -3,13 +3,15 @@ import * as http        from 'http'
 import * as path        from 'path'
 import * as readline    from 'readline'
 
-import * as tar         from 'tar'
+const tar = require('tar')
 import printf = require('printf')
 
 import {
   log,
   MODULE_ROOT,
 }                         from './config'
+
+export type LfwPair = [string, string, boolean] // image1, image2, isSame
 
 /**
  * https://github.com/davidsandberg/facenet/wiki/Validate-on-LFW
@@ -19,8 +21,9 @@ export class Lfw {
 
   private downloadUrl = 'http://vis-www.cs.umass.edu/lfw/lfw.tgz'
 
-  private lfwFile:    string
-  private lfwDir:     string
+  private tgzFile:        string
+  private extractDir:     string
+  private pairListCache:  LfwPair[]
 
   constructor(
     directory?: string,
@@ -28,39 +31,45 @@ export class Lfw {
     log.verbose('Lfw', 'constructor(%s)', directory)
 
     this.rootDir    = directory || path.join(MODULE_ROOT, 'lfw')
-    this.lfwFile    = path.join(this.rootDir, 'lfw.tgz')
-    this.lfwDir     = path.join(this.rootDir, 'raw')
+    this.tgzFile    = path.join(this.rootDir, 'lfw.tgz')
+    this.extractDir = path.join(this.rootDir, 'raw')
   }
 
   public async init(): Promise<void> {
     log.verbose('Lfw', 'init()')
 
     if (!fs.existsSync(this.rootDir)) {
+      log.silly('Lfw', 'init() creating rootDir %s', this.rootDir)
       fs.mkdirSync(this.rootDir)
     }
 
-    this.download()
-    this.extract()
+    await this.download()
+    await this.extract()
   }
 
   public async download(): Promise<void> {
     log.verbose('Lfw', 'download()')
     // https://stackoverflow.com/a/22793628/1123955
 
-    const filename  = path.join(this.rootDir, 'lfw.tgz')
-    const tmpname   = filename + '.tmp'
+    const tmpname   = this.tgzFile + '.tmp'
 
-    if (fs.existsSync(filename)) {
+    if (fs.existsSync(this.tgzFile)) {
+      log.silly('Lfw', 'download() %s already downloaded', this.tgzFile)
       return
     }
 
     return new Promise<void>((resolve, reject) => {
       const file = fs.createWriteStream(tmpname)
-      http.get(this.downloadUrl, function(response) {
+      http.get(this.downloadUrl, response => {
+        log.verbose('Lfw', 'download() start downloading... ')
+        response.on('readable', () => {
+          process.stdout.write('.')
+        })
         response.pipe(file)
         file.on('finish', () => {
+          log.silly('Lfw', 'download() finished')
           file.close()
-          fs.rename(tmpname, filename, err => {
+          fs.rename(tmpname, this.tgzFile, err => {
             if (err) {
               reject(err)
             } else {
@@ -77,23 +86,33 @@ export class Lfw {
   public async extract(): Promise<void> {
     log.verbose('Lfw', 'extract()')
 
-    const tarExtractor = tar.Extract({
+    const tarExtractor = tar.x({
       strip:  1,
-      path:   this.lfwDir,
+      cwd:   this.extractDir,
     })
 
-    fs.createReadStream(this.lfwFile)
+    fs.createReadStream(this.tgzFile)
       .pipe(tarExtractor)
 
     return new Promise<void>((resolve, reject) => {
-      tarExtractor.on('finish', () => resolve())
+      tarExtractor.on('finish', () => {
+        log.silly('Lfw', 'extract() finished')
+        resolve()
+      })
       tarExtractor.on('error', reject)
     })
   }
 
-  public async pairList(): Promise<[string, string, boolean][]> {
+  public async pairList(): Promise<LfwPair[]> {
+    log.verbose('Lfw', 'pairList()')
+
+    if (this.pairListCache && this.pairListCache.length) {
+      log.silly('Lfw', 'pairList() return cached list')
+      return this.pairListCache
+    }
+    this.pairListCache = []
+
     const pairsTxt = path.join(MODULE_ROOT, 'python3/facenet/data/pairs.txt')
-    const pairArr: [string, string, boolean][] = []
 /*
 10	300
 Abel_Pacheco	1	4
@@ -107,8 +126,11 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
       terminal: false,
     })
 
-    rl.on('line', function(line) {
-      console.log('Line: ' + line)
+    rl.on('line', line => {
+      if (this.pairListCache.length % 1000 === 0) {
+        log.silly('Lfw', 'pairList() loading %d ...', this.pairListCache.length)
+      }
+
       let pair: [string, string, boolean]
 
       let id1: string,
@@ -150,11 +172,14 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
           return
       }
 
-      pairArr.push(pair)
+      this.pairListCache.push(pair)
     })
 
-    return new Promise<[string, string, boolean][]>((resolve, reject) => {
-      rl.on('close', () => resolve(pairArr))
+    return new Promise<LfwPair[]>((resolve, reject) => {
+      rl.on('close', () => {
+        log.silly('Lfw', 'pairList() fully loaded: %d pairs', this.pairListCache.length)
+        resolve(this.pairListCache)
+      })
       rl.on('error', reject)
     })
   }

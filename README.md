@@ -261,6 +261,10 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 * [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
 * [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
 
+## Dataset
+
+1. [LFW - Labeled Faces in the Wild](http://vis-www.cs.umass.edu/lfw/)
+
 # Todo
 
 - [x] NPM Module: `facenet`
