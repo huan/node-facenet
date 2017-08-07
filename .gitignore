@@ -133,3 +133,4 @@ python3/
 models/
 
 /*.jpg
+/lfw/

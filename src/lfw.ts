@@ -3,8 +3,9 @@ import * as http        from 'http'
 import * as path        from 'path'
 import * as readline    from 'readline'
 
-const tar = require('tar')
-import printf = require('printf')
+import * as glob        from 'glob'
+const tar             = require('tar')
+import printf         = require('printf')
 
 import {
   log,
@@ -12,6 +13,10 @@ import {
 }                         from './config'
 
 export type LfwPair = [string, string, boolean] // image1, image2, isSame
+
+export interface IdImageListMap {
+  [id: string]: string[]
+}
 
 /**
  * https://github.com/davidsandberg/facenet/wiki/Validate-on-LFW
@@ -24,6 +29,7 @@ export class Lfw {
   private tgzFile:        string
   private extractDir:     string
   private pairListCache:  LfwPair[]
+  private _dataset: IdImageListMap
 
   constructor(
     directory?: string,
@@ -42,24 +48,28 @@ export class Lfw {
       log.silly('Lfw', 'init() creating rootDir %s', this.rootDir)
       fs.mkdirSync(this.rootDir)
     }
+    if (!fs.existsSync(this.extractDir)) {
+      log.silly('Lfw', 'init() creating extractDir %s', this.extractDir)
+      fs.mkdirSync(this.extractDir)
+    }
 
     await this.download()
     await this.extract()
   }
 
   public async download(): Promise<void> {
-    log.verbose('Lfw', 'download()')
-    // https://stackoverflow.com/a/22793628/1123955
-
-    const tmpname   = this.tgzFile + '.tmp'
+    log.verbose('Lfw', 'download() to %s', this.rootDir)
 
     if (fs.existsSync(this.tgzFile)) {
       log.silly('Lfw', 'download() %s already downloaded', this.tgzFile)
       return
     }
 
+    const tmpname   = this.tgzFile + '.tmp'
+    const file = fs.createWriteStream(tmpname)
+
     return new Promise<void>((resolve, reject) => {
-      const file = fs.createWriteStream(tmpname)
+      // https://stackoverflow.com/a/22793628/1123955
       http.get(this.downloadUrl, response => {
         log.verbose('Lfw', 'download() start downloading... ')
         response.on('readable', () => {
@@ -67,6 +77,7 @@ export class Lfw {
         })
         response.pipe(file)
         file.on('finish', () => {
+          process.stdout.write('\n')
           log.silly('Lfw', 'download() finished')
           file.close()
           fs.rename(tmpname, this.tgzFile, err => {
@@ -84,11 +95,18 @@ export class Lfw {
   }
 
   public async extract(): Promise<void> {
-    log.verbose('Lfw', 'extract()')
+    log.verbose('Lfw', 'extract() to %s', this.extractDir)
+
+    if (fs.existsSync(this.extractDir)) {
+      log.silly('Lfw', 'extract() directory already exists(extracted)')
+      return
+    }
+
+    const tmpdir = this.extractDir + '.tmp'
 
     const tarExtractor = tar.x({
       strip:  1,
-      cwd:   this.extractDir,
+      cwd:   tmpdir,
     })
 
     fs.createReadStream(this.tgzFile)
@@ -96,8 +114,13 @@ export class Lfw {
 
     return new Promise<void>((resolve, reject) => {
       tarExtractor.on('finish', () => {
-        log.silly('Lfw', 'extract() finished')
-        resolve()
+        fs.rename(tmpdir, this.extractDir, err => {
+          if (err) {
+            return reject(err)
+          }
+          log.silly('Lfw', 'extract() finished')
+          return resolve()
+        })
       })
       tarExtractor.on('error', reject)
     })
@@ -127,10 +150,6 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
     })
 
     rl.on('line', line => {
-      if (this.pairListCache.length % 1000 === 0) {
-        log.silly('Lfw', 'pairList() loading %d ...', this.pairListCache.length)
-      }
-
       let pair: [string, string, boolean]
 
       let id1: string,
@@ -143,16 +162,22 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
           same: boolean
 
       const arr = line.split('\t')
+      if (arr.length === 2) {
+        return
+      }
+
+      if (this.pairListCache.length % 1000 === 0) {
+        log.silly('Lfw', 'pairList() loading %d ...', this.pairListCache.length)
+      }
+
       switch (arr.length) {
-        case 2:
-          return
         case 3:
           id1 = arr[0]
           num1 = arr[1]
           num2 = arr[2]
 
-          file1 = printf('%s/%4d', id1, num1)
-          file2 = printf('%s/%4d', id1, num2)
+          file1 = filename(id1, num1)
+          file2 = filename(id1, num2)
           same = true
           pair = [file1, file2, same]
           break
@@ -162,14 +187,18 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
           id2   = arr[2]
           num2  = arr[3]
 
-          file1 = printf('%s/%4d', id1, num1)
-          file2 = printf('%s/%4d', id2, num2)
+          file1 = filename(id1, num1)
+          file2 = filename(id2, num2)
           same = false
           pair = [file1, file2, same]
           break
         default:
           log.error('Lfw', 'pairList() got arr.length: %d', arr.length)
           return
+      }
+
+      function filename(id: string, num: string) {
+        return printf('%s/%s_%04d.jpg', id, id, num)
       }
 
       this.pairListCache.push(pair)
@@ -184,4 +213,30 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
     })
   }
 
+  public async dataset(): Promise<IdImageListMap> {
+    if (this._dataset) {
+      return this._dataset
+    }
+
+    this._dataset = {}
+
+    return new Promise<IdImageListMap>((resolve, reject) => {
+      glob(`${this.extractDir}/**/*.jpg`, (err, matches) => {
+        if (err) {
+          reject(err)
+        }
+        matches.forEach(fullPath => {
+          const parts = fullPath.split(path.sep)
+          const [id, image] = parts.slice(-2)
+
+          if (Array.isArray(this._dataset[id])) {
+            this._dataset[id].push(image)
+          } else {
+            this._dataset[id] = [image]
+          }
+        })
+        resolve(this._dataset)
+      })
+    })
+  }
 }

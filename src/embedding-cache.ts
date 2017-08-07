@@ -59,6 +59,10 @@ export class EmbeddingCache {
     })
   }
 
+  public clean() {
+    fs.unlinkSync(this.dbFile)
+  }
+
   public async embedding(relativePath: string): Promise<FaceEmbedding>
   public async embedding(relativePath: string, embedding: FaceEmbedding): Promise<void>
 

@@ -7,6 +7,7 @@
   "dependencies": {
     "argparse": "1.0.9",
     "brolog": "1.1.34",
+    "glob": "^7.1.2",
     "levelup": "^1.3.9",
     "numjs": "0.14.2",
     "python-bridge": "1.0.3",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "@types/argparse": "^1.0.30",
+    "@types/glob": "^5.0.30",
     "@types/gm": "^1.17.31",
     "@types/leveldown": "^1.7.0",
     "@types/levelup": "0.0.30",

@@ -14,15 +14,33 @@ async function main(args: Args): Promise<number> {
 
   let ret = 0
   switch (args.command) {
+    case 'dataset':
+      await lfw.init()
+      const dataset = await lfw.dataset()
+      const keys = Object.keys(dataset)
+      for (let i = 0; i < 10; i++) {
+        log.info('LfwManager', 'dataset: %s has %d images: %s',
+                                keys[i],
+                                dataset[keys[i]].length,
+                                dataset[keys[i]].join(','),
+                )
+      }
+      break
     case 'init':
       await lfw.init()
+      log.info('LfwManager', 'init done')
       break
     case 'pairs':
       const pairList = await lfw.pairList()
-      log.info('LfwCli', 'pairList: %s', pairList[0])
+      const sameNum = pairList.filter(p => p[2]).length
+      log.info('LfwManager', 'pairList: total %d, same %d, not-same %d',
+                              pairList.length,
+                              sameNum,
+                              pairList.length - sameNum,
+              )
       break
     default:
-      log.error('LfwCli', 'not supported command: %s', args.command)
+      log.error('LfwManager', 'not supported command: %s', args.command)
       ret = 1
       break
   }
@@ -61,7 +79,7 @@ function parseArguments(): Args {
     [ '-l', '--log' ],
     {
       help: 'Log Level: verbose, silly',
-      defaultValue: 'warn',
+      defaultValue: 'info',
     },
   )
 
