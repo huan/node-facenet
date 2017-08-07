@@ -4,6 +4,8 @@
 import * as crypto  from 'crypto'
 import * as nj      from 'numjs'
 
+import { Face }     from './face'
+
 export type FaceImageData = nj.NdArray<Uint8Array>
 
 export class FaceImage {
@@ -67,5 +69,16 @@ export class FaceImage {
 
   public save(file: string): void {
     nj.images.save(this.data, file)
+  }
+
+  public asFace(): Face {
+    const face = new Face()
+    face.init(
+      this,
+      [0, 0, this.width(), this.height()],
+      [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
+      1,
+    )
+    return face
   }
 }

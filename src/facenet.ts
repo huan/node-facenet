@@ -136,3 +136,7 @@ export class Facenet {
   }
 
 }
+
+export {
+  FaceEmbedding,
+}
