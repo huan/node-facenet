@@ -52,7 +52,7 @@ export class Facenet {
    * @param image
    */
   public async align(image: FaceImage): Promise<Face[]> {
-    log.verbose('Facenet', 'align()')
+    log.verbose('Facenet', 'align(%d)', image.id)
 
     log.silly('Facenet', 'align() pythonFacenet.align(data) ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(image.data)
@@ -83,6 +83,8 @@ export class Facenet {
    * Get the 128 dims embeding from image(s)
    */
   public async embedding(face: Face): Promise<FaceEmbedding> {
+    log.verbose('Facenet', 'embedding(%d)', face.id)
+
     let image = face.image()
     if (image.width() !== image.height()) {
       throw new Error('should be a square image because it will be resized to 160x160')

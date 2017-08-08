@@ -25,6 +25,7 @@ main() {
   node::version
   echo
   python::version
+  echo
 }
 
 main "$@"

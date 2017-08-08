@@ -156,7 +156,9 @@ export class PythonFacenet {
   public async embedding(image: nj.NdArray<Uint8Array>): Promise<number[]> {
     log.verbose('PythonFacenet', 'embedding(%s)', image.shape)
 
-    await this.initFacenet()
+    if (!this.facenetInited) {
+      await this.initFacenet()
+    }
 
     const [row, col, depth] = image.shape
     const base64Text = this.image_to_base64(image)
