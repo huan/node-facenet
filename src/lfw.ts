@@ -3,54 +3,42 @@ import * as http        from 'http'
 import * as path        from 'path'
 import * as readline    from 'readline'
 
-import * as glob        from 'glob'
-const tar             = require('tar')
+import mkdirp         = require('mkdirp')
 import printf         = require('printf')
+const tar             = require('tar')
 
 import {
   log,
   MODULE_ROOT,
 }                         from './config'
+import { Dataset }        from './dataset'
 
 export type LfwPair = [string, string, boolean] // image1, image2, isSame
-
-export interface IdImageListMap {
-  [id: string]: string[]
-}
 
 /**
  * https://github.com/davidsandberg/facenet/wiki/Validate-on-LFW
  */
-export class Lfw {
-  public rootDir:    string
-
+export class Lfw extends Dataset {
   private downloadUrl = 'http://vis-www.cs.umass.edu/lfw/lfw.tgz'
-
-  private tgzFile:        string
-  private extractDir:     string
+  private downloadFile:   string
   private pairListCache:  LfwPair[]
-  private _dataset: IdImageListMap
 
   constructor(
-    directory?: string,
+    directory: string,
+    ext = 'jpg',
   ) {
-    log.verbose('Lfw', 'constructor(%s)', directory)
+    super(directory, ext)
+    log.verbose('Lfw', 'constructor()')
 
-    this.rootDir    = directory || path.join(MODULE_ROOT, 'lfw')
-    this.tgzFile    = path.join(this.rootDir, 'lfw.tgz')
-    this.extractDir = path.join(this.rootDir, 'raw')
+    this.downloadFile = path.join(directory, 'lfw.tgz')
   }
 
-  public async init(): Promise<void> {
-    log.verbose('Lfw', 'init()')
+  public async setup(): Promise<void> {
+    log.verbose('Lfw', 'setup()')
 
-    if (!fs.existsSync(this.rootDir)) {
-      log.silly('Lfw', 'init() creating rootDir %s', this.rootDir)
-      fs.mkdirSync(this.rootDir)
-    }
-    if (!fs.existsSync(this.extractDir)) {
-      log.silly('Lfw', 'init() creating extractDir %s', this.extractDir)
-      fs.mkdirSync(this.extractDir)
+    if (!fs.existsSync(this.directory)) {
+      log.silly('Lfw', 'setup() creating directory %s', this.directory)
+      mkdirp.sync(this.directory)
     }
 
     await this.download()
@@ -58,20 +46,20 @@ export class Lfw {
   }
 
   public async download(): Promise<void> {
-    log.verbose('Lfw', 'download() to %s', this.rootDir)
+    log.verbose('Lfw', 'download() to %s', this.directory)
 
-    if (fs.existsSync(this.tgzFile)) {
-      log.silly('Lfw', 'download() %s already downloaded', this.tgzFile)
+    if (fs.existsSync(this.downloadFile)) {
+      log.silly('Lfw', 'download() %s already downloaded', this.downloadFile)
       return
     }
 
-    const tmpname   = this.tgzFile + '.tmp'
+    const tmpname   = this.downloadFile + '.tmp'
     const file = fs.createWriteStream(tmpname)
 
     return new Promise<void>((resolve, reject) => {
       // https://stackoverflow.com/a/22793628/1123955
       http.get(this.downloadUrl, response => {
-        log.verbose('Lfw', 'download() start downloading... ')
+        log.verbose('Lfw', 'download() start... ')
         response.on('readable', () => {
           process.stdout.write('.')
         })
@@ -80,7 +68,7 @@ export class Lfw {
           process.stdout.write('\n')
           log.silly('Lfw', 'download() finished')
           file.close()
-          fs.rename(tmpname, this.tgzFile, err => {
+          fs.rename(tmpname, this.downloadFile, err => {
             if (err) {
               reject(err)
             } else {
@@ -95,35 +83,21 @@ export class Lfw {
   }
 
   public async extract(): Promise<void> {
-    log.verbose('Lfw', 'extract() to %s', this.extractDir)
+    log.verbose('Lfw', 'extract()')
 
-    if (fs.existsSync(this.extractDir)) {
-      log.silly('Lfw', 'extract() directory already exists(extracted)')
+    const EXTRACTED_MARK_FILE = path.join(this.directory, 'EXTRACTED')
+    if (fs.existsSync(EXTRACTED_MARK_FILE)) {
+      log.silly('Lfw', 'extract() already extracted')
       return
     }
 
-    const tmpdir = this.extractDir + '.tmp'
-
-    const tarExtractor = tar.x({
+    await tar.x({
+      file:   this.downloadFile,
       strip:  1,
-      cwd:   tmpdir,
+      cwd:    this.directory,
     })
 
-    fs.createReadStream(this.tgzFile)
-      .pipe(tarExtractor)
-
-    return new Promise<void>((resolve, reject) => {
-      tarExtractor.on('finish', () => {
-        fs.rename(tmpdir, this.extractDir, err => {
-          if (err) {
-            return reject(err)
-          }
-          log.silly('Lfw', 'extract() finished')
-          return resolve()
-        })
-      })
-      tarExtractor.on('error', reject)
-    })
+    fs.closeSync(fs.openSync(EXTRACTED_MARK_FILE, 'w')) // touch the file
   }
 
   public async pairList(): Promise<LfwPair[]> {
@@ -210,33 +184,6 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
         resolve(this.pairListCache)
       })
       rl.on('error', reject)
-    })
-  }
-
-  public async dataset(): Promise<IdImageListMap> {
-    if (this._dataset) {
-      return this._dataset
-    }
-
-    this._dataset = {}
-
-    return new Promise<IdImageListMap>((resolve, reject) => {
-      glob(`${this.extractDir}/**/*.jpg`, (err, matches) => {
-        if (err) {
-          reject(err)
-        }
-        matches.forEach(fullPath => {
-          const parts = fullPath.split(path.sep)
-          const [id, image] = parts.slice(-2)
-
-          if (Array.isArray(this._dataset[id])) {
-            this._dataset[id].push(image)
-          } else {
-            this._dataset[id] = [image]
-          }
-        })
-        resolve(this._dataset)
-      })
     })
   }
 }

@@ -5,6 +5,7 @@
     , ".mypy_cache/": true
     , ".vscode/.ropeproject/": true
     , "**/*.py[cod]": true
+    , "**/__pycache__/": true
     , "dist/": true
     , "models/": true
     , "node_modules/": true

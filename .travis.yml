@@ -39,7 +39,7 @@ notifications:
     on_failure: change
 
 after_success:
-  - npm run coverage
+  - npm run test:coverage
 
 before_deploy:
   - npm version

@@ -26,6 +26,16 @@ export interface FacialLandmark {
   rightMouthCorner: Point,
 }
 
+export interface FaceJsonObject {
+  id:             number,
+  facialLandmark: FacialLandmark,
+  boundingBox:    BoundingBox,
+  confidence:     number,
+  _embedding:     FaceEmbedding,
+  parentImageUrl: string,
+  box:            number[],
+}
+
 export class Face {
   public static id = 0
   public id: number
@@ -57,6 +67,45 @@ export class Face {
 
   constructor() {
     this.id = ++Face.id
+  }
+
+  public toJSON(): FaceJsonObject {
+    const {
+      id,
+      facialLandmark,
+      boundingBox,
+      confidence,
+      _embedding,
+      parentImage,
+      box,
+    } = this
+
+    const parentImageUrl = parentImage.url
+
+    return {
+      id,
+      facialLandmark,
+      boundingBox,
+      confidence,
+      _embedding,
+      parentImageUrl,
+      box,
+    }
+  }
+
+  public static fromJSON(obj: FaceJsonObject): Face {
+    const face = new Face()
+    face.id             = obj.id
+    face.facialLandmark = obj.facialLandmark
+    face.boundingBox    = obj.boundingBox
+    face.confidence     = obj.confidence
+    face._embedding     = obj._embedding
+    face.box            = obj.box
+
+    const image = new FaceImage(obj.parentImageUrl)
+    face.parentImage    = image
+
+    return face
   }
 
   public init(

@@ -9,7 +9,6 @@ import { Dataset }  from './dataset'
 
 const DIRECTORY = `${__dirname}/../tests/fixtures/dataset`
 
-
 class DatasetTest extends Dataset {
   public async setup(): Promise<void> {
     //

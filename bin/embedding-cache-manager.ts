@@ -4,7 +4,7 @@ import * as path          from 'path'
 import { ArgumentParser } from 'argparse'
 
 import {
-  Dataset,
+  Lfw,
   EmbeddingCache,
   Facenet,
   log,
@@ -22,7 +22,7 @@ async function main(args: Args): Promise<number> {
   }
 
   const facenet = new Facenet()
-  const dataset = new Dataset(directory)
+  const lfw = new Lfw(directory)
 
   const cache = new EmbeddingCache(facenet, directory)
   cache.init()
@@ -32,7 +32,7 @@ async function main(args: Args): Promise<number> {
   let ret = 0
   switch (args.command) {
     case 'calc':
-      const imageList = await dataset.imageList()
+      const imageList = await lfw.imageList()
       for (const file of imageList) {
         await cache.embedding(file)
       }

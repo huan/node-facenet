@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
+import * as path          from 'path'
+
 import { ArgumentParser } from 'argparse'
 
 import {
   Lfw,
   log,
+  MODULE_ROOT,
   VERSION,
 }                         from '../'
 
@@ -15,19 +18,19 @@ async function main(args: Args): Promise<number> {
   let ret = 0
   switch (args.command) {
     case 'dataset':
-      await lfw.init()
-      const dataset = await lfw.dataset()
-      const keys = Object.keys(dataset)
+      await lfw.setup()
+      const idImageList = await lfw.idImageList()
+      const keys = Object.keys(idImageList)
       for (let i = 0; i < 10; i++) {
         log.info('LfwManager', 'dataset: %s has %d images: %s',
                                 keys[i],
-                                dataset[keys[i]].length,
-                                dataset[keys[i]].join(','),
+                                idImageList[keys[i]].length,
+                                idImageList[keys[i]].join(','),
                 )
       }
       break
-    case 'init':
-      await lfw.init()
+    case 'setup':
+      await lfw.setup()
       log.info('LfwManager', 'init done')
       break
     case 'pairs':
@@ -72,6 +75,7 @@ function parseArguments(): Args {
     [ '-d', '--directory' ],
     {
       help: 'LFW Dataset Directory',
+      defaultValue: path.join(MODULE_ROOT, 'datasets', 'lfw'),
     },
   )
 

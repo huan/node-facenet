@@ -23,18 +23,18 @@ export class EmbeddingCache {
   private cacheData: EmbeddingCacheData
 
   constructor(
-    public facenet: Facenet,
-    public rootDir: string,
+    public facenet:     Facenet,
+    public datasetDir:  string,
   ) {
-    log.verbose('EmbeddingCache', 'constructor(%s)', rootDir)
-    this.dbPath = path.join(rootDir, 'embedding.db')
+    log.verbose('EmbeddingCache', 'constructor(%s)', datasetDir)
+    this.dbPath = path.join(datasetDir, 'embedding.db')
   }
 
   public init(): void {
     log.verbose('EmbeddingCache', 'init()')
 
-    if (!fs.existsSync(this.rootDir)) {
-      throw new Error(`directory not exist: ${this.rootDir}`)
+    if (!fs.existsSync(this.datasetDir)) {
+      throw new Error(`directory not exist: ${this.datasetDir}`)
     }
 
     this.db = levelup(this.dbPath, {
@@ -136,7 +136,7 @@ export class EmbeddingCache {
       return v
     }
 
-    const fullPathName = path.join(this.rootDir, relativePath)
+    const fullPathName = path.join(this.datasetDir, relativePath)
     const image = new FaceImage(fullPathName)
     const face: Face  = image.asFace()
 

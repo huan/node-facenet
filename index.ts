@@ -1,5 +1,6 @@
 export {
   log,
+  MODULE_ROOT,
   VERSION,
 }                           from './src/config'
 export { Dataset }          from './src/dataset'

@@ -49,7 +49,7 @@
     "example:demo": "ts-node examples/demo.ts",
     "example:visualize": "ts-node examples/visualize",
     "lint": "npm run lint:ts && npm run lint:py",
-    "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean && tsc --noEmit",
+    "lint:ts": "tslint --project tsconfig.json --type-check && npm run dist:clean && tsc --noEmit",
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/*.py",
