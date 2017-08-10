@@ -1,10 +1,10 @@
 /**
  *
  */
-import * as crypto  from 'crypto'
 import * as nj      from 'numjs'
 
 import { Face }     from './face'
+import { md5 }      from './misc'
 
 export type FaceImageData = nj.NdArray<Uint8Array>
 
@@ -25,7 +25,7 @@ export class FaceImage {
   }
   public set data(image: FaceImageData) {
     this._data = image
-    this.url    = this.calcMd5(image)
+    this.url    = md5(image)
   }
   private _data: FaceImageData
 
@@ -43,7 +43,7 @@ export class FaceImage {
   }
 
   public toString(): string {
-    return `Image<${this.url}>`
+    return `Image#${this.id}<${this.url}>`
   }
 
   public resize(width: number, height: number): FaceImage {
@@ -58,13 +58,6 @@ export class FaceImage {
 
   public height(): number {
     return this.data.shape[1] // rows
-  }
-
-  public calcMd5(data: FaceImageData): string {
-    return crypto
-            .createHash('md5')
-            .update(new Buffer(data.tolist()))
-            .digest('hex')
   }
 
   public save(file: string): void {

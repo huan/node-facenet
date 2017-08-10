@@ -6,6 +6,7 @@
     , ".vscode/.ropeproject/": true
     , "**/*.py[cod]": true
     , "**/__pycache__/": true
+    , "datasets/": true
     , "dist/": true
     , "models/": true
     , "node_modules/": true

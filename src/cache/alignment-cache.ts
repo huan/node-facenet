@@ -1,7 +1,6 @@
 import * as fs          from 'fs'
 import * as path        from 'path'
 
-import * as levelup     from 'levelup'
 import * as rimraf      from 'rimraf'
 
 import {
@@ -9,15 +8,21 @@ import {
   FaceEmbedding,
 }                       from '../facenet'
 import { FaceImage }    from '../face-image'
-import { Face }         from '../face'
+import {
+  Face,
+  FaceJsonObject,
+}                       from '../face'
 import { log }          from '../config'
+
+import { DbCache }      from './db-cache'
 
 export interface AlignmentCacheData {
   [key: string]: FaceEmbedding,
 }
 
 export class AlignmentCache {
-  public alignmentPath:  string
+  public alignmentPath: string
+  public db:            DbCache
 
   constructor(
     public facenet: Facenet,
@@ -30,6 +35,8 @@ export class AlignmentCache {
   public init(): void {
     log.verbose('AlignmentCache', 'init()')
 
+    this.db = new DbCache(this.alignmentPath)
+
     if (!fs.existsSync(this.datasetDir)) {
       throw new Error(`directory not exist: ${this.datasetDir}`)
     }
@@ -40,35 +47,29 @@ export class AlignmentCache {
 
   public async clean(): Promise<void> {
     log.verbose('AlignmentCache', 'clean()')
+    await this.db.clean()
     rimraf.sync(this.alignmentPath)
   }
 
-  public async align(relativePath: string): Promise<FaceEmbedding>
-  public async align(relativePath: string, align: Facealign): Promise<void>
+  public async align(faceImage: FaceImage): Promise<Face[]> {
+    log.verbose('AlignmentCache', 'align(%s)', faceImage)
 
-  public async align(
-    relativePath: string,
-  ): Promise<FaceEmbedding | void> {
-    log.verbose('AlignmentCache', 'embedding(%s, %s)', relativePath, embedding)
+    let faceList: Face[] = []
 
-    if (embedding) {
-      await this.dbPut(relativePath, embedding)
-      return
+    const obj = await this.db.get(faceImage.url) as FaceJsonObject[]
+    if (obj) {
+      log.silly('AlignmentCache', 'align() db HIT')
+      for (const faceObj of obj) {
+        faceList.push(Face.fromJSON(faceObj))
+      }
+      return faceList
+    } else {
+      log.silly('AlignmentCache', 'align() db MISS')
+
+      faceList = await this.facenet.align(faceImage)
+      await this.db.put(faceImage.url, faceList)  // Face.toJSON()
     }
 
-    const v = await this.dbGet(relativePath)
-    if (v) {
-      log.silly('AlignmentCache', 'embedding() cache HIT')
-      return v
-    }
-
-    const fullPathName = path.join(this.datasetDir, relativePath)
-    const image = new FaceImage(fullPathName)
-    const face: Face  = image.asFace()
-
-    await this.facenet.embedding(face)
-    await this.dbPut(relativePath, face.embedding)
-    log.silly('AlignmentCache', 'embedding() cache MISS')
-    return face.embedding
+    return faceList
   }
 }

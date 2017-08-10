@@ -198,6 +198,7 @@ export class PythonFacenet {
   /**
    * Deal with big file(e.g. 4000 x 4000 JPEG)
    * the following method will cause NODEJS HEAP MEMORY OUT(>1.5GB)
+   * https://github.com/nicolaspanel/numjs/issues/21#issuecomment-319301957
    *
    * MEMORY OUT 1: image.flatten()
    * MEMORY OUT 2: [].concat.apply([], arrays);

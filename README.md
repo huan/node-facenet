@@ -120,7 +120,7 @@ Supported:
 
 1. Node.js >= 7 (**8** is recommend)
 1. Tensorflow >= 1.2
-1. Python >=3.5 (**3.6** is recommend)
+1. Python3 >=3.5 (**3.6** is recommend)
 
 ## Ram
 
@@ -240,7 +240,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 * [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
 * [Average Face : OpenCV ( C++ / Python ) Tutorial](https://www.learnopencv.com/average-face-opencv-c-python-tutorial/) 
 
-## Python
+## Python3
 
 * [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 * [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
@@ -279,7 +279,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
     - [x] Mtcnn
     - [ ] [Chinese Whispter](https://en.wikipedia.org/wiki/Chinese_Whispers_(clustering_method))
     - [ ] Batch Support
-- [ ] ~~Python `async` & `await`~~
+- [ ] ~~Python3 `async` & `await`~~
 - [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn/ChineseWhisper)
 - [ ] TensorFlow Sereving
 - [ ] OpenAPI Specification(Swagger)

@@ -27,7 +27,6 @@ export interface FacialLandmark {
 }
 
 export interface FaceJsonObject {
-  id:             number,
   facialLandmark: FacialLandmark,
   boundingBox:    BoundingBox,
   confidence:     number,
@@ -71,7 +70,6 @@ export class Face {
 
   public toJSON(): FaceJsonObject {
     const {
-      id,
       facialLandmark,
       boundingBox,
       confidence,
@@ -83,7 +81,6 @@ export class Face {
     const parentImageUrl = parentImage.url
 
     return {
-      id,
       facialLandmark,
       boundingBox,
       confidence,
@@ -93,9 +90,13 @@ export class Face {
     }
   }
 
-  public static fromJSON(obj: FaceJsonObject): Face {
+  public static fromJSON(obj: FaceJsonObject | string): Face {
+    if (typeof obj === 'string') {
+      obj = JSON.parse(obj) as FaceJsonObject
+    }
+
     const face = new Face()
-    face.id             = obj.id
+    face.id             = ++Face.id
     face.facialLandmark = obj.facialLandmark
     face.boundingBox    = obj.boundingBox
     face.confidence     = obj.confidence
@@ -151,7 +152,7 @@ export class Face {
   }
 
   public toString(): string {
-    return `Face<${this.parentImage.url}#${this.box.join(',')}#${this._embedding}`
+    return `Face#${this.id}<${this.parentImage.url}#${this.box.join(',')}#${this._embedding}`
   }
 
   public adjustBox(box: number[]): BoundingBox {

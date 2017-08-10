@@ -41,8 +41,6 @@ export class EmbeddingCache {
     })
   }
 
-
-
   public async embedding(relativePath: string): Promise<FaceEmbedding>
   public async embedding(relativePath: string, embedding: FaceEmbedding): Promise<void>
 
