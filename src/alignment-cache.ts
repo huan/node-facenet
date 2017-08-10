@@ -7,10 +7,10 @@ import * as rimraf      from 'rimraf'
 import {
   Facenet,
   FaceEmbedding,
-}                       from './facenet'
-import { FaceImage }    from './face-image'
-import { Face }         from './face'
-import { log }          from './config'
+}                       from '../facenet'
+import { FaceImage }    from '../face-image'
+import { Face }         from '../face'
+import { log }          from '../config'
 
 export interface AlignmentCacheData {
   [key: string]: FaceEmbedding,
