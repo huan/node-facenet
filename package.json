@@ -1,7 +1,7 @@
 {
   "name": "facenet",
   "version": "0.1.58",
-  "description": "FaceNet is for easy face recognition, verification, and clustering.",
+  "description": "node-facenet is a Python/TensorFlow backed FaceNet implementation for Node.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
@@ -49,14 +49,14 @@
     "example:demo": "ts-node examples/demo.ts",
     "example:visualize": "ts-node examples/visualize",
     "lint": "npm run lint:ts && npm run lint:py",
-    "lint:ts": "tslint --project tsconfig.json --type-check && npm run dist:clean && tsc --noEmit",
+    "lint:ts": "tslint --project tsconfig.json --type-check && npm run clean:dist && tsc --noEmit",
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/*.py",
     "preinstall": "npm run check-version",
     "postinstall": "npm run venv && npm run postinstall:facenet && npm run postinstall:models",
     "postinstall:facenet": "cd python3 && if [ -d facenet ]; then (cd facenet && git pull); else git clone https://github.com/davidsandberg/facenet.git; fi && cd -",
-    "postinstall:models": "set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/zixia/facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -",
+    "postinstall:models": "set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -",
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run test:py && npm run test:ts",
     "test:coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -67,7 +67,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zixia/facenet.git"
+    "url": "git+https://github.com/zixia/node-facenet.git"
   },
   "keywords": [
     "facenet",
@@ -87,9 +87,9 @@
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zixia/facenet/issues"
+    "url": "https://github.com/zixia/node-facenet/issues"
   },
-  "homepage": "https://github.com/zixia/facenet#readme",
+  "homepage": "https://github.com/zixia/node-facenet#readme",
   "files": [
     "CHANGELOG",
     "LICENSE",
@@ -107,7 +107,7 @@
   "facenet": {
     "env": {
       "PYTHON_FACENET_MODEL_PATH": "models/",
-      "PYTHON_FACENET_MODEL_URL": "https://github.com/zixia/facenet/releases/download/v0.1.9/model-20170512.tar.bz2"
+      "PYTHON_FACENET_MODEL_URL": "https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2"
     }
   },
   "engines": {

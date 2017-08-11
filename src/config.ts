@@ -16,3 +16,5 @@ export const MODULE_ROOT = parentDirectory() === 'dist'
 
 const packageFile = path.join(MODULE_ROOT, 'package.json')
 export const VERSION = require(packageFile).version
+
+export type FaceEmbedding = nj.NdArray<number>  // 128 dim

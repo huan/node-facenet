@@ -65,10 +65,13 @@ export class FaceImage {
   }
 
   public asFace(): Face {
-    const face = new Face()
+    const imageData = new ImageData(
+      (this.data as any).selection.data,
+      this.width(),
+      this.height(),
+    )
+    const face = new Face(imageData, [0, 0, this.width(), this.height()])
     face.init(
-      this,
-      [0, 0, this.width(), this.height()],
       [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
       1,
     )

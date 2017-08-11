@@ -11,11 +11,11 @@ import {
   MODULE_ROOT,
 }                 from './config'
 
-export type BoundingBox = [
+export type BoundingFiveNumber = [
   number, number, number, number, // x1, y1, x2, y2
   number                          // confidence
 ]
-export type Landmark = number[]
+export type LandmarkMatrix = number[][] // A 10 rows vector, each col is for a face.
 
 export class PythonFacenet {
   public python3: PythonBridge
@@ -128,15 +128,17 @@ export class PythonFacenet {
    *
    * @param image
    */
-  public async align(image: nj.NdArray<Uint8Array>): Promise<[BoundingBox[], Landmark[]]> {
+    public async align(
+    image: nj.NdArray<Uint8Array>,
+  ): Promise<[BoundingFiveNumber[], LandmarkMatrix]> {
     log.verbose('PythonFacenet', 'align(%s)', image.shape)
     await this.initMtcnn()
 
     const [row, col, depth] = image.shape
     const base64Text = this.image_to_base64(image)
 
-    let boundingBoxes: BoundingBox[]
-    let landmarks: Landmark[]
+    let boundingBoxes: BoundingFiveNumber[]
+    let landmarks: LandmarkMatrix
 
     const start = Date.now();
     [boundingBoxes, landmarks] = await this.python3

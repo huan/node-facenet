@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
-Easy face recognition, verification, and clustering in JavaScript/Node.js.
+node-facenet is a Python/TensorFlow backed FaceNet implementation for Node.js.
 
 ![Google Facenet](https://zixia.github.io/facenet/images/facenet.jpg)
 
@@ -306,6 +306,20 @@ This repository is heavily inspired by the following implementations:
 ```markdown
 [![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/facenet)
 ```
+
+# Changelog
+
+## v0.2/master
+
+1. Dataset: LFW manager utility
+1. AlignmentCache & EmbeddingCache class and manager utility
+
+## v0.1 Jul 2017
+
+1. `npm run demo` to visuliaze the face alignment and distance(embedding) in a three people photo.
+1. Facenet.align() to do face alignment
+1. Facenet.embedding() to calculate the 128 dim feature vector of face
+1. Initial workable version
 
 # Author
 

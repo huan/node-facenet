@@ -4,10 +4,10 @@ export {
   VERSION,
 }                           from './src/config'
 export { Dataset }          from './src/dataset'
-export { EmbeddingCache }   from './src/embedding-cache'
+export { EmbeddingCache }   from './src/cache/embedding-cache'
 export { Facenet }          from './src/facenet'
 export {
-  BoundingBox,
+  Rectangle,
   Face,
 }                           from './src/face'
 export { FaceImage }        from './src/face-image'

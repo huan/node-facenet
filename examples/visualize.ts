@@ -3,7 +3,7 @@ import * as gm      from 'gm'
 const printf        = require('printf')
 
 import {
-  BoundingBox,
+  Rectangle,
   Face,
   Facenet,
   FaceImage,
@@ -28,15 +28,15 @@ async function main() {
       await facenet.embedding(face)
 
       const color = 'green'
-      const {p1, p2} = face.boundingBox
-      const base = Math.floor((p2.x - p1.x + p2.y - p1.y) / 50) + 1
+      const {x, y, w, h} = face.boundingBox
+      const base = Math.floor((w + h) / 50) + 1
       newImage.fill('none')
               .stroke(color, base * 1)
               .drawRectangle(
-                p1.x,
-                p1.y,
-                p2.x,
-                p2.y,
+                x,
+                y,
+                x + w,
+                y + h,
                 base * 5,
               )
     }
@@ -65,7 +65,7 @@ async function main() {
                 .fill('grey')
                 .drawLine(c1.x, c1.y, c2.x, c2.y)
 
-        newImage.region(r.p2.x - r.p1.x, r.p2.y - r.p1.y, r.p1.x, r.p1.y)
+        newImage.region(r.w, r.h, r.x, r.y)
                 .gravity('Center')
                 .stroke('none', 0)
                 .fill('green')
@@ -87,7 +87,7 @@ async function main() {
   }
 }
 
-function region(f1: Face, f2: Face): BoundingBox {
+function region(f1: Face, f2: Face): Rectangle {
 
   const c1 = f1.center()
   const c2 = f2.center()
@@ -117,19 +117,11 @@ function region(f1: Face, f2: Face): BoundingBox {
     [y1, y2] = [y2, y1]
   }
 
-  const p1 = {
+  return {
     x: x1,
     y: y1,
-  }
-
-  const p2 = {
-    x: x2,
-    y: y2,
-  }
-
-  return {
-    p1,
-    p2,
+    w: x2 - x1,
+    h: y2 - y1,
   }
 }
 

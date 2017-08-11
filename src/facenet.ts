@@ -3,14 +3,16 @@ import * as nj            from 'numjs'
 
 import {
   Face,
-  FaceEmbedding,
 }                         from './face'
 import { FaceImage }      from './face-image'
 import {
+  FaceEmbedding,
   log,
   VERSION,
 }                         from './config'
-import { PythonFacenet }  from './python-facenet'
+import {
+  PythonFacenet,
+}                         from './python-facenet'
 
 // export interface FacenetOptions {
 //   log?: LogLevelName
@@ -44,6 +46,7 @@ export class Facenet {
   }
 
   public async quit(): Promise<void> {
+    log.info('Facenet', 'quit()')
     await this.pythonFacenet.quit()
   }
 
@@ -62,17 +65,19 @@ export class Facenet {
 
     const faceList: Face[] = []
     for (const i in boundingBoxes) {
-      const box = boundingBoxes[i]
-      const confidence = box[4]
+      const boundingBox = boundingBoxes[i]
+      const confidence = boundingBox[4]
       const marks = xyLandmarks[i]
 
-      const face = new Face()
-      face.init(
-        image,
-        box,
-        marks,
-        confidence,
+      const imageData = new ImageData(
+        (image.data as any).selection.data as Uint8ClampedArray,
+        image.width(),
+        image.height(),
       )
+      const face = new Face(imageData, boundingBox)
+      face.init(marks, confidence)
+      // face.confidence(confidence)
+      // face.landmarks(marks)
       faceList.push(face)
     }
 

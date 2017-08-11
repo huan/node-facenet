@@ -27,7 +27,7 @@ async function main(args: Args): Promise<number> {
   const cache = new EmbeddingCache(facenet, directory)
   cache.init()
 
-  const count = await cache.dbCount()
+  const count = await cache.count()
 
   let ret = 0
   switch (args.command) {

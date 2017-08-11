@@ -25,7 +25,7 @@ async function main() {
       assert(face.embedding === embedding,
             'Save embedding to face. Also return it for convenience')
 
-      const faceFile = `${face.parentImage.id}-${face.id}.jpg`
+      const faceFile = `${face.id}.jpg`
       face.image().save(faceFile)
 
       console.log('image file:',    imageFile)

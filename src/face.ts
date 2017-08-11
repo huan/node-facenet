@@ -3,18 +3,25 @@
  */
 import * as nj from 'numjs'
 
-import { FaceImage } from './face-image'
+import {
+  FaceImage,
+}                 from './face-image'
 
-export type FaceEmbedding = nj.NdArray<number>  // 128 dim
+import {
+  FaceEmbedding,
+  log,
+}                 from './config'
 
 export interface Point {
   x: number,
   y: number,
 }
 
-export interface BoundingBox {
-  p1: Point,
-  p2: Point,
+export interface Rectangle {
+  x: number,
+  y: number,
+  w: number,
+  h: number,
 }
 
 export interface FacialLandmark {
@@ -28,10 +35,9 @@ export interface FacialLandmark {
 
 export interface FaceJsonObject {
   facialLandmark: FacialLandmark,
-  boundingBox:    BoundingBox,
+  boundingBox:    Rectangle,
   confidence:     number,
   _embedding:     FaceEmbedding,
-  parentImageUrl: string,
   box:            number[],
 }
 
@@ -39,9 +45,9 @@ export class Face {
   public static id = 0
   public id: number
 
-  public facialLandmark:  FacialLandmark
-  public boundingBox:     BoundingBox
+  public boundingBox:     Rectangle
   public confidence:      number
+  public facialLandmark:  FacialLandmark
 
   public get embedding(): FaceEmbedding {
     if (!this._embedding) {
@@ -61,11 +67,29 @@ export class Face {
 
   private _embedding: FaceEmbedding
 
-  public parentImage: FaceImage
-  private box:        number[]
-
-  constructor() {
+  constructor(
+    public data:  ImageData,
+    public box:   number[], // [x0, y0, x1, y1]
+  ) {
     this.id = ++Face.id
+    log.silly('Face', 'constructor() #%d', this.id)
+
+    this.boundingBox = this.squareBox(box)
+
+    const b = this.boundingBox
+
+    const [r1, c1, r2, c2] = [
+      b.y,
+      b.x,
+      b.y + b.h,
+      b.x + b.w,
+    ]
+
+    let image = nj.array<Uint8ClampedArray>(data.data)
+    image = image.hi(r2, c2).lo(r1, c1) as any
+
+    const array = (image as any).selection.data as Uint8ClampedArray
+    this.data = new ImageData(array, r2 - r1, c2 - c1)
   }
 
   public toJSON(): FaceJsonObject {
@@ -74,18 +98,14 @@ export class Face {
       boundingBox,
       confidence,
       _embedding,
-      parentImage,
       box,
     } = this
-
-    const parentImageUrl = parentImage.url
 
     return {
       facialLandmark,
       boundingBox,
       confidence,
       _embedding,
-      parentImageUrl,
       box,
     }
   }
@@ -95,29 +115,24 @@ export class Face {
       obj = JSON.parse(obj) as FaceJsonObject
     }
 
-    const face = new Face()
-    face.id             = ++Face.id
-    face.facialLandmark = obj.facialLandmark
-    face.boundingBox    = obj.boundingBox
-    face.confidence     = obj.confidence
-    face._embedding     = obj._embedding
-    face.box            = obj.box
+    // const face = new Face()
+    // face.id             = ++Face.id
+    // face.facialLandmark = obj.facialLandmark
+    // face.boundingBox    = obj.boundingBox
+    // face.confidence     = obj.confidence
+    // face._embedding     = obj._embedding
+    // face.box            = obj.box
 
-    const image = new FaceImage(obj.parentImageUrl)
-    face.parentImage    = image
+    // const image = new FaceImage(obj.parentImageUrl)
 
-    return face
+    return {} as any
   }
 
   public init(
-    parentImage: FaceImage,
-    box: number[],      // Bounding Box
     marks: number[][],  // Facial Landmark
     confidence: number,
   ): void {
-    this.box          = box
     this.confidence   = confidence
-    this.parentImage  = parentImage
 
     const leftEye: Point = {
       x: marks[0][0],
@@ -147,83 +162,68 @@ export class Face {
       leftMouthCorner,
       rightMouthCorner,
     }
-
-    this.boundingBox = this.adjustBox(box)
   }
 
   public toString(): string {
-    return `Face#${this.id}<${this.parentImage.url}#${this.box.join(',')}#${this._embedding}`
+    return `Face#${this.id}<${this._embedding}>`
   }
 
-  public adjustBox(box: number[]): BoundingBox {
-    let x1 = box[0]
-    let y1 = box[1]
-    let x2 = box[2]
-    let y2 = box[3]
+  public squareBox(box: number[]): Rectangle {
+    let x0 = box[0]
+    let y0 = box[1]
+    let x1 = box[2]
+    let y1 = box[3]
 
-    let width   = x2 - x1
-    let height  = y2 - y1
+    let w   = x1 - x0
+    let h  = y1 - y0
 
-    const halfDiff = Math.abs(width - height) / 2
+    const halfDiff = Math.abs(w - h) / 2
 
-    if (width > height) {
-      y1 -= halfDiff
-      y2 += halfDiff
-      height = y2 - y1  // update
+    if (w > h) {
+      y0 -= halfDiff
+      y1 += halfDiff
+      h = y1 - y0  // update
     } else {
-      x1 -= halfDiff
-      x2 += halfDiff
-      width = x2 - x1   // update
+      x0 -= halfDiff
+      x1 += halfDiff
+      w = x1 - x0   // update
     }
 
     // const margin = width / 10
     // console.log('margin:', margin)
 
-    // x1 -= margin
-    // y1 -= margin
-
-    // x2 += margin
-    // y2 += margin
-
-    const p1: Point = {
-      x:  Math.round(x1),
-      y:  Math.round(y1),
-    }
-
-    const p2: Point = {
-      x:  Math.round(x2),
-      y:  Math.round(y2),
-    }
+    const x = Math.round(x0)
+    const y = Math.round(y0)
 
     return {
-      p1,
-      p2,
+      x, y,
+      w, h,
     }
   }
 
   public center(): Point {
-    const {p1, p2} = this.boundingBox
-    const x = (p2.x - p1.x) / 2 + p1.x
-    const y = (p2.y - p1.y) / 2 + p1.y
-    return {x, y}
+    const {x, y, w, h} = this.boundingBox
+    const cx = w / 2 + x
+    const cy = h / 2 + y
+    return {x: cx, y: cy}
   }
 
   public width(): number {
-    const b = this.boundingBox
-    return b.p2.x - b.p1.x
+    return this.boundingBox.w
   }
 
   public height(): number {
-    const {p1, p2} = this.boundingBox
-    return p2.y - p1.y
+    return this.boundingBox.h
   }
 
   public image(): FaceImage {
-    const data = this.parentImage.data
 
-    const {p1, p2} = this.boundingBox
-    const [r1, c1, r2, c2] = [p1.y, p1.x, p2.y, p2.x]
-    const img = data.hi(r2, c2).lo(r1, c1) as any
+    const {x, y, w, h} = this.boundingBox
+    const [r1, c1, r2, c2] = [y, x, y + h, x + w]
+    const img = nj.array(this.data.data, 'uint8_clamped')
+                  .hi(r2, c2)
+                  .lo(r1, c1) as any
+
     return new FaceImage(img)
   }
 }
