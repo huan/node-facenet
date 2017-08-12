@@ -1,16 +1,15 @@
 /**
  *
  */
-import * as nj from 'numjs'
+import ndarray = require('ndarray')
 
-import {
-  FaceImage,
-}                 from './face-image'
+const { ImageData } = require('canvas')
 
 import {
   FaceEmbedding,
   log,
-}                 from './config'
+}                         from './config'
+import { bufResizeUint8ClampedRGBA }   from './misc'
 
 export interface Point {
   x: number,
@@ -34,11 +33,10 @@ export interface FacialLandmark {
 }
 
 export interface FaceJsonObject {
-  facialLandmark: FacialLandmark,
   boundingBox:    Rectangle,
   confidence:     number,
-  _embedding:     FaceEmbedding,
-  box:            number[],
+  data:           string,   // Base64 of Buffer
+  facialLandmark: FacialLandmark,
 }
 
 export class Face {
@@ -49,64 +47,56 @@ export class Face {
   public confidence:      number
   public facialLandmark:  FacialLandmark
 
-  public get embedding(): FaceEmbedding {
-    if (!this._embedding) {
-      throw new Error('no embedding yet!')
-    }
-    return this._embedding
-  }
-
-  public set embedding(embedding: FaceEmbedding) {
-    if (this._embedding) {
-      throw new Error('already had embedding!')
-    } else if (embedding.shape[0] !== 128) {
-      throw new Error('embedding dim is not 128!')
-    }
-    this._embedding = embedding
-  }
-
   private _embedding: FaceEmbedding
 
   constructor(
     public data:  ImageData,
-    public box:   number[], // [x0, y0, x1, y1]
+    box:          number[], // [x0, y0, x1, y1]
   ) {
     this.id = ++Face.id
-    log.silly('Face', 'constructor() #%d', this.id)
+    log.silly('Face', 'constructor() id=#%d', this.id)
 
     this.boundingBox = this.squareBox(box)
 
-    const b = this.boundingBox
+    if (   this.boundingBox.w !== data.width
+        || this.boundingBox.h !== data.height
+    ) { // need to corp and reset this.data
+      log.silly('Face', 'constructor() w=%d, h=%d; width=%d, height=%d',
+                        this.boundingBox.w,
+                        this.boundingBox.h,
+                        data.width,
+                        data.height,
+              )
+      const rect = this.boundingBox
 
-    const [r1, c1, r2, c2] = [
-      b.y,
-      b.x,
-      b.y + b.h,
-      b.x + b.w,
-    ]
+      const [c0, r0, c1, r1] = [
+        rect.x,
+        rect.y,
+        rect.x + rect.w - 1,
+        rect.y + rect.h - 1,
+      ]
+      const image = ndarray(data.data, [data.width, data.height, 4])
+      const cropedImage = (image as any).hi(r1 + 1, c1 + 1, null).lo(r0, c0, null)
 
-    let image = nj.array<Uint8ClampedArray>(data.data)
-    image = image.hi(r2, c2).lo(r1, c1) as any
-
-    const array = (image as any).selection.data as Uint8ClampedArray
-    this.data = new ImageData(array, r2 - r1, c2 - c1)
+      const newImage = bufResizeUint8ClampedRGBA(cropedImage)
+      this.data = new ImageData(newImage.data, rect.w, rect.h)
+    }
   }
 
   public toJSON(): FaceJsonObject {
+    const data = Buffer.from(this.data.data.buffer)
+                      .toString('base64')
     const {
-      facialLandmark,
       boundingBox,
       confidence,
-      _embedding,
-      box,
+      facialLandmark,
     } = this
 
     return {
-      facialLandmark,
       boundingBox,
       confidence,
-      _embedding,
-      box,
+      data,
+      facialLandmark,
     }
   }
 
@@ -115,17 +105,22 @@ export class Face {
       obj = JSON.parse(obj) as FaceJsonObject
     }
 
-    // const face = new Face()
-    // face.id             = ++Face.id
-    // face.facialLandmark = obj.facialLandmark
-    // face.boundingBox    = obj.boundingBox
-    // face.confidence     = obj.confidence
-    // face._embedding     = obj._embedding
-    // face.box            = obj.box
+    const buf = Buffer.from(obj.data, 'base64')
+    const array = new Uint8ClampedArray(buf)
 
-    // const image = new FaceImage(obj.parentImageUrl)
+    const b = obj.boundingBox
+    const imageData = new ImageData(array, b.w, b.h)
 
-    return {} as any
+    const face = new Face(
+      imageData,
+      [b.x, b.y, b.x + b.w, b.y + b.h],
+    )
+
+    face.facialLandmark = obj.facialLandmark
+    face.boundingBox    = obj.boundingBox
+    face.confidence     = obj.confidence
+
+    return face
   }
 
   public init(
@@ -174,26 +169,26 @@ export class Face {
     let x1 = box[2]
     let y1 = box[3]
 
-    let w   = x1 - x0
-    let h  = y1 - y0
-
-    const halfDiff = Math.abs(w - h) / 2
-
-    if (w > h) {
-      y0 -= halfDiff
-      y1 += halfDiff
-      h = y1 - y0  // update
-    } else {
-      x0 -= halfDiff
-      x1 += halfDiff
-      w = x1 - x0   // update
-    }
-
-    // const margin = width / 10
-    // console.log('margin:', margin)
-
     const x = Math.round(x0)
     const y = Math.round(y0)
+
+    // XXX should width inc 1 ???
+    let w = x1 - x0 + 1
+    let h = y1 - y0 + 1
+
+    if (w !== h) {
+      const halfDiff = Math.abs(w - h) / 2
+
+      if (w > h) {
+        y0 -= halfDiff
+        y1 += halfDiff
+        h += 2 * halfDiff  // update
+      } else {
+        x0 -= halfDiff
+        x1 += halfDiff
+        w += 2 * halfDiff // update
+      }
+    }
 
     return {
       x, y,
@@ -201,29 +196,37 @@ export class Face {
     }
   }
 
-  public center(): Point {
-    const {x, y, w, h} = this.boundingBox
-    const cx = w / 2 + x
-    const cy = h / 2 + y
-    return {x: cx, y: cy}
+  public get embedding(): FaceEmbedding {
+    if (!this._embedding) {
+      throw new Error('no embedding yet!')
+    }
+    return this._embedding
   }
 
-  public width(): number {
-    return this.boundingBox.w
+  public set embedding(embedding: FaceEmbedding) {
+    if (this._embedding) {
+      throw new Error('already had embedding!')
+    } else if (embedding.shape[0] !== 128) {
+      throw new Error('embedding dim is not 128!')
+    }
+    this._embedding = embedding
   }
 
-  public height(): number {
-    return this.boundingBox.h
+  public get center(): Point {
+    const x = Math.round(this.data.width / 2)
+    const y = Math.round(this.data.height / 2)
+    return {x, y}
   }
 
-  public image(): FaceImage {
+  public get width(): number {
+    return this.data.width
+  }
 
-    const {x, y, w, h} = this.boundingBox
-    const [r1, c1, r2, c2] = [y, x, y + h, x + w]
-    const img = nj.array(this.data.data, 'uint8_clamped')
-                  .hi(r2, c2)
-                  .lo(r1, c1) as any
+  public get height(): number {
+    return this.data.height
+  }
 
-    return new FaceImage(img)
+  public get image(): ImageData {
+    return this.data
   }
 }
