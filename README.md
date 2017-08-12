@@ -1,10 +1,10 @@
 # FaceNet
 
-[![Build Status](https://travis-ci.org/zixia/facenet.svg?branch=master)](https://travis-ci.org/zixia/facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
+[![Build Status](https://travis-ci.org/zixia/node-facenet.svg?branch=master)](https://travis-ci.org/zixia/node-facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
 node-facenet is a Python/TensorFlow backed FaceNet implementation for Node.js.
 
-![Google Facenet](https://zixia.github.io/facenet/images/facenet.jpg)
+![Google Facenet](https://zixia.github.io/node-facenet/images/facenet.jpg)
 
 FaceNet is a deep convolutional network designed by Google, trained to solve face verification, recognition and clustering problem with efficiently at scale.
 
@@ -21,14 +21,14 @@ The follow examples will give you some intuitions for using the code.
 
 ## 1. Visualize for Intuition
 
-![FaceNet Visualization](https://zixia.github.io/facenet/images/landing-twins-ricky-martin-visualized.jpg)
+![FaceNet Visualization](https://zixia.github.io/node-facenet/images/landing-twins-ricky-martin-visualized.jpg)
 
 1. Face is in the green rectangle.
 1. Similarity(distance) between faces showed as a number in the middle of the line.
 1. To identify if two faces belong to the same person, we could use an experiential threshold of distance: 0.75.
 
 ```shell
-$ git clone git@github.com:zixia/facenet.git
+$ git clone git@github.com:zixia/node-facenet.git
 $ cd facenet
 $ npm install
 $ npm run example:visualize
@@ -63,12 +63,12 @@ for (const face of faceList) {
 }
 ```
 
-Full source code can be found at here: <https://github.com/zixia/facenet/blob/master/examples/demo.ts>
+Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/demo.ts>
 
 Try it by run:
 
 ```shell
-$ git clone git@github.com:zixia/facenet.git
+$ git clone git@github.com:zixia/node-facenet.git
 $ cd facenet
 $ npm install
 $ npm run example:demo
@@ -201,10 +201,10 @@ model-20170512-110547.meta
 
 # Develop
 
-[![Issue Stats](http://issuestats.com/github/zixia/facenet/badge/pr)](http://issuestats.com/github/zixia/facenet) [![Issue Stats](http://issuestats.com/github/zixia/facenet/badge/issue)](http://issuestats.com/github/zixia/facenet) [![Coverage Status](https://coveralls.io/repos/github/zixia/facenet/badge.svg?branch=master)](https://coveralls.io/github/zixia/facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/facenet.svg)](https://greenkeeper.io/)
+[![Issue Stats](http://issuestats.com/github/zixia/node-facenet/badge/pr)](http://issuestats.com/github/zixia/node-facenet) [![Issue Stats](http://issuestats.com/github/zixia/node-facenet/badge/issue)](http://issuestats.com/github/zixia/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/zixia/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/zixia/node-facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/node-facenet.svg)](https://greenkeeper.io/)
 
 ```shell
-$ git clone git@github.com:zixia/facenet.git
+$ git clone git@github.com:zixia/node-facenet.git
 $ cd facenet
 $ npm install
 $ npm test
@@ -301,10 +301,10 @@ This repository is heavily inspired by the following implementations:
 
 ## FaceNet Badge
 
-[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/facenet)
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet)
 
 ```markdown
-[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/facenet)
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet)
 ```
 
 # Changelog
