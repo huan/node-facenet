@@ -4,7 +4,7 @@ import * as nj            from 'numjs'
 import {
   Face,
 }                         from './face'
-import { FaceImage }      from './face-image'
+// import { FaceImage }      from './face-image'
 import {
   FaceEmbedding,
   log,
@@ -52,14 +52,17 @@ export class Facenet {
 
   /**
    * Alignment the image, get faces list, ordered with biggest first
-   * @param image
+   * @param imageData
    */
-  public async align(image: FaceImage): Promise<Face[]> {
-    log.verbose('Facenet', 'align(%d)', image.id)
+  public async align(imageData: ImageData): Promise<Face[]> {
+    log.verbose('Facenet', 'align(%dx%d)',
+                            imageData.width,
+                            imageData.height,
+                )
 
-    log.silly('Facenet', 'align() pythonFacenet.align(data) ...')
-    const [boundingBoxes, landmarks] = await this.pythonFacenet.align(image.data)
-    log.silly('Facenet', 'align() pythonFacenet.align(data) done')
+    log.silly('Facenet', 'align() pythonFacenet.align(imageData) ...')
+    const [boundingBoxes, landmarks] = await this.pythonFacenet.align(imageData)
+    log.silly('Facenet', 'align() pythonFacenet.align(imageData) done')
 
     const xyLandmarks = this.transformLandmarks(landmarks)
 
@@ -69,11 +72,6 @@ export class Facenet {
       const confidence = boundingBox[4]
       const marks = xyLandmarks[i]
 
-      const imageData = new ImageData(
-        (image.data as any).selection.data as Uint8ClampedArray,
-        image.width(),
-        image.height(),
-      )
       const face = new Face(imageData, boundingBox)
       face.init(marks, confidence)
       // face.confidence(confidence)
@@ -90,16 +88,18 @@ export class Facenet {
   public async embedding(face: Face): Promise<FaceEmbedding> {
     log.verbose('Facenet', 'embedding(%d)', face.id)
 
-    let image = face.image()
-    if (image.width() !== image.height()) {
+    let imageData = face.imageData
+    if (imageData.width !== imageData.height) {
       throw new Error('should be a square image because it will be resized to 160x160')
     }
 
-    if (image.width() !== 160) {
-      image = image.resize(160, 160)
+    if (imageData.width !== 160) {
+      // XXX: restore function
+      imageData = imageData
+      // image = image.resize(160, 160)
     }
 
-    const embedding = await this.pythonFacenet.embedding(image.data)
+    const embedding = await this.pythonFacenet.embedding(imageData)
 
     // Set embedding to face
     face.embedding =  nj.array(embedding)
@@ -107,7 +107,7 @@ export class Facenet {
     return face.embedding
   }
 
-  public distance(v1: nj.NdArray<number>, v2: nj.NdArray<number>): number {
+  public distance(v1: FaceEmbedding, v2: FaceEmbedding): number {
     const l2 = v1.subtract(v2)
                   .pow(2)
                   .sum()

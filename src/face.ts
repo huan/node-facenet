@@ -8,8 +8,11 @@ const { ImageData } = require('canvas')
 import {
   FaceEmbedding,
   log,
-}                         from './config'
-import { bufResizeUint8ClampedRGBA }   from './misc'
+}                           from './config'
+import {
+  bufResizeUint8ClampedRGBA,
+  md5ImageData,
+}                           from './misc'
 
 export interface Point {
   x: number,
@@ -33,6 +36,7 @@ export interface FacialLandmark {
 }
 
 export interface FaceJsonObject {
+  _embedding:     FaceEmbedding,
   boundingBox:    Rectangle,
   confidence:     number,
   data:           string,   // Base64 of Buffer
@@ -42,6 +46,7 @@ export interface FaceJsonObject {
 export class Face {
   public static id = 0
   public id: number
+  public md5: string
 
   public boundingBox:     Rectangle
   public confidence:      number
@@ -50,22 +55,22 @@ export class Face {
   private _embedding: FaceEmbedding
 
   constructor(
-    public data:  ImageData,
-    box:          number[], // [x0, y0, x1, y1]
+    public imageData:   ImageData,
+    box:                number[], // [x0, y0, x1, y1]
   ) {
-    this.id = ++Face.id
-    log.silly('Face', 'constructor() id=#%d', this.id)
+    this.md5 = md5ImageData(imageData)
+    log.silly('Face', 'constructor() md5=%s', this.md5)
 
     this.boundingBox = this.squareBox(box)
 
-    if (   this.boundingBox.w !== data.width
-        || this.boundingBox.h !== data.height
+    if (   this.boundingBox.w !== imageData.width
+        || this.boundingBox.h !== imageData.height
     ) { // need to corp and reset this.data
       log.silly('Face', 'constructor() w=%d, h=%d; width=%d, height=%d',
                         this.boundingBox.w,
                         this.boundingBox.h,
-                        data.width,
-                        data.height,
+                        imageData.width,
+                        imageData.height,
               )
       const rect = this.boundingBox
 
@@ -75,24 +80,34 @@ export class Face {
         rect.x + rect.w - 1,
         rect.y + rect.h - 1,
       ]
-      const image = ndarray(data.data, [data.width, data.height, 4])
+      const image = ndarray(
+        imageData.data,
+        [
+          imageData.width,
+          imageData.height,
+          imageData.data.length / imageData.width / imageData.height, // depth(4)
+        ],
+      )
       const cropedImage = (image as any).hi(r1 + 1, c1 + 1, null).lo(r0, c0, null)
 
-      const newImage = bufResizeUint8ClampedRGBA(cropedImage)
-      this.data = new ImageData(newImage.data, rect.w, rect.h)
+      const array = bufResizeUint8ClampedRGBA(cropedImage)
+      // update this.imageData to the croped one
+      this.imageData = new ImageData(array.data, array.shape[0], array.shape[1])
     }
   }
 
   public toJSON(): FaceJsonObject {
-    const data = Buffer.from(this.data.data.buffer)
+    const data = Buffer.from(this.imageData.data.buffer)
                       .toString('base64')
     const {
+      _embedding,
       boundingBox,
       confidence,
       facialLandmark,
     } = this
 
     return {
+      _embedding,
       boundingBox,
       confidence,
       data,
@@ -116,6 +131,7 @@ export class Face {
       [b.x, b.y, b.x + b.w, b.y + b.h],
     )
 
+    face._embedding     = obj._embedding
     face.facialLandmark = obj.facialLandmark
     face.boundingBox    = obj.boundingBox
     face.confidence     = obj.confidence
@@ -213,20 +229,22 @@ export class Face {
   }
 
   public get center(): Point {
-    const x = Math.round(this.data.width / 2)
-    const y = Math.round(this.data.height / 2)
+    const x = Math.round(this.imageData.width / 2)
+    const y = Math.round(this.imageData.height / 2)
     return {x, y}
   }
 
   public get width(): number {
-    return this.data.width
+    return this.imageData.width
   }
 
   public get height(): number {
-    return this.data.height
+    return this.imageData.height
   }
 
-  public get image(): ImageData {
-    return this.data
+  public get depth(): number {
+    return this.imageData.data.length
+            / this.imageData.width
+            / this.imageData.height
   }
 }

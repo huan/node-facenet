@@ -3,7 +3,7 @@ import * as assert  from 'assert'
 
 import {
   Facenet,
-  FaceImage,
+  // FaceImage,
   log,
 }                   from '../'  // from 'facenet'
 
@@ -26,7 +26,8 @@ async function main() {
             'Save embedding to face. Also return it for convenience')
 
       const faceFile = `${face.id}.jpg`
-      face.image().save(faceFile)
+      // XXX
+      // face.image().save(faceFile)
 
       console.log('image file:',    imageFile)
       console.log('face file:',     faceFile)

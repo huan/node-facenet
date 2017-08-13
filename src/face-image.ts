@@ -3,9 +3,7 @@
  */
 import * as nj      from 'numjs'
 
-const canvas = require('canvas')
-
-console.log(canvas)
+// const canvas = require('canvas')
 
 import { Face }     from './face'
 import { md5 }      from './misc'

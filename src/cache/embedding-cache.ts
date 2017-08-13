@@ -5,7 +5,7 @@ import {
   Facenet,
   FaceEmbedding,
 }                       from '../facenet'
-import { FaceImage }    from '../face-image'
+// import { FaceImage }    from '../face-image'
 import { Face }         from '../face'
 import { log }          from '../config'
 

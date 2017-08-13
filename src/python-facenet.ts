@@ -1,15 +1,14 @@
-import * as path            from 'path'
+import * as path    from 'path'
 
-import * as nj   from 'numjs'
 import {
   pythonBridge,
   PythonBridge,
-}                from 'python-bridge'
+}                   from 'python-bridge'
 
 import {
   log,
   MODULE_ROOT,
-}                 from './config'
+}                   from './config'
 
 export type BoundingFiveNumber = [
   number, number, number, number, // x1, y1, x2, y2
@@ -126,16 +125,19 @@ export class PythonFacenet {
 
   /**
    *
-   * @param image
+   * @param imageData
    */
-    public async align(
-    image: nj.NdArray<Uint8Array>,
+  public async align(
+    imageData: ImageData,
   ): Promise<[BoundingFiveNumber[], LandmarkMatrix]> {
-    log.verbose('PythonFacenet', 'align(%s)', image.shape)
+    log.verbose('PythonFacenet', 'align(%dx%d)', imageData.width, imageData.height)
     await this.initMtcnn()
 
-    const [row, col, depth] = image.shape
-    const base64Text = this.image_to_base64(image)
+    const row   = imageData.height
+    const col   = imageData.width
+    const depth = imageData.data.length / row / col
+
+    const base64Text = this.base64ImageData(imageData)
 
     let boundingBoxes: BoundingFiveNumber[]
     let landmarks: LandmarkMatrix
@@ -155,15 +157,21 @@ export class PythonFacenet {
    *
    * @param image
    */
-  public async embedding(image: nj.NdArray<Uint8Array>): Promise<number[]> {
-    log.verbose('PythonFacenet', 'embedding(%s)', image.shape)
+  public async embedding(imageData: ImageData): Promise<number[]> {
+    log.verbose('PythonFacenet', 'embedding(%dx%d)',
+                                  imageData.width,
+                                  imageData.height,
+                )
 
     if (!this.facenetInited) {
       await this.initFacenet()
     }
 
-    const [row, col, depth] = image.shape
-    const base64Text = this.image_to_base64(image)
+    const row   = imageData.height
+    const col   = imageData.width
+    const depth = imageData.data.length / row / col
+
+    const base64Text = this.base64ImageData(imageData)
 
     const start = Date.now();
 
@@ -208,22 +216,26 @@ export class PythonFacenet {
    *
    * @param image
    */
-  public image_to_base64(image: nj.NdArray<Uint8Array>): string {
-    const [row, col, depth] = image.shape
+  public base64ImageData(imageData: ImageData): string {
 
-    const typedData = new Uint8ClampedArray(row * col * depth)
+    return Buffer.from(imageData.data.buffer)
+                .toString('base64')
 
-    let n = 0
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < col; j++) {
-        for (let k = 0; k < depth; k++) {
-          typedData[n++] = image.get(i, j, k) as any as number
-        }
-      }
-    }
+    // const [row, col, depth] = image.shape
 
-    const base64Text = Buffer.from(typedData.buffer)
-                            .toString('base64')
-    return base64Text
+    // const typedData = new Uint8ClampedArray(row * col * depth)
+
+    // let n = 0
+    // for (let i = 0; i < row; i++) {
+    //   for (let j = 0; j < col; j++) {
+    //     for (let k = 0; k < depth; k++) {
+    //       typedData[n++] = image.get(i, j, k) as any as number
+    //     }
+    //   }
+    // }
+
+    // const base64Text = Buffer.from(typedData.buffer)
+    //                         .toString('base64')
+    // return base64Text
   }
 }

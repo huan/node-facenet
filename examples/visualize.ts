@@ -6,7 +6,6 @@ import {
   Rectangle,
   Face,
   Facenet,
-  FaceImage,
   log,
 }                   from '../'  // from 'facenet'
 
@@ -57,8 +56,8 @@ async function main() {
         //         .stroke('green', 1)
         //         .drawRectangle(r.x1, r.y1, r.x2, r.y2)
 
-        const c1 = faceList[row].center()
-        const c2 = faceList[col].center()
+        const c1 = faceList[row].center
+        const c2 = faceList[col].center
 
         newImage.region(image.width(), image.height(), 0, 0)
                 .stroke('none', 0)
@@ -89,25 +88,25 @@ async function main() {
 
 function region(f1: Face, f2: Face): Rectangle {
 
-  const c1 = f1.center()
-  const c2 = f2.center()
+  const c1 = f1.center
+  const c2 = f2.center
 
   let x1, y1, x2, y2
 
   if (c1.x < c2.x) {
-    x1 = c1.x + f1.width() / 2
-    x2 = c2.x - f2.width() / 2
+    x1 = c1.x + f1.width / 2
+    x2 = c2.x - f2.width / 2
   } else {
-    x1 = c2.x + f2.width() / 2
-    x2 = c1.x - f1.width() / 2
+    x1 = c2.x + f2.width / 2
+    x2 = c1.x - f1.width / 2
   }
 
   if (c1.y < c2.y) {
-    y1 = c1.y + f1.height() / 2
-    y2 = c2.y - f2.height() / 2
+    y1 = c1.y + f1.height / 2
+    y2 = c2.y - f2.height / 2
   } else {
-    y1 = c2.y + f2.height() / 2
-    y2 = c1.y - f1.height() / 2
+    y1 = c2.y + f2.height / 2
+    y2 = c1.y - f1.height / 2
   }
 
   if (x1 > x2) {

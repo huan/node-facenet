@@ -1,25 +1,24 @@
 #!/usr/bin/env ts-node
 
-const t             = require('tap')  // tslint:disable:no-shadowed-variable
-const { ImageData } = require('canvas')
+const t                   = require('tap')  // tslint:disable:no-shadowed-variable
+const { createImageData } = require('canvas')
 
 import { log }        from './config'
 log.level('silly')
-// import { FaceImage }  from './face-image'
 import {
   Rectangle,
   Face,
 }                     from './face'
 
 t.test('constructor() with full bounding box', async (t: any) => {
-    // https://stackoverflow.com/a/23501676/1123955
+  // https://stackoverflow.com/a/23501676/1123955
   const ARRAY = new Uint8ClampedArray([
     1, 2, 3, 255,
     5, 6, 7, 255,
     9, 10, 11, 255,
     13, 14, 15, 255,
   ])
-  const IMAGE_DATA = new ImageData(ARRAY, 2, 2) as ImageData
+  const IMAGE_DATA = createImageData(ARRAY, 2, 2) as ImageData
   const RECT: Rectangle = {
     x: 0,
     y: 0,
@@ -27,9 +26,17 @@ t.test('constructor() with full bounding box', async (t: any) => {
     h: 2,
   }
   const BOX = [0, 0, 1, 1]
+  const WIDTH = 2
+  const HEIGHT = 2
+  const DEPTH = 4
+
   const f = new Face(IMAGE_DATA, BOX)
-  t.deepEqual(f.data.data, IMAGE_DATA.data, 'data should be equal')
+  t.deepEqual(f.imageData.data, IMAGE_DATA.data, 'data should be equal')
   t.deepEqual(f.boundingBox, RECT, 'boundingBox should be equal')
+
+  t.equal(f.width,  WIDTH,  'should get the right WIDTH')
+  t.equal(f.height, HEIGHT, 'should get the right HEIGHT')
+  t.equal(f.depth,  DEPTH,  'should get the right DEPTH')
 })
 
 t.test('constructor() with sub bounding box that needs corp', async (t: any) => {
@@ -42,7 +49,7 @@ t.test('constructor() with sub bounding box that needs corp', async (t: any) => 
     17, 18, 19, 255,
     21, 22, 23, 255,
   ])
-  const IMAGE_DATA = new ImageData(ARRAY, 2, 3) as ImageData
+  const IMAGE_DATA = createImageData(ARRAY, 2, 3) as ImageData
   const EXPECTED_BOUNDING_BOX: Rectangle = {
     x: 0,
     y: 0,
@@ -57,9 +64,18 @@ t.test('constructor() with sub bounding box that needs corp', async (t: any) => 
   ])
 
   const BOX = [0, 0, 1, 1]
+
+  const WIDTH = 2
+  const HEIGHT = 2
+  const DEPTH = 4
+
   const f = new Face(IMAGE_DATA, BOX)
-  t.deepEqual(f.data.data, EXPECTED_CROPPED_ARRAY, 'data should be cropped right')
+  t.deepEqual(f.imageData.data, EXPECTED_CROPPED_ARRAY, 'data should be cropped right')
   t.deepEqual(f.boundingBox, EXPECTED_BOUNDING_BOX, 'boundingBox should be equal')
+
+  t.equal(f.width,  WIDTH,  'should get the right WIDTH')
+  t.equal(f.height, HEIGHT, 'should get the right HEIGHT')
+  t.equal(f.depth,  DEPTH,  'should get the right DEPTH')
 })
 
 t.test('toJSON & fromJSON', async (t: any) => {
@@ -71,7 +87,7 @@ t.test('toJSON & fromJSON', async (t: any) => {
   // tslint:disable-next-line:max-line-length
   const JSON_TEXT = '{"boundingBox":{"x":0,"y":0,"w":1,"h":1},"confidence":1,"data":"AQIDBAUGBwgJCgsMDQ4PEA==","facialLandmark":{"leftEye":{"x":0,"y":0},"rightEye":{"x":0,"y":1},"nose":{"x":0,"y":0},"leftMouthCorner":{"x":1,"y":0},"rightMouthCorner":{"x":1,"y":1}}}'
 
-  const IMAGE_DATA = new ImageData(ARRAY, 2, 2)
+  const IMAGE_DATA = createImageData(ARRAY, 2, 2) as ImageData
   const f = new Face(IMAGE_DATA, BOX)
   f.init(MARKS, CONFIDENCE)
 

@@ -1,17 +1,17 @@
 import * as crypto  from 'crypto'
 import * as ndarray from 'ndarray'
 
-// TODO: use ndarray instead of nj.NdArray
-export function md5(array: nj.NdArray<any>): string {
-  // https://github.com/nicolaspanel/numjs/blob/master/src/ndarray.js#L24
-  const data = (array as any).selection.data as Uint8Array
-  const buf = new Buffer(data.buffer)
-  return crypto
-          .createHash('md5')
-          .update(buf)
-          // .update(new Buffer(ndarray.tolist()))
-          .digest('hex')
-}
+// // TODO: use ndarray instead of nj.NdArray
+// export function md5(array: nj.NdArray<any>): string {
+//   // https://github.com/nicolaspanel/numjs/blob/master/src/ndarray.js#L24
+//   const data = (array as any).selection.data as Uint8Array
+//   const buf = new Buffer(data.buffer)
+//   return crypto
+//           .createHash('md5')
+//           .update(buf)
+//           // .update(new Buffer(ndarray.tolist()))
+//           .digest('hex')
+// }
 
 export function bufResizeUint8ClampedRGBA(array: ndarray): ndarray {
   const buf = new Uint8ClampedArray(array.shape[0] * array.shape[1] * 4)
@@ -24,4 +24,11 @@ export function bufResizeUint8ClampedRGBA(array: ndarray): ndarray {
     }
   }
   return newArray
+}
+
+export function md5ImageData(imageData: ImageData): string {
+  const buffer = new Buffer(imageData.data.buffer)
+  return crypto.createHash('md5')
+              .update(buffer)
+              .digest('hex')
 }

@@ -5,8 +5,14 @@ ENV LC_ALL C.UTF-8
 
 RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
   && apt-get update && apt-get install -y \
+      build-essential \
+      g++ \
       git \
       iputils-ping \
+      libcairo2-dev \
+      libjpeg8-dev \
+      libpango1.0-dev \
+      libgif-dev \
       nodejs \
       python2.7 \
       vim \
