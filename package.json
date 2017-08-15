@@ -31,7 +31,6 @@
     "@types/rimraf": "0.0.28",
     "@types/tar": "1.0.29",
     "cross-env": "5.0.5",
-    "crossenv": "0.0.2-security",
     "gm": "1.23.0",
     "nyc": "11.1.0",
     "shx": "0.2.2",
@@ -64,7 +63,7 @@
     "test:coverage": "nyc report --reporter=text-lcov | coveralls",
     "test:ts": "tap --timeout=600 \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
-    "test:npm": "cross-env TMPDIR=/tmp/npm-package-test.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/facenet-smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node facenet-smoke-testing.js",
+    "test:npm": "cross-env-shell TMPDIR=/tmp/npm-package-test.$$ 'npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/facenet-smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node facenet-smoke-testing.js'",
     "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt"
   },
   "repository": {
