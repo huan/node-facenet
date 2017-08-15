@@ -41,8 +41,6 @@ def base64_to_image(
     # important to define dtype!
     image_array = np.array(image_view, dtype=np.uint8)
     image = image_array.reshape(row, col, depth)
-    # We have to return a list instead of np.array
-    # because np.array can not be json serialized to python-bridge.
     return image
 
 
@@ -203,7 +201,8 @@ class MtcnnBridge():
             self.factor,
         )
 
-        bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
-        landmarks = np.around(landmarks)
+        # do not do around: leave it to the high level api, to keep precision
+        # bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
+        # landmarks = np.around(landmarks)
 
         return bounding_boxes.tolist(), landmarks.tolist()

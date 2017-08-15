@@ -14,7 +14,7 @@ export type BoundingFiveNumber = [
   number, number, number, number, // x1, y1, x2, y2
   number                          // confidence
 ]
-export type LandmarkMatrix = number[][] // A 10 rows vector, each col is for a face.
+export type LandmarkRowList = number[][] // A 10 rows vector, each col is for a face.
 
 export class PythonFacenet {
   public python3: PythonBridge
@@ -129,7 +129,7 @@ export class PythonFacenet {
    */
   public async align(
     imageData: ImageData,
-  ): Promise<[BoundingFiveNumber[], LandmarkMatrix]> {
+  ): Promise<[BoundingFiveNumber[], LandmarkRowList]> {
     log.verbose('PythonFacenet', 'align(%dx%d)', imageData.width, imageData.height)
     await this.initMtcnn()
 
@@ -140,11 +140,11 @@ export class PythonFacenet {
     const base64Text = this.base64ImageData(imageData)
 
     let boundingBoxes: BoundingFiveNumber[]
-    let landmarks: LandmarkMatrix
+    let landmarks: LandmarkRowList
 
     const start = Date.now();
     [boundingBoxes, landmarks] = await this.python3
-      `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
+      `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth}).tolist()`
 
     log.silly('PythonFacenet', 'align() mtcnn_bridge.align() cost %d milliseconds',
                                 Date.now() - start,
@@ -202,7 +202,7 @@ export class PythonFacenet {
       `from facenet_bridge import base64_to_image`
 
     return await this.python3
-      `base64_to_image(${text}, ${row}, ${col}, ${depth}).tolist()`
+      `base64_to_image(${text}, ${row}, ${col}, ${depth})`
   }
 
   /**
