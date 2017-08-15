@@ -2,11 +2,13 @@
 import * as path          from 'path'
 
 const t             = require('tap')  // tslint:disable:no-shadowed-variable
-const { loadImage } = require('canvas')
 import * as nj            from 'numjs'
 
 import { PythonFacenet }  from './python-facenet'
-import { imageToData }    from './misc'
+import {
+  imageToData,
+  loadImage,
+}                         from './misc'
 
 t.test('PythonFacenet python venv', async (t: any) => {
   const pf = new PythonFacenet()

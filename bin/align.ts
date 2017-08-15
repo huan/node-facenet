@@ -3,14 +3,11 @@
 import { ArgumentParser } from 'argparse'
 import * as gm            from 'gm'
 
-const {
-  loadImage,
-}                         = require('canvas')
-
 import {
   Facenet,
   // FaceImage,
   log,
+  loadImage,
   imageToData,
   VERSION,
 }                         from '../'

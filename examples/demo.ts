@@ -1,12 +1,12 @@
 #!/usr/bin/env ts-node
 import * as assert  from 'assert'
 
-const { loadImage } = require('canvas')
-
 import {
   Facenet,
   imageToData,
   log,
+  loadImage,
+  saveJpeg,
 }                   from '../'  // from 'facenet'
 
 async function main() {
@@ -24,19 +24,19 @@ async function main() {
 
     for (const face of faceList) {
       // Calculate Face Embedding, return feature vector
-      const embedding = await facenet.embedding(face)
-      assert(face.embedding === embedding,
-            'Save embedding to face. Also return it for convenience')
+      // const embedding = await facenet.embedding(face)
+      // assert(face.embedding === embedding,
+      //       'Save embedding to face. Also return it for convenience')
+      assert(true)
 
-      const faceFile = `${face.id}.jpg`
-      // XXX
-      // face.image().save(faceFile)
+      const faceFile = `${face.md5}.jpg`
+      saveJpeg(face.imageData, faceFile)
 
       console.log('image file:',    imageFile)
       console.log('face file:',     faceFile)
       console.log('bounding box:',  face.boundingBox)
       console.log('landmarks:',     face.facialLandmark)
-      console.log('embedding:',     face.embedding)
+      // console.log('embedding:',     face.embedding)
     }
   } finally {
     facenet.quit()

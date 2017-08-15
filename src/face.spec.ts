@@ -1,10 +1,10 @@
 #!/usr/bin/env ts-node
 
 const t                   = require('tap')  // tslint:disable:no-shadowed-variable
-const {
+import {
   createImageData,
   createCanvas,
-}                         = require('canvas')
+}                         from './misc'
 
 // import { log }        from './config'
 // log.level('silly')
@@ -16,7 +16,9 @@ import {
 t.test('constructor()', async (t: any) => {
   const canvas = createCanvas(3, 3)
   const ctx = canvas.getContext('2d')
-
+  if (!ctx) {
+    throw new Error('no ctx')
+  }
   const IMAGE_DATA_3_3 = ctx.createImageData(3, 3)
 
   let val = 0

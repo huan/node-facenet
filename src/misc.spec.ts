@@ -2,19 +2,18 @@
 import * as path          from 'path'
 
 const t             = require('tap')  // tslint:disable:no-shadowed-variable
-const {
-  createCanvas,
-  createImageData,
-  loadImage,
-}                   = require('canvas')
+
 import * as ndarray from 'ndarray'
 
 import {
   bufResizeUint8ClampedRGBA,
+  createCanvas,
+  createImageData,
   cropImage,
+  dataToImage,
   imageMd5,
   imageToData,
-  dataToImage,
+  loadImage,
   resizeImage,
 }                         from './misc'
 

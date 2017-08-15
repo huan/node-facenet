@@ -1,16 +1,16 @@
 import * as fs          from 'fs'
 import * as path        from 'path'
 
-const { loadImage }     = require('canvas')
-
 import { log }          from '../config'
 import {
   Facenet,
   FaceEmbedding,
 }                       from '../facenet'
-// import { FaceImage }    from '../face-image'
 import { Face }         from '../face'
-import { imageToData }  from '../misc'
+import {
+  loadImage,
+  imageToData,
+}                       from '../misc'
 
 import { DbCache }      from './db-cache'
 

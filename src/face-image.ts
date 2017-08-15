@@ -3,10 +3,7 @@
  */
 import * as nj      from 'numjs'
 
-// const canvas = require('canvas')
-
 import { Face }     from './face'
-// import { imageMd5 } from './misc'
 
 export type FaceImageData = nj.NdArray<Uint8Array>
 

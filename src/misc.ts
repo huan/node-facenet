@@ -1,22 +1,11 @@
 import * as crypto  from 'crypto'
+import * as fs      from 'fs'
+
 import * as ndarray from 'ndarray'
 
-const {
-  createCanvas,
-  loadImage,
-}                   = require('canvas')
-
-// TODO: use ndarray instead of nj.NdArray
-// export function md5(array: nj.NdArray<any>): string {
-//   // https://github.com/nicolaspanel/numjs/blob/master/src/ndarray.js#L24
-//   const data = (array as any).selection.data as Uint8Array
-//   const buf = new Buffer(data.buffer)
-//   return crypto
-//           .createHash('md5')
-//           .update(buf)
-//           // .update(new Buffer(ndarray.tolist()))
-//           .digest('hex')
-// }
+const _createCanvas     = require('canvas').createCanvas
+const _createImageData  = require('canvas').createImageData
+const _loadImage        = require('canvas').loadImage
 
 export function bufResizeUint8ClampedRGBA(array: ndarray): ndarray {
   const buf = new Uint8ClampedArray(array.shape[0] * array.shape[1] * 4)
@@ -47,6 +36,9 @@ export function imageMd5(image: ImageData | HTMLImageElement ): string {
 export function imageToData(image: HTMLImageElement): ImageData {
   const canvas  = createCanvas(image.width, image.height)
   const ctx     = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('getContext found null')
+  }
 
   ctx.drawImage(image, 0, 0, image.width, image.height)
   const imageData = ctx.getImageData(0, 0, image.width, image.height)
@@ -57,6 +49,9 @@ export function imageToData(image: HTMLImageElement): ImageData {
 export async function dataToImage(data: ImageData): Promise<HTMLImageElement> {
   const canvas = createCanvas(data.width, data.height)
   const ctx = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('getContext found null')
+  }
   ctx.putImageData(data, 0, 0)
   const dataUrl = canvas.toDataURL()
   const image = await loadImage(dataUrl)
@@ -72,6 +67,9 @@ export function cropImage(
 ): ImageData {
   const canvas  = createCanvas(width, height)
   const ctx     = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('getContext found null')
+  }
 
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/putImageData
   // Issues #12 negative x/y value bug
@@ -94,9 +92,60 @@ export async function resizeImage(
 
   const canvas  = createCanvas(width, height)
   const ctx     = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('getContext found null')
+  }
 
   ctx.drawImage(image, 0, 0, width, height)
   const resizedImage = ctx.getImageData(0, 0, width, height)
 
   return resizedImage
+}
+
+export async function loadImage(url: string): Promise<HTMLImageElement> {
+  const image = await _loadImage(url)
+  return image
+}
+
+export function createCanvas(
+  width: number,
+  height: number,
+): HTMLCanvasElement {
+  const canvas = _createCanvas(width, height)
+  return canvas
+}
+
+export async function saveJpeg(
+  imageData:  ImageData,
+  file:       string,
+): Promise<void> {
+  const out = fs.createWriteStream(file)
+
+  const canvas = createCanvas(imageData.width, imageData.height)
+  const ctx = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('no ctx')
+  }
+  ctx.putImageData(imageData, 0, 0)
+
+  const stream = (canvas as any).createJPEGStream({
+    bufsize: 2048,
+    quality: 80,
+  })
+
+  stream.pipe(out)
+
+  return new Promise<void>((resolve, reject) => {
+    out.on('close', resolve)
+    out.on('error', reject)
+    stream.on('error', reject)
+  })
+}
+
+export function createImageData(
+  array:  Uint8ClampedArray,
+  width:  number,
+  height: number,
+): ImageData {
+  return _createImageData(array, width, height)
 }

@@ -3,13 +3,12 @@
  */
 // import ndarray = require('ndarray')
 
-const { createImageData } = require('canvas')
-
 import {
   FaceEmbedding,
   log,
 }                           from './config'
 import {
+  createImageData,
   cropImage,
   imageMd5,
 }                           from './misc'
@@ -58,7 +57,9 @@ export class Face {
     public imageData:   ImageData,
     box:                number[], // [x0, y0, x1, y1]
   ) {
+    this.id = ++Face.id
     this.md5 = imageMd5(imageData)
+
     log.silly('Face', 'constructor(%dx%d#%s, [%s]',
                       imageData.width,
                       imageData.height,
@@ -220,9 +221,12 @@ export class Face {
     this._embedding = embedding
   }
 
+  /**
+   * Center point for the boundingBox
+   */
   public get center(): Point {
-    const x = Math.round(this.imageData.width / 2)
-    const y = Math.round(this.imageData.height / 2)
+    const x = Math.round(this.boundingBox.x + this.imageData.width  / 2)
+    const y = Math.round(this.boundingBox.y + this.imageData.height / 2)
     return {x, y}
   }
 

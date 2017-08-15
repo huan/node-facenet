@@ -12,7 +12,11 @@ import {
   Face,
   FaceJsonObject,
 }                       from '../face'
-import { imageMd5 }     from '../misc'
+import {
+  imageMd5,
+  imageToData,
+  loadImage,
+}                       from '../misc'
 
 import { DbCache }      from './db-cache'
 
@@ -51,8 +55,14 @@ export class AlignmentCache {
     rimraf.sync(this.alignmentPath)
   }
 
-  public async align(imageData: ImageData): Promise<Face[]> {
-    log.verbose('AlignmentCache', 'align(%dx%d)', imageData.width, imageData.height)
+  public async align(imageData: ImageData | string): Promise<Face[]> {
+    if (typeof imageData === 'string') {
+      log.verbose('AlignmentCache', 'align(%s)', imageData)
+      const image = await loadImage(imageData)
+      imageData = imageToData(image)
+    } else {
+      log.verbose('AlignmentCache', 'align(%dx%d)', imageData.width, imageData.height)
+    }
 
     let faceList: Face[] = []
     const md5 = imageMd5(imageData)

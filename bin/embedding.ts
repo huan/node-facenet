@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 import { ArgumentParser } from 'argparse'
-const { loadImage }       = require('canvas')
 
 import {
   Facenet,
   imageToData,
   log,
+  loadImage,
   VERSION,
 }                         from '../'
 

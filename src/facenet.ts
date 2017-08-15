@@ -15,6 +15,8 @@ import {
 }                         from './python-facenet'
 
 import {
+  imageToData,
+  loadImage,
   resizeImage,
 }                         from './misc'
 
@@ -58,12 +60,16 @@ export class Facenet {
    * Alignment the image, get faces list
    * @param image
    */
-  public async align(imageData: ImageData): Promise<Face[]> {
+  public async align(imageData: ImageData | string): Promise<Face[]> {
+    if (typeof imageData === 'string') {
+      const image = await loadImage(imageData)
+      imageData = imageToData(image)
+    }
     log.verbose('Facenet', 'align(%dx%d)', imageData.width, imageData.height)
 
-    log.silly('Facenet', 'align() pythonFacenet.align(imageData) ...')
+    log.silly('Facenet', 'align() pythonFacenet.align() ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(imageData)
-    log.silly('Facenet', 'align() pythonFacenet.align(imageData) done')
+    log.silly('Facenet', 'align() pythonFacenet.align() done')
 
     const xyLandmarks = this.transformMtcnnLandmarks(landmarks)
 
@@ -87,7 +93,7 @@ export class Facenet {
    * Get the 128 dims embeding from image(s)
    */
   public async embedding(face: Face): Promise<FaceEmbedding> {
-    log.verbose('Facenet', 'embedding(%d)', face.id)
+    log.verbose('Facenet', 'embedding(Face#%d)', face.id)
 
     let imageData = face.imageData
     if (imageData.width !== imageData.height) {

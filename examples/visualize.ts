@@ -1,13 +1,13 @@
 #!/usr/bin/env ts-node
-import * as gm      from 'gm'
-const printf        = require('printf')
-const { loadImage } = require('canvas')
+import * as gm        from 'gm'
+const printf          = require('printf')
 
 import {
   Rectangle,
   Face,
   Facenet,
   imageToData,
+  loadImage,
   log,
 }                   from '../'  // from 'facenet'
 
@@ -24,7 +24,7 @@ async function main() {
     // Do Face Alignment, return faces
     const faceList = await facenet.align(imageData)
 
-    const newImage = gm(imageFile)
+    const outputImage = gm(imageFile)
 
     for (const face of faceList) {
       await facenet.embedding(face)
@@ -32,26 +32,29 @@ async function main() {
       const color = 'green'
       const {x, y, w, h} = face.boundingBox
       const base = Math.floor((w + h) / 50) + 1
-      newImage.fill('none')
-              .stroke(color, base * 1)
-              .drawRectangle(
-                x,
-                y,
-                x + w,
-                y + h,
-                base * 5,
-              )
+      outputImage.fill('none')
+                .stroke(color, base * 1)
+                .drawRectangle(
+                  x,
+                  y,
+                  x + w,
+                  y + h,
+                  base * 5,
+                )
     }
 
     for (let row = 0; row < faceList.length; row++) {
       for (let col = row + 1; col < faceList.length; col++) {
+        const faceR = faceList[row]
+        const faceC = faceList[col]
+
         let dist = await facenet.distance(
-          faceList[row].embedding,
-          faceList[col].embedding,
+          faceR.embedding,
+          faceC.embedding,
         )
         dist = printf('%.2f ', dist)
 
-        const r = region(faceList[row], faceList[col])
+        const r = region(faceR, faceC)
 
         // console.log(r)
 
@@ -59,15 +62,15 @@ async function main() {
         //         .stroke('green', 1)
         //         .drawRectangle(r.x1, r.y1, r.x2, r.y2)
 
-        const c1 = faceList[row].center
-        const c2 = faceList[col].center
+        const c1 = faceR.center
+        const c2 = faceC.center
 
-        newImage.region(image.width(), image.height(), 0, 0)
+        outputImage.region(image.width, image.height, 0, 0)
                 .stroke('none', 0)
                 .fill('grey')
                 .drawLine(c1.x, c1.y, c2.x, c2.y)
 
-        newImage.region(r.w, r.h, r.x, r.y)
+        outputImage.region(r.w, r.h, r.x, r.y)
                 .gravity('Center')
                 .stroke('none', 0)
                 .fill('green')
@@ -77,7 +80,7 @@ async function main() {
     }
 
     const visualizeFile = 'facenet-visulized.jpg'
-    newImage.noProfile().write(visualizeFile, err => {
+    outputImage.noProfile().write(visualizeFile, err => {
       if (err) {
         throw err
       }
@@ -127,7 +130,7 @@ function region(f1: Face, f2: Face): Rectangle {
   }
 }
 
-// log.level('silly')
+log.level('silly')
 
 main()
 .catch(console.error)
