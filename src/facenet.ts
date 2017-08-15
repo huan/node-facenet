@@ -14,6 +14,11 @@ import {
   PythonFacenet,
 }                         from './python-facenet'
 
+import {
+  imageToData,
+  resizeImage,
+}                         from './misc'
+
 // export interface FacenetOptions {
 //   log?: LogLevelName
 // }
@@ -51,20 +56,19 @@ export class Facenet {
   }
 
   /**
-   * Alignment the image, get faces list, ordered with biggest first
-   * @param imageData
+   * Alignment the image, get faces list
+   * @param image
    */
-  public async align(imageData: ImageData): Promise<Face[]> {
-    log.verbose('Facenet', 'align(%dx%d)',
-                            imageData.width,
-                            imageData.height,
-                )
+  public async align(image: HTMLImageElement): Promise<Face[]> {
+    log.verbose('Facenet', 'align(%s)', image.src)
+
+    const imageData = imageToData(image)
 
     log.silly('Facenet', 'align() pythonFacenet.align(imageData) ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(imageData)
     log.silly('Facenet', 'align() pythonFacenet.align(imageData) done')
 
-    const xyLandmarks = this.transformLandmarks(landmarks)
+    const xyLandmarks = this.transformMtcnnLandmarks(landmarks)
 
     const faceList: Face[] = []
     for (const i in boundingBoxes) {
@@ -94,9 +98,7 @@ export class Facenet {
     }
 
     if (imageData.width !== 160) {
-      // XXX: restore function
-      imageData = imageData
-      // image = image.resize(160, 160)
+      imageData = await resizeImage(imageData, 160, 160)
     }
 
     const embedding = await this.pythonFacenet.embedding(imageData)
@@ -116,7 +118,7 @@ export class Facenet {
             .get(0)
   }
 
-  public transformLandmarks(landmarks: number[][]): number[][][] {
+  public transformMtcnnLandmarks(landmarks: number[][]): number[][][] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
     const tLandmarks = nj.array(landmarks.reduce((a, b) => a.concat(b), []))
@@ -137,7 +139,7 @@ export class Facenet {
       false,
     )
 
-    const pairedLandmarks = xyLandmarks.reshape(faceNum, 5, 2) as nj.NdArray<number>
+    const pairedLandmarks = xyLandmarks.reshape(faceNum, 5, 2) as nj.NdArray<number>  // number[][][]
 
     return pairedLandmarks.tolist() as any as number[][][]
   }

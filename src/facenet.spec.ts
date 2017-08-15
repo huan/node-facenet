@@ -75,9 +75,9 @@ t.test('transformLandmarks()', async (t: any) => {
     [[1000, 1005], [1001, 1006], [1002, 1007], [1003, 1008], [1004, 1009]],
   ]
 
-  const pairedLandmarks1 = f.transformLandmarks(LANDMARKS_1)
-  const pairedLandmarks2 = f.transformLandmarks(LANDMARKS_2)
-  const pairedLandmarks3 = f.transformLandmarks(LANDMARKS_3)
+  const pairedLandmarks1 = f.transformMtcnnLandmarks(LANDMARKS_1)
+  const pairedLandmarks2 = f.transformMtcnnLandmarks(LANDMARKS_2)
+  const pairedLandmarks3 = f.transformMtcnnLandmarks(LANDMARKS_3)
 
   t.deepEqual(pairedLandmarks1, EXPECTED_1, 'should transform landmarks with dim #1 right')
   t.deepEqual(pairedLandmarks2, EXPECTED_2, 'should transform landmarks with dim #2 right')
