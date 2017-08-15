@@ -15,7 +15,6 @@ import {
 }                         from './python-facenet'
 
 import {
-  imageToData,
   resizeImage,
 }                         from './misc'
 

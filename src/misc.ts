@@ -74,6 +74,7 @@ export function cropImage(
   const ctx     = canvas.getContext('2d')
 
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/putImageData
+  // Issues #12 negative x/y value bug
   ctx.putImageData(imageData, 0 - x, 0 - y)
   const croppedImageData = ctx.getImageData(0, 0, width, height)
 
