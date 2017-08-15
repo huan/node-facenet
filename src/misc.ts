@@ -3,6 +3,7 @@ import * as ndarray from 'ndarray'
 
 const {
   createCanvas,
+  loadImage,
 }                   = require('canvas')
 
 // TODO: use ndarray instead of nj.NdArray
@@ -53,6 +54,15 @@ export function imageToData(image: HTMLImageElement): ImageData {
   return imageData
 }
 
+export async function dataToImage(data: ImageData): Promise<HTMLImageElement> {
+  const canvas = createCanvas(data.width, data.height)
+  const ctx = canvas.getContext('2d')
+  ctx.putImageData(data, 0, 0)
+  const dataUrl = canvas.toDataURL()
+  const image = await loadImage(dataUrl)
+  return image
+}
+
 export function cropImage(
   imageData:  ImageData,
   x:          number,
@@ -68,4 +78,24 @@ export function cropImage(
   const croppedImageData = ctx.getImageData(0, 0, width, height)
 
   return croppedImageData
+}
+
+export async function resizeImage(
+  image:  ImageData | HTMLImageElement,
+  width:  number,
+  height: number,
+): Promise<ImageData> {
+  if ((image as any).data) {  // ImageData
+    image = await dataToImage(image as ImageData)
+  } else {
+    image = image as HTMLImageElement
+  }
+
+  const canvas  = createCanvas(width, height)
+  const ctx     = canvas.getContext('2d')
+
+  ctx.drawImage(image, 0, 0, width, height)
+  const resizedImage = ctx.getImageData(0, 0, width, height)
+
+  return resizedImage
 }
