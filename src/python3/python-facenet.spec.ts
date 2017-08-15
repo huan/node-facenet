@@ -4,17 +4,21 @@ import * as path          from 'path'
 const t             = require('tap')  // tslint:disable:no-shadowed-variable
 import * as nj            from 'numjs'
 
-import { PythonFacenet }  from './python-facenet'
+import {
+  MODULE_ROOT,
+}                         from '../config'
 import {
   imageToData,
   loadImage,
 }                         from '../misc'
 
+import { PythonFacenet }  from './python-facenet'
+
 t.test('PythonFacenet python venv', async (t: any) => {
   const pf = new PythonFacenet()
   t.ok(pf, 'should be instanciated')
 
-  const VIRTUAL_ENV = path.normalize(`${__dirname}/../python3`)
+  const VIRTUAL_ENV = path.normalize(`${MODULE_ROOT}/python3`)
   t.equal(process.env['VIRTUAL_ENV'], VIRTUAL_ENV,              'should set VIRTUAL_ENV right')
   t.ok((process.env['PATH'] as string).startsWith(VIRTUAL_ENV), 'should set PATH right')
   t.notOk(process.env['PYTHONHOME'],                            'should have no PYTHONHOME')
@@ -79,7 +83,7 @@ t.test('Base64 bridge', async (t: any) => {
 
 t.test('align()', async (t: any) => {
   const pf = new PythonFacenet()
-  const IMAGE_FILE = path.resolve(__dirname, '../tests/fixtures/two-faces.jpg')
+  const IMAGE_FILE = path.resolve(MODULE_ROOT, 'tests/fixtures/two-faces.jpg')
 
   try {
     await pf.initMtcnn()
@@ -107,7 +111,7 @@ t.test('embedding()', async (t: any) => {
   try {
     await pf.initFacenet()
 
-    const IMAGE_FILE = path.resolve(__dirname, '../tests/fixtures/aligned-face.png')
+    const IMAGE_FILE = path.resolve(MODULE_ROOT, 'tests/fixtures/aligned-face.png')
     const image = await loadImage(IMAGE_FILE)
     const imageData = imageToData(image)
 

@@ -45,6 +45,7 @@ def image_with_two_faces() -> Iterable[Any]:
         os.path.join(
             file_path,
             '..',
+            '..',
             'tests',
             'fixtures',
             'two-faces.jpg',
@@ -62,6 +63,7 @@ def image_aligned_face() -> Iterable[Any]:
     fixture_file = os.path.abspath(os.path.normpath(
         os.path.join(
             file_path,
+            '..',
             '..',
             'tests',
             'fixtures',

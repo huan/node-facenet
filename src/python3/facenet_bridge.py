@@ -99,9 +99,9 @@ class FacenetBridge(object):
         path_split = PurePath(file_path).parts
         is_dist = path_split[-2:-1][0] == 'dist'    # the parent directory name
         if is_dist:
-            module_root = os.path.join(file_path, '..', '..')
+            module_root = os.path.join(file_path, '..', '..', '..')
         else:
-            module_root = os.path.join(file_path, '..')
+            module_root = os.path.join(file_path, '..', '..')
 
         module_root = os.path.abspath(
             os.path.normpath(

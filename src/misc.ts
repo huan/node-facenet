@@ -104,6 +104,9 @@ export async function resizeImage(
 
 export async function loadImage(url: string): Promise<HTMLImageElement> {
   const image = await _loadImage(url)
+  if (!image) {
+    throw new Error('no image for url:' + url)
+  }
   return image
 }
 
