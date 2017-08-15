@@ -14,8 +14,8 @@ cache:
     - node_modules
 
 install:
-  - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng jpeg giflib; fi
-  - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
+  - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng; fi # jpeg giflib
+  - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
   - npm install --unsafe-perm
 
 script:
