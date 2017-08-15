@@ -5,6 +5,7 @@ import * as rimraf      from 'rimraf'
 
 import { log }          from '../config'
 import {
+  Alignable,
   Facenet,
   FaceEmbedding,
 }                       from '../facenet'
@@ -24,38 +25,38 @@ export interface AlignmentCacheData {
   [key: string]: FaceEmbedding,
 }
 
-export class AlignmentCache {
-  public alignmentPath: string
-  public db:            DbCache
+export class AlignmentCache implements Alignable {
+  public alignmentCachePath:  string
+  public db:                  DbCache
 
   constructor(
     public facenet: Facenet,
-    public datasetDir: string,
+    public directory: string,
   ) {
-    log.verbose('AlignmentCache', 'constructor(%s)', datasetDir)
-    this.alignmentPath = path.join(datasetDir, 'alignment.cache')
+    log.verbose('AlignmentCache', 'constructor(%s)', directory)
+    this.alignmentCachePath = path.join(directory, 'alignment.cache')
   }
 
   public init(): void {
     log.verbose('AlignmentCache', 'init()')
 
-    this.db = new DbCache(this.alignmentPath)
+    this.db = new DbCache(this.alignmentCachePath)
 
-    if (!fs.existsSync(this.datasetDir)) {
-      throw new Error(`directory not exist: ${this.datasetDir}`)
+    if (!fs.existsSync(this.directory)) {
+      throw new Error(`directory not exist: ${this.directory}`)
     }
-    if (!fs.existsSync(this.alignmentPath)) {
-      fs.mkdirSync(this.alignmentPath)
+    if (!fs.existsSync(this.alignmentCachePath)) {
+      fs.mkdirSync(this.alignmentCachePath)
     }
   }
 
   public async clean(): Promise<void> {
     log.verbose('AlignmentCache', 'clean()')
     await this.db.clean()
-    rimraf.sync(this.alignmentPath)
+    rimraf.sync(this.alignmentCachePath)
   }
 
-  public async align(imageData: ImageData | string): Promise<Face[]> {
+  public async align(imageData: ImageData | string ): Promise<Face[]> {
     if (typeof imageData === 'string') {
       log.verbose('AlignmentCache', 'align(%s)', imageData)
       const image = await loadImage(imageData)
@@ -67,10 +68,10 @@ export class AlignmentCache {
     let faceList: Face[] = []
     const md5 = imageMd5(imageData)
 
-    const obj = await this.db.get(md5) as FaceJsonObject[]
-    if (obj) {
+    const objList = await this.db.get(md5) as FaceJsonObject[]
+    if (objList && Array.isArray(objList)) {
       log.silly('AlignmentCache', 'align() db HIT')
-      for (const faceObj of obj) {
+      for (const faceObj of objList) {
         faceList.push(Face.fromJSON(faceObj))
       }
       return faceList

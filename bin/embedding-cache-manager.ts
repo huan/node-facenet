@@ -4,9 +4,13 @@ import * as path          from 'path'
 import { ArgumentParser } from 'argparse'
 
 import {
-  Lfw,
+  AlignmentCache,
   EmbeddingCache,
+  Face,
   Facenet,
+  imageToData,
+  Lfw,
+  loadImage,
   log,
   VERSION,
 }                         from '../'
@@ -24,17 +28,22 @@ async function main(args: Args): Promise<number> {
   const facenet = new Facenet()
   const lfw = new Lfw(directory)
 
-  const cache = new EmbeddingCache(facenet, directory)
-  cache.init()
+  const alignmentCache = new AlignmentCache(facenet, directory)
+  const embeddingCache = new EmbeddingCache(facenet, directory)
+  await alignmentCache.init()
+  await embeddingCache.init()
 
-  const count = await cache.count()
+  const count = await embeddingCache.count()
 
   let ret = 0
   switch (args.command) {
-    case 'calc':
+    case 'setup':
       const imageList = await lfw.imageList()
       for (const file of imageList) {
-        await cache.embedding(file)
+        const image = await loadImage(file)
+        const imageData = imageToData(image)
+        const face = new Face(imageData)
+        await embeddingCache.embedding(face)
       }
       log.info('EmbeddingCacheManager', 'cache: %s has inited %d entries',
                                         args.directory,
@@ -42,7 +51,7 @@ async function main(args: Args): Promise<number> {
               )
       break
     case 'clean':
-      await cache.clean()
+      await embeddingCache.clean()
       log.info('EmbeddingCacheManager', 'cleaned %d entries', count)
       break
     default:
@@ -76,8 +85,8 @@ function parseArguments(): Args {
   parser.addArgument(
     [ 'command' ],
     {
-      help: 'init, clean',
-      defaultValue: 'init',
+      help: 'setup, clean',
+      defaultValue: 'setup',
     },
   )
 

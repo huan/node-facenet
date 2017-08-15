@@ -55,7 +55,7 @@ export class Face {
 
   constructor(
     public imageData:   ImageData,
-    box:                number[], // [x0, y0, x1, y1]
+    box?:                number[], // [x0, y0, x1, y1]
   ) {
     this.id = ++Face.id
 
@@ -65,6 +65,9 @@ export class Face {
                       box,
               )
 
+    if (!box) {
+      box = [0, 0, imageData.width, imageData.height]
+    }
     this.boundingBox = this.squareBox(box)
 
     if (   this.boundingBox.w !== imageData.width

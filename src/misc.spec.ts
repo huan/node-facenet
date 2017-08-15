@@ -17,34 +17,9 @@ import {
   resizeImage,
 }                         from './misc'
 
-// t.test('md5()', async (t: any) => {
-//   const data = nj.array([1, 2, 3], 'uint8')
-//   const EXPECTED_MD5 = '5289df737df57326fcdd22597afb1fac'
-
-//   const md5Text = md5(data)
-//   console.log(md5Text)
-//   t.equal(md5Text, EXPECTED_MD5, 'should do md5 sum for nj.array right')
-// })
-
-function fixtureImageData3x3(): ImageData {
-  const canvas = createCanvas(3, 3)
-  const ctx = canvas.getContext('2d')
-  if (!ctx) {
-    throw new Error('no ctx')
-  }
-  const imageData = ctx.createImageData(3, 3)
-
-  let val = 0
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    val++
-    imageData.data[i + 0] = val
-    imageData.data[i + 1] = val
-    imageData.data[i + 2] = val
-    imageData.data[i + 3] = 255
-  }
-
-  return imageData
-}
+import {
+  fixtureImageData3x3,
+}                         from './fixtures'
 
 t.test('bufResizeUint8ClampedRGBA()', async (t: any) => {
   const UINT8_CLAMPED_ARRAY = new Uint8ClampedArray([

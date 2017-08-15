@@ -13,6 +13,7 @@ import {
 
 async function main(args: Args): Promise<number> {
   log.level(args.log as any)
+
   const lfw = new Lfw(args.directory)
 
   let ret = 0
@@ -21,7 +22,7 @@ async function main(args: Args): Promise<number> {
       await lfw.setup()
       const idImageList = await lfw.idImageList()
       const keys = Object.keys(idImageList)
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 3; i++) {
         log.info('LfwManager', 'dataset: %s has %d images: %s',
                                 keys[i],
                                 idImageList[keys[i]].length,
@@ -66,7 +67,7 @@ function parseArguments(): Args {
   parser.addArgument(
     [ 'command' ],
     {
-      help: 'init, align, embedding',
+      help: 'setup, dataset, pairs, align, embedding',
       defaultValue: 'init',
     },
   )

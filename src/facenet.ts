@@ -20,11 +20,15 @@ import {
   resizeImage,
 }                         from './misc'
 
-// export interface FacenetOptions {
-//   log?: LogLevelName
-// }
+export interface Alignable {
+  align(imageData: ImageData | string): Promise<Face[]>,
+}
 
-export class Facenet {
+export interface Embeddingable {
+  embedding(face: Face): Promise<FaceEmbedding>,
+}
+
+export class Facenet implements Alignable, Embeddingable {
   private pythonFacenet: PythonFacenet
 
   constructor() {

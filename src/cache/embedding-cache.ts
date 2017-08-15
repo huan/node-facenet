@@ -3,14 +3,11 @@ import * as path        from 'path'
 
 import { log }          from '../config'
 import {
+  Embeddingable,
   Facenet,
   FaceEmbedding,
 }                       from '../facenet'
 import { Face }         from '../face'
-import {
-  loadImage,
-  imageToData,
-}                       from '../misc'
 
 import { DbCache }      from './db-cache'
 
@@ -18,7 +15,7 @@ export interface EmbeddingCacheData {
   [key: string]: FaceEmbedding,
 }
 
-export class EmbeddingCache {
+export class EmbeddingCache implements Embeddingable {
   public db:  DbCache
 
   constructor(
@@ -38,35 +35,19 @@ export class EmbeddingCache {
     this.db = new DbCache(path.join(this.directory, 'embedding.db'))
   }
 
-  public async embedding(relativePath: string): Promise<FaceEmbedding>
-  public async embedding(relativePath: string, embedding: FaceEmbedding): Promise<void>
+  public async embedding(face: Face): Promise<FaceEmbedding> {
+    log.verbose('EmbeddingCache', 'embedding(Face#%d)', face.id)
 
-  public async embedding(
-    relativePath: string,
-    embedding?:   FaceEmbedding,
-  ): Promise<FaceEmbedding | void> {
-    log.verbose('EmbeddingCache', 'embedding(%s, %s)', relativePath, embedding)
+    const cacheKey = face.md5
 
-    if (embedding) {
-      await this.db.put(relativePath, embedding)
-      return
-    }
-
-    const v = await this.db.get(relativePath)
+    const v = await this.db.get(cacheKey)
     if (v) {
       log.silly('EmbeddingCache', 'embedding() cache HIT')
       return v as FaceEmbedding
     }
 
-    const fullPathName = path.join(this.directory, relativePath)
-
-    const image = await loadImage(fullPathName)
-    const imageData = imageToData(image)
-
-    const face = new Face(imageData, [0, 0, imageData.width, imageData.height])
-
     await this.facenet.embedding(face)
-    await this.db.put(relativePath, face.embedding)
+    await this.db.put(cacheKey, face.embedding)
     log.silly('EmbeddingCache', 'embedding() cache MISS')
     return face.embedding
   }
