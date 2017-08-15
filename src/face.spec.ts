@@ -1,112 +1,110 @@
 #!/usr/bin/env ts-node
 
 const t                   = require('tap')  // tslint:disable:no-shadowed-variable
-const { createImageData } = require('canvas')
+const {
+  createImageData,
+  createCanvas,
+}                         = require('canvas')
 
-import { log }        from './config'
-log.level('silly')
+// import { log }        from './config'
+// log.level('silly')
 import {
   Rectangle,
   Face,
 }                     from './face'
 
-t.test('constructor() with full bounding box', async (t: any) => {
-  // https://stackoverflow.com/a/23501676/1123955
-  const ARRAY = new Uint8ClampedArray([
-    1, 2, 3, 255,
-    5, 6, 7, 255,
-    9, 10, 11, 255,
-    13, 14, 15, 255,
-  ])
-  const IMAGE_DATA = createImageData(ARRAY, 2, 2) as ImageData
-  const RECT: Rectangle = {
-    x: 0,
-    y: 0,
-    w: 2,
-    h: 2,
+t.test('constructor()', async (t: any) => {
+  const canvas = createCanvas(3, 3)
+  const ctx = canvas.getContext('2d')
+
+  const IMAGE_DATA_3_3 = ctx.createImageData(3, 3)
+
+  let val = 0
+  for (let i = 0; i < IMAGE_DATA_3_3.data.length; i += 4) {
+    val++
+    IMAGE_DATA_3_3.data[i + 0] = val // R
+    IMAGE_DATA_3_3.data[i + 1] = val // G
+    IMAGE_DATA_3_3.data[i + 2] = val // B
+
+    IMAGE_DATA_3_3.data[i + 3] = 255 // ALPHA: must be 255. See: https://stackoverflow.com/a/23501676/1123955
   }
-  const BOX = [0, 0, 1, 1]
-  const WIDTH = 2
-  const HEIGHT = 2
-  const DEPTH = 4
+  /**
+   * 1 2 3
+   * 4 5 6
+   * 7 8 9
+   */
+  const BOX_0_0_3_3 = [0, 0, 3, 3]
+  const EXPECTED_RECT_0_0_3_3: Rectangle = {
+    x: 0, y: 0,
+    w: 3, h: 3,
+  }
+  const EXPECTED_RECT_0_0_2_2: Rectangle = {
+    x: 0, y: 0,
+    w: 2, h: 2,
+  }
+  const EXPECTED_CROPPED_0_0_2_2 = new Uint8ClampedArray([
+    1, 1, 1, 255,
+    2, 2, 2, 255,
+    4, 4, 4, 255,
+    5, 5, 5, 255,
+  ])
 
-  const f = new Face(IMAGE_DATA, BOX)
-  t.deepEqual(f.imageData.data, IMAGE_DATA.data, 'data should be equal')
-  t.deepEqual(f.boundingBox, RECT, 'boundingBox should be equal')
+  t.test('with full bounding box', async (t: any) => {
+    const face = new Face(IMAGE_DATA_3_3, BOX_0_0_3_3)
+    t.deepEqual(face.imageData.data, IMAGE_DATA_3_3.data, 'data should be equal')
+    t.deepEqual(face.boundingBox, EXPECTED_RECT_0_0_3_3, 'boundingBox should be equal')
 
-  t.equal(f.width,  WIDTH,  'should get the right WIDTH')
-  t.equal(f.height, HEIGHT, 'should get the right HEIGHT')
-  t.equal(f.depth,  DEPTH,  'should get the right DEPTH')
+    t.equal(face.width,  3,  'should get width 3')
+    t.equal(face.height, 3, 'should get height 3')
+    t.equal(face.depth,  4,  'should get depth 4')
+  })
+
+  t.test('with sub bounding box that needs corp', async (t: any) => {
+
+    const BOX = [0, 0, 2, 2]
+
+    const face = new Face(IMAGE_DATA_3_3, BOX)
+    t.deepEqual(face.imageData.data, EXPECTED_CROPPED_0_0_2_2, 'data should be cropped right')
+    t.deepEqual(face.boundingBox, EXPECTED_RECT_0_0_2_2, 'boundingBox should be equal')
+
+    t.equal(face.width,  2,  'should get width 2')
+    t.equal(face.height, 2, 'should get height 2')
+    t.equal(face.depth,  4,  'should get depth 4')
+  })
 })
 
-t.test('constructor() with sub bounding box that needs corp', async (t: any) => {
-  // https://stackoverflow.com/a/23501676/1123955
-  const ARRAY = new Uint8ClampedArray([
-    1, 2, 3, 255,
-    5, 6, 7, 255,
-    9, 10, 11, 255,
-    13, 14, 15, 255,
-    17, 18, 19, 255,
-    21, 22, 23, 255,
-  ])
-  const IMAGE_DATA = createImageData(ARRAY, 2, 3) as ImageData
-  const EXPECTED_BOUNDING_BOX: Rectangle = {
-    x: 0,
-    y: 0,
-    w: 2,
-    h: 2,
-  }
-  const EXPECTED_CROPPED_ARRAY = new Uint8ClampedArray([
-    1, 2, 3, 255,
-    5, 6, 7, 255,
-    13, 14, 15, 255,
-    17, 18, 19, 255,
-  ])
-
-  const BOX = [0, 0, 1, 1]
-
-  const WIDTH = 2
-  const HEIGHT = 2
-  const DEPTH = 4
-
-  const f = new Face(IMAGE_DATA, BOX)
-  t.deepEqual(f.imageData.data, EXPECTED_CROPPED_ARRAY, 'data should be cropped right')
-  t.deepEqual(f.boundingBox, EXPECTED_BOUNDING_BOX, 'boundingBox should be equal')
-
-  t.equal(f.width,  WIDTH,  'should get the right WIDTH')
-  t.equal(f.height, HEIGHT, 'should get the right HEIGHT')
-  t.equal(f.depth,  DEPTH,  'should get the right DEPTH')
-})
-
-t.test('toJSON & fromJSON', async (t: any) => {
+t.test('JSON implementations', async (t: any) => {
   const ARRAY = new Uint8ClampedArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
   const BOX = [0, 0, 1, 1]
   const CONFIDENCE = 1
   const MARKS = [[0, 0], [0, 1], [0, 0], [1, 0], [1, 1]]
 
   // tslint:disable-next-line:max-line-length
-  const JSON_TEXT = '{"boundingBox":{"x":0,"y":0,"w":1,"h":1},"confidence":1,"data":"AQIDBAUGBwgJCgsMDQ4PEA==","facialLandmark":{"leftEye":{"x":0,"y":0},"rightEye":{"x":0,"y":1},"nose":{"x":0,"y":0},"leftMouthCorner":{"x":1,"y":0},"rightMouthCorner":{"x":1,"y":1}}}'
+  const JSON_TEXT = '{"boundingBox":{"x":0,"y":0,"w":1,"h":1},"confidence":1,"imageData":"AAAABA==","facialLandmark":{"leftEye":{"x":0,"y":0},"rightEye":{"x":0,"y":1},"nose":{"x":0,"y":0},"leftMouthCorner":{"x":1,"y":0},"rightMouthCorner":{"x":1,"y":1}}}'
 
   const IMAGE_DATA = createImageData(ARRAY, 2, 2) as ImageData
-  const f = new Face(IMAGE_DATA, BOX)
-  f.init(MARKS, CONFIDENCE)
+  const face = new Face(IMAGE_DATA, BOX)
+  face.init(MARKS, CONFIDENCE)
 
-  const jsonText = JSON.stringify(f)
+  t.test('toJSON()', async (t: any) => {
+    const jsonText = JSON.stringify(face)
+    t.equal(jsonText, JSON_TEXT, 'should toJson right')
+  })
 
-  t.equal(jsonText, JSON_TEXT, 'should toJson right')
+  t.test('fromSON()', async (t: any) => {
+    const ff = Face.fromJSON(JSON_TEXT)
 
-  const ff = Face.fromJSON(JSON_TEXT)
+    t.equal(ff.boundingBox.x, BOX[0], 'boundingBox x should equal to BOX[0]')
+    t.equal(ff.boundingBox.y, BOX[1], 'boundingBox y should equal to BOX[1]')
+    t.equal(ff.boundingBox.w, BOX[2] - BOX[0], 'boundingBox w should equal to BOX[2-0]')
+    t.equal(ff.boundingBox.h, BOX[3] - BOX[1], 'boundingBox h should equal to BOX[3-1]')
 
-  t.equal(ff.boundingBox.x, BOX[0], 'boundingBox x should equal to BOX[0]')
-  t.equal(ff.boundingBox.y, BOX[1], 'boundingBox y should equal to BOX[1]')
-  t.equal(ff.boundingBox.w, BOX[2] - BOX[0] + 1, 'boundingBox w should equal to BOX[2-0]')
-  t.equal(ff.boundingBox.h, BOX[3] - BOX[1] + 1, 'boundingBox h should equal to BOX[3-1]')
+    t.equal(ff.facialLandmark.leftEye.x, MARKS[0][0], 'facialLandmark leftEye.x should equal to MARKS[0][0]')
+    t.equal(ff.facialLandmark.leftEye.y, MARKS[0][1], 'facialLandmark leftEye.y should equal to MARKS[0][1]')
+    // TODO: test all the facialLandmarks
 
-  t.equal(ff.facialLandmark.leftEye.x, MARKS[0][0], 'facialLandmark leftEye.x should equal to MARKS[0][0]')
-  t.equal(ff.facialLandmark.leftEye.y, MARKS[0][1], 'facialLandmark leftEye.y should equal to MARKS[0][1]')
-  // TODO: test all the facialLandmarks
-
-  t.equal(ff.confidence, CONFIDENCE, 'should get the same confidence')
+    t.equal(ff.confidence, CONFIDENCE, 'should get the same confidence')
+  })
 })
 
 t.test('squareBox()', async (t: any) => {
