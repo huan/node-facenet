@@ -58,6 +58,34 @@ export async function dataToImage(data: ImageData): Promise<HTMLImageElement> {
   return image
 }
 
+// export function cropImage(
+//   imageData:  ImageData,
+//   x:          number,
+//   y:          number,
+//   width:      number,
+//   height:     number,
+// ): ImageData {
+//   const array = ndarray(
+//     new Uint8ClampedArray(imageData.data.buffer),
+//     [
+//       imageData.height,
+//       imageData.width,
+//       imageData.data.length / imageData.height / imageData.width,
+//     ],
+//   )
+//   const [r1, c1, r2, c2] = [
+//     y, x,
+//     y + height, x + width,
+//   ]
+//   const croppedArray = array.hi(r2, c2).lo(r1, c1)
+//   const croppedImageData = createImageData(
+//     croppedArray.data as Uint8ClampedArray,
+//     width,
+//     height,
+//   )
+//   return croppedImageData
+// }
+
 export function cropImage(
   imageData:  ImageData,
   x:          number,
@@ -65,7 +93,7 @@ export function cropImage(
   width:      number,
   height:     number,
 ): ImageData {
-  const canvas  = createCanvas(width, height)
+  const canvas  = createCanvas(imageData.width, imageData.height)
   const ctx     = canvas.getContext('2d')
   if (!ctx) {
     throw new Error('getContext found null')
@@ -73,8 +101,8 @@ export function cropImage(
 
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/putImageData
   // Issues #12 negative x/y value bug
-  ctx.putImageData(imageData, 0 - x, 0 - y)
-  const croppedImageData = ctx.getImageData(0, 0, width, height)
+  ctx.putImageData(imageData, 0, 0)
+  const croppedImageData = ctx.getImageData(x, y, width, height)
 
   return croppedImageData
 }
@@ -115,11 +143,12 @@ export function createCanvas(
   return canvas
 }
 
-export async function saveJpeg(
+export async function saveImage(
   imageData:  ImageData,
   file:       string,
+  ext:        'png' | 'jpg' = 'png',
 ): Promise<void> {
-  const out = fs.createWriteStream(file)
+  const out = fs.createWriteStream(`${file}.${ext}`)
 
   const canvas = createCanvas(imageData.width, imageData.height)
   const ctx = canvas.getContext('2d')
@@ -128,11 +157,22 @@ export async function saveJpeg(
   }
   ctx.putImageData(imageData, 0, 0)
 
-  const stream = (canvas as any).createJPEGStream({
-    bufsize: 2048,
-    quality: 80,
-  })
+  let stream: NodeJS.ReadableStream
+  switch (ext) {
+    case 'jpg':
+      stream = (canvas as any).createJPEGStream({
+        bufsize: 2048,
+        quality: 80,
+      })
+      break
 
+    case 'png':
+      stream = (canvas as any).createPNGStream()
+      break
+
+    default:
+      throw new Error('unsupported type:' + ext)
+  }
   stream.pipe(out)
 
   return new Promise<void>((resolve, reject) => {

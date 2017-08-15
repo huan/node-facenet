@@ -58,12 +58,10 @@ export class Face {
     box:                number[], // [x0, y0, x1, y1]
   ) {
     this.id = ++Face.id
-    this.md5 = imageMd5(imageData)
 
-    log.silly('Face', 'constructor(%dx%d#%s, [%s]',
+    log.silly('Face', 'constructor(%dx%d, [%s])',
                       imageData.width,
                       imageData.height,
-                      this.md5,
                       box,
               )
 
@@ -86,6 +84,8 @@ export class Face {
         this.boundingBox.h,
       )
     }
+    // update md5 after image crop
+    this.md5 = imageMd5(this.imageData)
   }
 
   public toJSON(): FaceJsonObject {
