@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
 import * as gm      from 'gm'
 const printf        = require('printf')
+const { loadImage } = require('canvas')
 
 import {
   Rectangle,
@@ -16,7 +17,7 @@ async function main() {
   try {
     // Load image from file
     const imageFile = `${__dirname}/../docs/images/landing-twins-ricky-martin.jpg`
-    const image = new FaceImage(imageFile)
+    const image = await loadImage(imageFile)
 
     // Do Face Alignment, return faces
     const faceList = await facenet.align(image)

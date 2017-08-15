@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
 import { ArgumentParser } from 'argparse'
-import * as gm from 'gm'
+import * as gm            from 'gm'
+
+const {
+  loadImage,
+}                         = require('canvas')
 
 import {
   Facenet,
-  FaceImage,
+  // FaceImage,
   log,
   VERSION,
 }                         from '../'
@@ -39,7 +43,7 @@ async function main(args: Args) {
     const imageFile = args.input
 
     log.info('CLI', 'Opening image', args.input)
-    const image = new FaceImage(imageFile)
+    const image = await loadImage(imageFile)
 
     log.info('CLI', 'MTCNN Aligning...')
     start = Date.now()

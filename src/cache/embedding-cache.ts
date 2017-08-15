@@ -1,6 +1,8 @@
 import * as fs          from 'fs'
 import * as path        from 'path'
 
+const { loadImage }     = require('canvas')
+
 import {
   Facenet,
   FaceEmbedding,
@@ -56,7 +58,7 @@ export class EmbeddingCache {
     }
 
     const fullPathName = path.join(this.directory, relativePath)
-    const image = new FaceImage(fullPathName)
+    const image = await loadImage(fullPathName)
     const face: Face  = image.asFace()
 
     await this.facenet.embedding(face)

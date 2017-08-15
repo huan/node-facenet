@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 import { ArgumentParser } from 'argparse'
+const { loadImage }       = require('canvas')
 
 import {
   Facenet,
-  FaceImage,
+  // FaceImage,
   log,
   VERSION,
 }                         from '../'
@@ -22,7 +23,7 @@ async function main(args: Args) {
   try {
     const imageFile = args.image_file
 
-    const image = new FaceImage(imageFile)
+    const image = await loadImage(imageFile)
     start = Date.now()
     const faceList = await f.align(image)
     log.info('CLI', 'Facenet Align(%fs): found %d faces',

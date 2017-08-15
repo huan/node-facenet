@@ -1,7 +1,9 @@
 #!/usr/bin/env ts-node
 import * as path          from 'path'
+
+const t             = require('tap')  // tslint:disable:no-shadowed-variable
+const { loadImage } = require('canvas')
 import * as nj            from 'numjs'
-const t = require('tap')  // tslint:disable:no-shadowed-variable
 
 import { PythonFacenet }  from './python-facenet'
 
@@ -78,7 +80,7 @@ t.test('align()', async (t: any) => {
 
   try {
     await pf.initMtcnn()
-    const image = nj.images.read(IMAGE_FILE) as any as nj.NdArray<Uint8Array>
+    const image = await loadImage(IMAGE_FILE)
 
     const [boundingBoxes, landmarks] = await pf.align(image)
     const numFaces = boundingBoxes.length
@@ -102,7 +104,7 @@ t.test('embedding()', async (t: any) => {
     await pf.initFacenet()
 
     const IMAGE_FILE = path.resolve(__dirname, '../tests/fixtures/aligned-face.png')
-    const image = nj.images.read(IMAGE_FILE) as any as nj.NdArray<Uint8Array>
+    const image = await loadImage(IMAGE_FILE)
 
     const embedding = await pf.embedding(image)
 

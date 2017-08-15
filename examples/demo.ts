@@ -1,6 +1,8 @@
 #!/usr/bin/env ts-node
 import * as assert  from 'assert'
 
+const { loadImage } = require('canvas')
+
 import {
   Facenet,
   // FaceImage,
@@ -14,7 +16,7 @@ async function main() {
   try {
     // Load image from file
     const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-    const image = new FaceImage(imageFile)
+    const image = await loadImage(imageFile)
 
     // Do Face Alignment, return faces
     const faceList = await facenet.align(image)

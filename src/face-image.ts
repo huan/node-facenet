@@ -6,7 +6,7 @@ import * as nj      from 'numjs'
 // const canvas = require('canvas')
 
 import { Face }     from './face'
-import { md5 }      from './misc'
+// import { imageMd5 } from './misc'
 
 export type FaceImageData = nj.NdArray<Uint8Array>
 
@@ -27,7 +27,7 @@ export class FaceImage {
   }
   public set data(image: FaceImageData) {
     this._data = image
-    this.url    = md5(image)
+    // this.url    = imageMd5(image)
   }
   private _data: FaceImageData
 
