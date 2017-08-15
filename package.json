@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@types/argparse": "1.0.30",
-    "@types/glob": "5.0.30",
+    "@types/glob": "5.0.31",
     "@types/gm": "1.17.31",
     "@types/leveldown": "1.7.0",
     "@types/levelup": "0.0.30",
