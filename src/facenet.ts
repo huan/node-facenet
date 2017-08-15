@@ -12,7 +12,7 @@ import {
 }                         from './config'
 import {
   PythonFacenet,
-}                         from './python-facenet'
+}                         from './python3/python-facenet'
 
 import {
   imageToData,

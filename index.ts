@@ -12,4 +12,4 @@ export {
 }                           from './src/face'
 export { Lfw }              from './src/lfw'
 export *                    from './src/misc'
-export { PythonFacenet }    from './src/python-facenet'
+export { PythonFacenet }    from './src/python3/python-facenet'

@@ -8,7 +8,7 @@ import { PythonFacenet }  from './python-facenet'
 import {
   imageToData,
   loadImage,
-}                         from './misc'
+}                         from '../misc'
 
 t.test('PythonFacenet python venv', async (t: any) => {
   const pf = new PythonFacenet()

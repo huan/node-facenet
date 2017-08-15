@@ -8,7 +8,7 @@ import {
 import {
   log,
   MODULE_ROOT,
-}                   from './config'
+}                   from '../config'
 
 export type BoundingFiveNumber = [
   number, number, number, number, // x1, y1, x2, y2
