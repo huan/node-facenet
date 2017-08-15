@@ -3,16 +3,16 @@ import * as path        from 'path'
 
 import * as rimraf      from 'rimraf'
 
+import { log }          from '../config'
 import {
   Facenet,
   FaceEmbedding,
 }                       from '../facenet'
-// import { FaceImage }    from '../face-image'
 import {
   Face,
   FaceJsonObject,
 }                       from '../face'
-import { log }          from '../config'
+import { imageMd5 }     from '../misc'
 
 import { DbCache }      from './db-cache'
 
@@ -51,12 +51,13 @@ export class AlignmentCache {
     rimraf.sync(this.alignmentPath)
   }
 
-  public async align(image: HTMLImageElement): Promise<Face[]> {
-    log.verbose('AlignmentCache', 'align(%s)', image)
+  public async align(imageData: ImageData): Promise<Face[]> {
+    log.verbose('AlignmentCache', 'align(%dx%d)', imageData.width, imageData.height)
 
     let faceList: Face[] = []
+    const md5 = imageMd5(imageData)
 
-    const obj = await this.db.get(image.src) as FaceJsonObject[]
+    const obj = await this.db.get(md5) as FaceJsonObject[]
     if (obj) {
       log.silly('AlignmentCache', 'align() db HIT')
       for (const faceObj of obj) {
@@ -66,8 +67,8 @@ export class AlignmentCache {
     } else {
       log.silly('AlignmentCache', 'align() db MISS')
 
-      faceList = await this.facenet.align(image)
-      await this.db.put(image.src, faceList)  // Face.toJSON()
+      faceList = await this.facenet.align(imageData)
+      await this.db.put(md5, faceList)  // Face.toJSON()
     }
 
     return faceList
