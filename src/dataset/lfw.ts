@@ -10,8 +10,9 @@ const tar             = require('tar')
 import {
   log,
   MODULE_ROOT,
-}                         from './config'
-import { Dataset }        from './dataset'
+}                         from '../config'
+
+import { Dataset }        from './'
 
 export type LfwPair = [string, string, boolean] // image1, image2, isSame
 

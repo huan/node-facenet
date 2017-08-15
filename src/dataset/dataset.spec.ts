@@ -2,12 +2,15 @@
 
 const t = require('tap')  // tslint:disable:no-shadowed-variable
 
-// import { log }      from './config'
+import {
+  // log,
+  MODULE_ROOT,
+}                   from '../config'
 // log.level('silly')
 
 import { Dataset }  from './dataset'
 
-const DIRECTORY = `${__dirname}/../tests/fixtures/dataset`
+const FIXTURE_DIRECTORY = `${MODULE_ROOT}/tests/fixtures/dataset`
 
 class DatasetTest extends Dataset {
   public async setup(): Promise<void> {
@@ -16,12 +19,12 @@ class DatasetTest extends Dataset {
 }
 
 t.test('Smoke testing', async (t: any) => {
-  const d = new DatasetTest(DIRECTORY, 'jpg')
+  const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   t.ok(d, 'should inited a Dataset instance')
 })
 
 t.test('idList()', async (t: any) => {
-  const d = new DatasetTest(DIRECTORY, 'jpg')
+  const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   const idList = await d.idList()
 
   t.equal(idList.length, 2, 'should get 2 ids')
@@ -30,7 +33,7 @@ t.test('idList()', async (t: any) => {
 })
 
 t.test('imageList()', async (t: any) => {
-  const d = new DatasetTest(DIRECTORY, 'jpg')
+  const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   const imageList = await d.imageList()
 
   t.equal(imageList.length, 3, 'should get 3 images')
@@ -40,7 +43,7 @@ t.test('imageList()', async (t: any) => {
 })
 
 t.test('idImageList()', async (t: any) => {
-  const d = new DatasetTest(DIRECTORY, 'jpg')
+  const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   const idImageList = await d.idImageList()
 
   const idList = Object.keys(idImageList)

@@ -4,7 +4,7 @@ import * as glob  from 'glob'
 
 import {
   log,
-}                         from './config'
+}                         from '../config'
 
 export interface IdImageList {
   [id: string]: string[], // relative path
