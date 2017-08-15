@@ -133,4 +133,5 @@ python3/
 models/
 
 /*.jpg
+/*.png
 /datasets/
