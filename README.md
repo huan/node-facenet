@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zixia/node-facenet.svg?branch=master)](https://travis-ci.org/zixia/node-facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
-node-facenet is a Python/TensorFlow backed FaceNet implementation for Node.js.
+node-facenet is a TensorFlow backed FaceNet implementation for Node.js.
 
 ![Google Facenet](https://zixia.github.io/node-facenet/images/facenet.jpg)
 

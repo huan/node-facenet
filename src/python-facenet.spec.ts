@@ -6,6 +6,7 @@ const { loadImage } = require('canvas')
 import * as nj            from 'numjs'
 
 import { PythonFacenet }  from './python-facenet'
+import { imageToData }    from './misc'
 
 t.test('PythonFacenet python venv', async (t: any) => {
   const pf = new PythonFacenet()
@@ -81,8 +82,9 @@ t.test('align()', async (t: any) => {
   try {
     await pf.initMtcnn()
     const image = await loadImage(IMAGE_FILE)
+    const imageData = imageToData(image)
 
-    const [boundingBoxes, landmarks] = await pf.align(image)
+    const [boundingBoxes, landmarks] = await pf.align(imageData)
     const numFaces = boundingBoxes.length
     const numMarks = landmarks.length
     const confidence = boundingBoxes[0][4]
@@ -105,8 +107,9 @@ t.test('embedding()', async (t: any) => {
 
     const IMAGE_FILE = path.resolve(__dirname, '../tests/fixtures/aligned-face.png')
     const image = await loadImage(IMAGE_FILE)
+    const imageData = imageToData(image)
 
-    const embedding = await pf.embedding(image)
+    const embedding = await pf.embedding(imageData)
 
     t.equal(embedding.length, 128, 'should get 128 dim embedding')
     const valid = embedding

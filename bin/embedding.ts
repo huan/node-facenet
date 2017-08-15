@@ -5,7 +5,7 @@ const { loadImage }       = require('canvas')
 
 import {
   Facenet,
-  // FaceImage,
+  imageToData,
   log,
   VERSION,
 }                         from '../'
@@ -24,8 +24,10 @@ async function main(args: Args) {
     const imageFile = args.image_file
 
     const image = await loadImage(imageFile)
+    const imageData = imageToData(image)
+
     start = Date.now()
-    const faceList = await f.align(image)
+    const faceList = await f.align(imageData)
     log.info('CLI', 'Facenet Align(%fs): found %d faces',
                         (Date.now() - start) / 1000,
                         faceList.length,

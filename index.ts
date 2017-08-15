@@ -10,6 +10,6 @@ export {
   Rectangle,
   Face,
 }                           from './src/face'
-// export { FaceImage }        from './src/face-image'
 export { Lfw }              from './src/lfw'
+export *                    from './src/misc'
 export { PythonFacenet }    from './src/python-facenet'

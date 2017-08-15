@@ -7,6 +7,7 @@ import {
   Rectangle,
   Face,
   Facenet,
+  imageToData,
   log,
 }                   from '../'  // from 'facenet'
 
@@ -18,9 +19,10 @@ async function main() {
     // Load image from file
     const imageFile = `${__dirname}/../docs/images/landing-twins-ricky-martin.jpg`
     const image = await loadImage(imageFile)
+    const imageData = imageToData(image)
 
     // Do Face Alignment, return faces
-    const faceList = await facenet.align(image)
+    const faceList = await facenet.align(imageData)
 
     const newImage = gm(imageFile)
 

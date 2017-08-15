@@ -11,6 +11,7 @@ import {
   Facenet,
   // FaceImage,
   log,
+  imageToData,
   VERSION,
 }                         from '../'
 log.level('silly')
@@ -44,10 +45,11 @@ async function main(args: Args) {
 
     log.info('CLI', 'Opening image', args.input)
     const image = await loadImage(imageFile)
+    const imageData = imageToData(image)
 
     log.info('CLI', 'MTCNN Aligning...')
     start = Date.now()
-    const faceList = await f.align(image)
+    const faceList = await f.align(imageData)
     log.info('CLI', 'Aligned after %f seconds', (Date.now() - start) / 1000)
     log.info('CLI', 'Found %d faces', faceList.length)
     // console.log(faceList)

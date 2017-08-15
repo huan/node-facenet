@@ -144,7 +144,7 @@ export class PythonFacenet {
 
     const start = Date.now();
     [boundingBoxes, landmarks] = await this.python3
-      `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth}).tolist()`
+      `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
 
     log.silly('PythonFacenet', 'align() mtcnn_bridge.align() cost %d milliseconds',
                                 Date.now() - start,
@@ -202,7 +202,7 @@ export class PythonFacenet {
       `from facenet_bridge import base64_to_image`
 
     return await this.python3
-      `base64_to_image(${text}, ${row}, ${col}, ${depth})`
+      `base64_to_image(${text}, ${row}, ${col}, ${depth}).tolist()`
   }
 
   /**

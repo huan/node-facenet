@@ -3,13 +3,14 @@ import * as path        from 'path'
 
 const { loadImage }     = require('canvas')
 
+import { log }          from '../config'
 import {
   Facenet,
   FaceEmbedding,
 }                       from '../facenet'
 // import { FaceImage }    from '../face-image'
 import { Face }         from '../face'
-import { log }          from '../config'
+import { imageToData }  from '../misc'
 
 import { DbCache }      from './db-cache'
 
@@ -58,8 +59,11 @@ export class EmbeddingCache {
     }
 
     const fullPathName = path.join(this.directory, relativePath)
+
     const image = await loadImage(fullPathName)
-    const face: Face  = image.asFace()
+    const imageData = imageToData(image)
+
+    const face = new Face(imageData, [0, 0, imageData.width, imageData.height])
 
     await this.facenet.embedding(face)
     await this.db.put(relativePath, face.embedding)

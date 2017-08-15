@@ -59,10 +59,8 @@ export class Facenet {
    * Alignment the image, get faces list
    * @param image
    */
-  public async align(image: HTMLImageElement): Promise<Face[]> {
-    log.verbose('Facenet', 'align(%s)', image.src)
-
-    const imageData = imageToData(image)
+  public async align(imageData: ImageData): Promise<Face[]> {
+    log.verbose('Facenet', 'align(%dx%d)', imageData.width, imageData.height)
 
     log.silly('Facenet', 'align() pythonFacenet.align(imageData) ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(imageData)

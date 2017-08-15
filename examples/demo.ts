@@ -5,7 +5,7 @@ const { loadImage } = require('canvas')
 
 import {
   Facenet,
-  // FaceImage,
+  imageToData,
   log,
 }                   from '../'  // from 'facenet'
 
@@ -17,9 +17,10 @@ async function main() {
     // Load image from file
     const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
     const image = await loadImage(imageFile)
+    const imageData = imageToData(image)
 
     // Do Face Alignment, return faces
-    const faceList = await facenet.align(image)
+    const faceList = await facenet.align(imageData)
 
     for (const face of faceList) {
       // Calculate Face Embedding, return feature vector
