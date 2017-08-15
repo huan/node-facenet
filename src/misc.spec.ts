@@ -29,7 +29,9 @@ import {
 function fixtureImageData3x3(): ImageData {
   const canvas = createCanvas(3, 3)
   const ctx = canvas.getContext('2d')
-
+  if (!ctx) {
+    throw new Error('no ctx')
+  }
   const imageData = ctx.createImageData(3, 3)
 
   let val = 0
@@ -141,6 +143,9 @@ t.test('Image/Data convert', async (t: any) => {
     const canvas = createCanvas(3, 3)
     const ctx = canvas.getContext('2d')
     const image = await dataToImage(IMAGE_DATA)
+    if (!ctx) {
+      throw new Error('no ctx')
+    }
     ctx.drawImage(image, 0, 0)
     const data = ctx.getImageData(0, 0, 3, 3)
     t.deepEqual(data, IMAGE_DATA, 'should conver data to image right')
