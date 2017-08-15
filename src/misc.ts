@@ -58,34 +58,6 @@ export async function dataToImage(data: ImageData): Promise<HTMLImageElement> {
   return image
 }
 
-// export function cropImage(
-//   imageData:  ImageData,
-//   x:          number,
-//   y:          number,
-//   width:      number,
-//   height:     number,
-// ): ImageData {
-//   const array = ndarray(
-//     new Uint8ClampedArray(imageData.data.buffer),
-//     [
-//       imageData.height,
-//       imageData.width,
-//       imageData.data.length / imageData.height / imageData.width,
-//     ],
-//   )
-//   const [r1, c1, r2, c2] = [
-//     y, x,
-//     y + height, x + width,
-//   ]
-//   const croppedArray = array.hi(r2, c2).lo(r1, c1)
-//   const croppedImageData = createImageData(
-//     croppedArray.data as Uint8ClampedArray,
-//     width,
-//     height,
-//   )
-//   return croppedImageData
-// }
-
 export function cropImage(
   imageData:  ImageData,
   x:          number,

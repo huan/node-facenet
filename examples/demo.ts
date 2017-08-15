@@ -3,9 +3,11 @@ import * as assert  from 'assert'
 
 import {
   Facenet,
-  log,
   saveImage,
 }                   from '../'  // from 'facenet'
+
+// import { log }      from '../'
+// log.level('silly')
 
 async function main() {
   // Instanciate FaceNet
@@ -37,8 +39,6 @@ async function main() {
     facenet.quit()
   }
 }
-
-log.level('silly')
 
 main()
 .catch(console.error)
