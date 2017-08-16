@@ -72,7 +72,7 @@ t.test('JSON implementations', async (t: any) => {
     5, 5, 5, 255,
   ]
   // tslint:disable-next-line:max-line-length
-  const JSON_TEXT = '{"boundingBox":{"x":0,"y":0,"w":2,"h":2},"confidence":1,"imageData":"AQEB/wICAv8EBAT/BQUF/w==","facialLandmark":{"leftEye":{"x":0,"y":0},"rightEye":{"x":0,"y":1},"nose":{"x":0,"y":0},"leftMouthCorner":{"x":1,"y":0},"rightMouthCorner":{"x":1,"y":1}}}'
+  const JSON_TEXT = '{"boundingBox":[0,0,2,2],"confidence":1,"facialLandmark":{"leftEye":{"x":0,"y":0},"rightEye":{"x":0,"y":1},"nose":{"x":0,"y":0},"leftMouthCorner":{"x":1,"y":0},"rightMouthCorner":{"x":1,"y":1}},"imageData":"AQEB/wICAv8EBAT/BQUF/w==","rect":{"x":0,"y":0,"w":2,"h":2}}'
 
   const face = new Face(IMAGE_DATA, BOX)
   face.init(MARKS, CONFIDENCE)
