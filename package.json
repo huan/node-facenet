@@ -16,11 +16,11 @@
     "printf": "0.2.5",
     "python-bridge": "1.0.3",
     "rimraf": "2.6.1",
-    "tar": "3.1.10"
+    "tar": "3.1.11"
   },
   "devDependencies": {
     "@types/argparse": "1.0.30",
-    "@types/glob": "5.0.30",
+    "@types/glob": "5.0.31",
     "@types/gm": "1.17.31",
     "@types/leveldown": "1.7.0",
     "@types/levelup": "0.0.30",
@@ -28,7 +28,7 @@
     "@types/node": "8.0.21",
     "@types/numjs": "0.14.1",
     "@types/printf": "0.2.0",
-    "@types/rimraf": "0.0.28",
+    "@types/rimraf": "2.0.1",
     "@types/tar": "1.0.29",
     "cross-env": "5.0.5",
     "gm": "1.23.0",
