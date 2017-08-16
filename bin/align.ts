@@ -55,7 +55,7 @@ async function main(args: Args) {
     for (const face of faceList) {
       const mark = face.facialLandmark
       const color = randomColor()
-      const {x, y, w, h} = face.boundingBox
+      const {x, y, w, h} = face.rect
       const base = Math.floor(w + h) / 50 + 1
       newImage.fill('none')
               .stroke(color, base * 1)

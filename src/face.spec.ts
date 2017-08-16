@@ -35,7 +35,7 @@ t.test('constructor()', async (t: any) => {
   t.test('with full bounding box', async (t: any) => {
     const face = new Face(IMAGE_DATA_3_3, BOX_0_0_3_3)
     t.deepEqual(face.imageData.data, IMAGE_DATA_3_3.data, 'data should be equal')
-    t.deepEqual(face.boundingBox, EXPECTED_RECT_0_0_3_3, 'boundingBox should be equal')
+    t.deepEqual(face.rect, EXPECTED_RECT_0_0_3_3, 'rectangle should be equal')
 
     t.equal(face.width,  3,  'should get width 3')
     t.equal(face.height, 3, 'should get height 3')
@@ -48,7 +48,7 @@ t.test('constructor()', async (t: any) => {
 
     const face = new Face(IMAGE_DATA_3_3, BOX)
     t.deepEqual(face.imageData.data, EXPECTED_CROPPED_0_0_2_2, 'data should be cropped right')
-    t.deepEqual(face.boundingBox, EXPECTED_RECT_0_0_2_2, 'boundingBox should be equal')
+    t.deepEqual(face.rect, EXPECTED_RECT_0_0_2_2, 'rectangle should be equal')
 
     t.equal(face.width,  2,  'should get width 2')
     t.equal(face.height, 2, 'should get height 2')
@@ -87,10 +87,10 @@ t.test('JSON implementations', async (t: any) => {
 
     t.deepEqual(face.imageData.data, EXPECTED_IMAGE_ARRAY_2_2, 'should restore imageData right')
 
-    t.equal(face.boundingBox.x, BOX[0], 'boundingBox x should equal to BOX[0]')
-    t.equal(face.boundingBox.y, BOX[1], 'boundingBox y should equal to BOX[1]')
-    t.equal(face.boundingBox.w, BOX[2] - BOX[0], 'boundingBox w should equal to BOX[2-0]')
-    t.equal(face.boundingBox.h, BOX[3] - BOX[1], 'boundingBox h should equal to BOX[3-1]')
+    t.equal(face.rect.x, BOX[0], 'rectangle x should equal to BOX[0]')
+    t.equal(face.rect.y, BOX[1], 'rectangle y should equal to BOX[1]')
+    t.equal(face.rect.w, BOX[2] - BOX[0], 'rectangle w should equal to BOX[2-0]')
+    t.equal(face.rect.h, BOX[3] - BOX[1], 'rectangle h should equal to BOX[3-1]')
 
     t.equal(face.facialLandmark.leftEye.x, MARKS[0][0], 'facialLandmark leftEye.x should equal to MARKS[0][0]')
     t.equal(face.facialLandmark.leftEye.y, MARKS[0][1], 'facialLandmark leftEye.y should equal to MARKS[0][1]')

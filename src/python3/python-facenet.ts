@@ -73,7 +73,7 @@ export class PythonFacenet {
   }
 
   public async initFacenet(): Promise<void> {
-    log.verbose('PythonFacenet', 'initFacenet()')
+    log.silly('PythonFacenet', 'initFacenet()')
 
     if (this.facenetInited) {
       return
@@ -93,7 +93,7 @@ export class PythonFacenet {
   }
 
   public async initMtcnn(): Promise<void> {
-    log.verbose('PythonFacenet', 'initMtcnn()')
+    log.silly('PythonFacenet', 'initMtcnn()')
 
     if (this.mtcnnInited) {
       return

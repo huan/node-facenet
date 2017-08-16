@@ -6,11 +6,8 @@ import { ArgumentParser } from 'argparse'
 import {
   AlignmentCache,
   EmbeddingCache,
-  Face,
   Facenet,
-  imageToData,
   Lfw,
-  loadImage,
   log,
   VERSION,
 }                         from '../'
@@ -32,6 +29,7 @@ async function main(args: Args): Promise<number> {
   const embeddingCache = new EmbeddingCache(facenet, directory)
   await alignmentCache.init()
   await embeddingCache.init()
+  await facenet.init()
 
   const count = await embeddingCache.count()
 
@@ -39,11 +37,13 @@ async function main(args: Args): Promise<number> {
   switch (args.command) {
     case 'setup':
       const imageList = await lfw.imageList()
-      for (const file of imageList) {
-        const image = await loadImage(file)
-        const imageData = imageToData(image)
-        const face = new Face(imageData)
-        await embeddingCache.embedding(face)
+      for (const relativePath of imageList) {
+        const file = path.join(lfw.directory, relativePath)
+
+        const faceList = await alignmentCache.align(file)
+        await Promise.all(
+          faceList.map(face => embeddingCache.embedding(face)),
+        )
       }
       log.info('EmbeddingCacheManager', 'cache: %s has inited %d entries',
                                         args.directory,
@@ -59,6 +59,7 @@ async function main(args: Args): Promise<number> {
       ret = 1
       break
   }
+  await facenet.quit()
   return ret
 }
 

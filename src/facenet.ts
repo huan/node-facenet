@@ -1,29 +1,29 @@
-
 import * as nj            from 'numjs'
 
-import {
-  Face,
-}                         from './face'
-// import { FaceImage }      from './face-image'
 import {
   FaceEmbedding,
   log,
   VERSION,
 }                         from './config'
 import {
-  PythonFacenet,
-}                         from './python3/python-facenet'
-
+  Face,
+}                         from './face'
 import {
   imageToData,
   loadImage,
   resizeImage,
 }                         from './misc'
 
+import {
+  PythonFacenet,
+}                         from './python3/python-facenet'
+
+// Interface for Cache
 export interface Alignable {
   align(imageData: ImageData | string): Promise<Face[]>,
 }
 
+// Interface for Cache
 export interface Embeddingable {
   embedding(face: Face): Promise<FaceEmbedding>,
 }
@@ -66,12 +66,13 @@ export class Facenet implements Alignable, Embeddingable {
    */
   public async align(imageData: ImageData | string): Promise<Face[]> {
     if (typeof imageData === 'string') {
+      log.verbose('Facenet', 'align(%s)', imageData)
       const image = await loadImage(imageData)
       imageData = imageToData(image)
+    } else {
+      log.verbose('Facenet', 'align(%dx%d)', imageData.width, imageData.height)
     }
-    log.verbose('Facenet', 'align(%dx%d)', imageData.width, imageData.height)
 
-    log.silly('Facenet', 'align() pythonFacenet.align() ...')
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(imageData)
     log.silly('Facenet', 'align() pythonFacenet.align() done')
 
@@ -101,10 +102,13 @@ export class Facenet implements Alignable, Embeddingable {
 
     let imageData = face.imageData
     if (imageData.width !== imageData.height) {
+      log.warn('Facenet', 'embedding(%s) error!', face)
       throw new Error('should be a square image because it will be resized to 160x160')
     }
 
     if (imageData.width !== 160) {
+      log.verbose('Facenet', 'embedding(%dx%d) got a face not 160x160, resizing...',
+                            imageData.width, imageData.height)
       imageData = await resizeImage(imageData, 160, 160)
     }
 

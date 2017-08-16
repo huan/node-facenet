@@ -1,3 +1,4 @@
+import * as fs        from 'fs'
 import * as path      from 'path'
 
 import * as levelup   from 'levelup'
@@ -13,9 +14,21 @@ export class DbCache {
   public db:        levelup.LevelUp
   public entryList: DbEntryList
 
-  constructor(public directory: string) {
+  constructor(
+    public directory: string,
+    public dbName?:   string,
+  ) {
+    if (!this.dbName) {
+      this.dbName = 'leveldb.default'
+    } else {
+      this.dbName = 'leveldb.' + this.dbName
+    }
+
+    if (!fs.existsSync(this.directory)) {
+      throw new Error(`directory not exist: ${this.directory}`)
+    }
     this.db = levelup(
-      path.join(directory, 'level.db'),
+      path.join(directory, this.dbName),
       {
         valueEncoding: 'json',
       },
@@ -93,7 +106,12 @@ export class DbCache {
     log.verbose('DbCache', 'clean()')
     this.db.close()
     return new Promise<void>((resolve, reject) => {
-      rimraf(this.directory, (err) => {
+      const dbName = this.dbName
+      if (!dbName) {
+        return reject('no dbName')
+      }
+      const dbPath = path.join(this.directory, dbName)
+      rimraf(dbPath, (err) => {
         if (err) {
           return reject(err)
         }

@@ -204,8 +204,4 @@ class MtcnnBridge():
             self.factor,
         )
 
-        # do not do around: leave it to the high level api, to keep precision
-        # bounding_boxes[:, 0:4] = np.around(bounding_boxes[:, 0:4])
-        # landmarks = np.around(landmarks)
-
         return bounding_boxes.tolist(), landmarks.tolist()

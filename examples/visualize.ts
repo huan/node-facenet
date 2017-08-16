@@ -30,7 +30,7 @@ async function main() {
       await facenet.embedding(face)
 
       const color = 'green'
-      const {x, y, w, h} = face.boundingBox
+      const {x, y, w, h} = face.rect
       const base = Math.floor((w + h) / 50) + 1
       outputImage.fill('none')
                 .stroke(color, base * 1)

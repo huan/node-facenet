@@ -31,7 +31,7 @@ async function main() {
 
       console.log('image file:',    imageFile)
       console.log('face file:',     faceFile)
-      console.log('bounding box:',  face.boundingBox)
+      console.log('bounding box:',  face.rect)
       console.log('landmarks:',     face.facialLandmark)
       console.log('embedding:',     face.embedding)
     }

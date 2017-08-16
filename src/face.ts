@@ -36,10 +36,11 @@ export interface FacialLandmark {
 
 export interface FaceJsonObject {
   _embedding:     FaceEmbedding,
-  boundingBox:    Rectangle,
+  boundingBox?:   number[],
   confidence:     number,
-  imageData:      string,   // Base64 of Buffer
   facialLandmark: FacialLandmark,
+  imageData:      string,   // Base64 of Buffer
+  rect:           Rectangle,
 }
 
 export class Face {
@@ -47,44 +48,44 @@ export class Face {
   public id: number
   public md5: string
 
-  public boundingBox:     Rectangle
+  public rect:            Rectangle
   public confidence:      number
   public facialLandmark:  FacialLandmark
 
   private _embedding: FaceEmbedding
 
   constructor(
-    public imageData:   ImageData,
-    box?:                number[], // [x0, y0, x1, y1]
+    public imageData:     ImageData,
+    private boundingBox?:  number[], // [x0, y0, x1, y1]
   ) {
     this.id = ++Face.id
 
     log.silly('Face', 'constructor(%dx%d, [%s])',
                       imageData.width,
                       imageData.height,
-                      box,
+                      boundingBox,
               )
 
-    if (!box) {
-      box = [0, 0, imageData.width, imageData.height]
+    if (!boundingBox) {
+      boundingBox = [0, 0, imageData.width, imageData.height]
     }
-    this.boundingBox = this.squareBox(box)
+    this.rect = this.squareBox(boundingBox)
 
-    if (   this.boundingBox.w !== imageData.width
-        || this.boundingBox.h !== imageData.height
+    if (   this.rect.w !== imageData.width
+        || this.rect.h !== imageData.height
     ) { // need to corp and reset this.data
       log.silly('Face', 'constructor() box.w=%d, box.h=%d; image.w=%d, image.h=%d',
-                        this.boundingBox.w,
-                        this.boundingBox.h,
+                        this.rect.w,
+                        this.rect.h,
                         imageData.width,
                         imageData.height,
               )
       this.imageData = cropImage(
         imageData,
-        this.boundingBox.x,
-        this.boundingBox.y,
-        this.boundingBox.w,
-        this.boundingBox.h,
+        this.rect.x,
+        this.rect.y,
+        this.rect.w,
+        this.rect.h,
       )
     }
     // update md5 after image crop
@@ -99,14 +100,16 @@ export class Face {
       boundingBox,
       confidence,
       facialLandmark,
+      rect,
     } = this
 
     return {
       _embedding,
       boundingBox,
       confidence,
-      imageData,
       facialLandmark,
+      imageData,
+      rect,
     }
   }
 
@@ -118,17 +121,23 @@ export class Face {
     const buffer  = Buffer.from(obj.imageData, 'base64')
     const array   = new Uint8ClampedArray(buffer)
 
-    const b = obj.boundingBox
-    const imageData = createImageData(array, b.w, b.h)
+    const rect = obj.rect
+    const imageData = createImageData(array, rect.w, rect.h)
 
     const face = new Face(
       imageData,
-      [b.x, b.y, b.x + b.w, b.y + b.h],
+      [
+        rect.x,
+        rect.y,
+        rect.x + rect.w,
+        rect.y + rect.h,
+      ],
     )
 
     face._embedding     = obj._embedding
-    face.facialLandmark = obj.facialLandmark
     face.boundingBox    = obj.boundingBox
+    face.facialLandmark = obj.facialLandmark
+    face.rect           = obj.rect
     face.confidence     = obj.confidence
 
     return face
@@ -228,8 +237,8 @@ export class Face {
    * Center point for the boundingBox
    */
   public get center(): Point {
-    const x = Math.round(this.boundingBox.x + this.imageData.width  / 2)
-    const y = Math.round(this.boundingBox.y + this.imageData.height / 2)
+    const x = Math.round(this.rect.x + this.imageData.width  / 2)
+    const y = Math.round(this.rect.y + this.imageData.height / 2)
     return {x, y}
   }
 

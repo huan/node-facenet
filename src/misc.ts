@@ -20,7 +20,7 @@ export function bufResizeUint8ClampedRGBA(array: ndarray): ndarray {
   return newArray
 }
 
-export function imageMd5(image: ImageData | HTMLImageElement ): string {
+export function imageMd5(image: ImageData | HTMLImageElement): string {
   if ((image as any).src) {  // HTMLImageElement
     image = imageToData(image as HTMLImageElement)
   } else {

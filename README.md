@@ -41,25 +41,21 @@ $ npm run example:visualize
 TL;DR: Talk is cheap, show me the code!
 
 ```ts
-import { Facenet, FaceImage } from 'facenet'
+import { Facenet } from 'facenet'
 
 const facenet = new Facenet()
 
-// Load image from file
-const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-const image = new FaceImage(imageFile)
-
 // Do Face Alignment, return faces
-const faceList = await facenet.align(image)
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+const faceList = await facenet.align(imageFile)
 
 for (const face of faceList) {
-  // Calculate Face Embedding, return feature vector
-  const embedding = await facenet.embedding(face)
-  assert(face.embedding === embedding)
-
   console.log('bounding box:',  face.boundingBox)
   console.log('landmarks:',     face.facialLandmark)
-  console.log('embedding:',     face.embedding)
+
+  // Calculate Face Embedding, return feature vector
+  const embedding = await facenet.embedding(face)
+  console.log('embedding:', embedding)
 }
 ```
 
@@ -144,7 +140,7 @@ const facenet = new Facenet()
 facenet.quit()
 ```
 
-### 1. Facenet#align(image: FaceImage): Promise<Face[]>
+### 1. Facenet#align(image: FaceImage | string): Promise<Face[]>
 
 Do face alignment for the image, return a list of faces.
 
@@ -162,18 +158,6 @@ import { Face } from 'facenet'
 console.log('bounding box:',  face.boundingBox)
 console.log('landmarks:',     face.facialLandmark)
 console.log('embedding:',     face.embedding)
-
-face.image.save('/tmp/face.jpg')
-```
-
-## FaceImage
-
-```ts
-import { FaceImage } from 'facenet'
-
-const image = new FaceImage('tests/fixtures/two-faces.jpg')
-image.resize(160, 160)
-image.save('/tmp/image.jpg')
 ```
 
 # Environment Variables
@@ -186,7 +170,7 @@ Default is set to `models/` directory inside project directory. The pre-trained 
 
 ```shell
 $ pwd
-/home/zixia/git/facenet
+/home/zixia/git/node-facenet
 
 $ ls models/
 20170512-110547.pb
@@ -309,10 +293,15 @@ This repository is heavily inspired by the following implementations:
 
 # Changelog
 
-## v0.2/master
+## v0.3 / Master
+
+
+## v0.2 Aug 2017 (BREAKING CHANGES)
 
 1. Dataset: LFW manager utility
 1. AlignmentCache & EmbeddingCache class and manager utility
+1. BREAKING CHANGE: Removed `FaceImage` class. `Facenet#alignment()` now accept a string filename as parameter.
+1. BREAKING CHANGE: Reconstructed `Face` class.
 
 ## v0.1 Jul 2017
 
