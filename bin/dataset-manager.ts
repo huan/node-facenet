@@ -5,7 +5,7 @@ import * as path          from 'path'
 import { ArgumentParser } from 'argparse'
 
 import {
-  Dataset,
+  // Dataset,
   Lfw,
   log,
   MODULE_ROOT,
