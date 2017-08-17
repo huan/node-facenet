@@ -295,13 +295,15 @@ This repository is heavily inspired by the following implementations:
 
 ## v0.3 / Master
 
+1. Added three cache classes: AlignmentCache & EmbeddingCache & FaceCache.
+1. Added cache manager utilities: embedding-cache-manager & alignment-cache-manager & face-cache-manager
+1. Added Dataset manager utility: lfw-manager (should be dataset-manager in future)
 
 ## v0.2 Aug 2017 (BREAKING CHANGES)
 
-1. Dataset: LFW manager utility
-1. AlignmentCache & EmbeddingCache class and manager utility
-1. BREAKING CHANGE: Removed `FaceImage` class. `Facenet#alignment()` now accept a string filename as parameter.
-1. BREAKING CHANGE: Reconstructed `Face` class.
+1. `Facenet#align()` now accept a filename string as parameter.
+1. BREAKING CHANGE: `FaceImage` class had been removed.
+1. BREAKING CHANGE: `Face` class refactoring.
 
 ## v0.1 Jul 2017
 

@@ -74,15 +74,26 @@ export class Facenet implements Alignable, Embeddingable {
     }
 
     const [boundingBoxes, landmarks] = await this.pythonFacenet.align(imageData)
-    log.silly('Facenet', 'align() pythonFacenet.align() done')
+    log.silly('Facenet', 'align() pythonFacenet.align() done: %s', boundingBoxes)
 
     const xyLandmarks = this.transformMtcnnLandmarks(landmarks)
 
     const faceList: Face[] = []
     for (const i in boundingBoxes) {
-      const boundingBox = boundingBoxes[i]
+      const boundingBox = this.squareBox(boundingBoxes[i])
       const confidence = boundingBox[4]
       const marks = xyLandmarks[i]
+
+      // boundary out of image
+      if (boundingBox[0] < 0 || boundingBox[1] < 0
+        ||  boundingBox[2] > imageData.width
+        ||  boundingBox[3] > imageData.height
+      ) {
+        log.silly('Facenet', 'align(%dx%d) box[%s] out of boundary, skipped',
+                              imageData.width, imageData.height,
+                              boundingBox)
+        continue
+      }
 
       const face = new Face(imageData, boundingBox)
       face.init(marks, confidence)
@@ -98,11 +109,12 @@ export class Facenet implements Alignable, Embeddingable {
    * Get the 128 dims embeding from image(s)
    */
   public async embedding(face: Face): Promise<FaceEmbedding> {
-    log.verbose('Facenet', 'embedding(Face#%d)', face.id)
+    log.verbose('Facenet', 'embedding(%s)', face)
 
     let imageData = face.imageData
     if (imageData.width !== imageData.height) {
-      log.warn('Facenet', 'embedding(%s) error!', face)
+      log.warn('Facenet', 'embedding(%s) %dx%d not square!',
+                          face, imageData.width, imageData.height)
       throw new Error('should be a square image because it will be resized to 160x160')
     }
 
@@ -153,6 +165,45 @@ export class Facenet implements Alignable, Embeddingable {
     const pairedLandmarks = xyLandmarks.reshape(faceNum, 5, 2) as nj.NdArray<number>  // number[][][]
 
     return pairedLandmarks.tolist() as any as number[][][]
+  }
+
+  public squareBox(box: number[]): number[] {
+    let x0 = box[0]
+    let y0 = box[1]
+    let x1 = box[2]
+    let y1 = box[3]
+
+    // corner point: according to the canvas implementation:
+    // it should include top left, but exclude bottom right.
+    let w = x1 - x0
+    let h = y1 - y0
+
+    if (w !== h) {
+      const halfDiff = Math.abs(w - h) / 2
+
+      if (w > h) {
+        y0 -= halfDiff
+        y1 += halfDiff
+      } else {
+        x0 -= halfDiff
+        x1 += halfDiff
+      }
+    }
+
+    // update w & h
+    w = x1 - x0
+    h = y1 - y0
+
+    // keep w === h
+    x0 = Math.round(x0)
+    y0 = Math.round(y0)
+    x1 = Math.round(x0 + w)
+    y1 = Math.round(y0 + h)
+
+    log.silly('Facenet', 'squareBox([%s]) -> [%d,%d,%d,%d]',
+                      box, x0, y0, x1, y1)
+
+    return [x0, y0, x1, y1]
   }
 
 }

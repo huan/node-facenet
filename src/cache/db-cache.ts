@@ -54,7 +54,7 @@ export class DbCache {
   }
 
   public async put(key: string, value: Object): Promise<void> {
-    log.silly('DbCache', 'put(%s, %s)', key, value)
+    log.silly('DbCache', 'put("%s", "%s")', key, value)
 
     this.entryList = {} // refresh
 

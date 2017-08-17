@@ -1,8 +1,4 @@
 import * as fs          from 'fs'
-import * as path        from 'path'
-// import { promisify }    from 'util'
-
-import * as rimraf      from 'rimraf'
 
 import { log }          from '../config'
 import {
@@ -12,17 +8,15 @@ import {
 }                       from '../facenet'
 import {
   Face,
-  FaceJsonObject,
 }                       from '../face'
 import {
   imageMd5,
   imageToData,
   loadImage,
-  resizeImage,
-  saveImage,
 }                       from '../misc'
 
 import { DbCache }      from './db-cache'
+import { FaceCache }    from './face-cache'
 
 export interface AlignmentCacheData {
   [key: string]: FaceEmbedding,
@@ -30,8 +24,9 @@ export interface AlignmentCacheData {
 
 export class AlignmentCache implements Alignable {
   public db: DbCache
+  public faceCache: FaceCache
+
   public dbName   = 'alignment'
-  public cacheDir = 'cache.alignment'
 
   constructor(
     public facenet: Facenet,
@@ -43,23 +38,20 @@ export class AlignmentCache implements Alignable {
   public init(): void {
     log.verbose('AlignmentCache', 'init()')
 
-    this.db = new DbCache(this.rootDir, this.dbName)
-
     if (!fs.existsSync(this.rootDir)) {
       throw new Error(`directory not exist: ${this.rootDir}`)
     }
-    const fullCacheDir = path.join(this.rootDir, this.cacheDir)
-    if (!fs.existsSync(fullCacheDir)) {
-      fs.mkdirSync(fullCacheDir)
+
+    if (!this.db) {
+      this.db = new DbCache(this.rootDir, this.dbName)
     }
 
+    this.faceCache = new FaceCache(this.rootDir)
   }
 
   public async clean(): Promise<void> {
     log.verbose('AlignmentCache', 'clean()')
     await this.db.clean()
-    const cacheDir = path.join(this.rootDir, this.cacheDir)
-    rimraf.sync(cacheDir)
   }
 
   public async align(imageData: ImageData | string ): Promise<Face[]> {
@@ -94,14 +86,17 @@ export class AlignmentCache implements Alignable {
   private async get(
     md5: string,
   ): Promise<Face[] | null> {
-    const objList = await this.db.get(md5) as FaceJsonObject[]
-    const faceList: Face[] = []
+    const faceMd5List = await this.db.get(md5) as string[]
 
-    if (objList && Array.isArray(objList)) {
-      for (const faceObj of objList) {
-        faceList.push(Face.fromJSON(faceObj))
+    if (faceMd5List && Array.isArray(faceMd5List)) {
+      const faceList = await Promise.all(
+        faceMd5List.map(faceMd5 => this.faceCache.get(faceMd5)),
+      )
+      if (faceList.some(face => !face)) {
+        return null
+      } else {
+        return faceList as Face[]
       }
-      return faceList
     }
     return null
   }
@@ -110,22 +105,12 @@ export class AlignmentCache implements Alignable {
     md5:      string,
     faceList: Face[],
   ): Promise<void> {
-    await this.db.put(md5, faceList)  // Face.toJSON()
+    await Promise.all(
+      faceList.map(async face => this.faceCache.put(face)),
+    )
 
-    faceList.forEach(async face => {
-
-      const faceFile = path.join(
-        this.rootDir,
-        this.cacheDir,
-        face.md5,
-      )
-
-      let imageData = face.imageData
-      if (imageData.width !== 160) {
-        imageData = await resizeImage(imageData, 160, 160)
-      }
-      await saveImage(imageData, faceFile)
-    })
+    const faceMd5List = faceList.map(face => face.md5)
+    await this.db.put(md5, faceMd5List)
   }
 
 }

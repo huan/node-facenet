@@ -60,21 +60,28 @@ export class Face {
   ) {
     this.id = ++Face.id
 
-    log.silly('Face', 'constructor(%dx%d, [%s])',
+    log.verbose('Face', 'constructor(%dx%d, [%s]) #%d',
                       imageData.width,
                       imageData.height,
                       boundingBox,
+                      this.id,
               )
 
     if (!boundingBox) {
       boundingBox = [0, 0, imageData.width, imageData.height]
     }
-    this.rect = this.squareBox(boundingBox)
+
+    this.rect = {
+      x: boundingBox[0],
+      y: boundingBox[1],
+      w: boundingBox[2] - boundingBox[0],
+      h: boundingBox[3] - boundingBox[1],
+    }
 
     if (   this.rect.w !== imageData.width
         || this.rect.h !== imageData.height
     ) { // need to corp and reset this.data
-      log.silly('Face', 'constructor() box.w=%d, box.h=%d; image.w=%d, image.h=%d',
+      log.verbose('Face', 'constructor() box.w=%d, box.h=%d; image.w=%d, image.h=%d',
                         this.rect.w,
                         this.rect.h,
                         imageData.width,
@@ -90,6 +97,10 @@ export class Face {
     }
     // update md5 after image crop
     this.md5 = imageMd5(this.imageData)
+  }
+
+  public toString(): string {
+    return `Face#${this.id}#${this.md5}<${this._embedding}>`
   }
 
   public toJSON(): FaceJsonObject {
@@ -176,44 +187,6 @@ export class Face {
       nose,
       leftMouthCorner,
       rightMouthCorner,
-    }
-  }
-
-  public toString(): string {
-    return `Face#${this.id}#${this.md5}<${this._embedding}>`
-  }
-
-  public squareBox(box: number[]): Rectangle {
-    let x0 = box[0]
-    let y0 = box[1]
-    let x1 = box[2]
-    let y1 = box[3]
-
-    // corner point: according to the canvas implementation:
-    // it should include top left, but exclude bottom right.
-    let w = x1 - x0
-    let h = y1 - y0
-
-    if (w !== h) {
-      const halfDiff = Math.abs(w - h) / 2
-
-      if (w > h) {
-        y0 -= halfDiff
-        y1 += halfDiff
-      } else {
-        x0 -= halfDiff
-        x1 += halfDiff
-      }
-    }
-
-    const x = Math.round(x0)
-    const y = Math.round(y0)
-    w = Math.round(x1 - x0)
-    h = Math.round(y1 - y0)
-
-    return {
-      x, y,
-      w, h,
     }
   }
 

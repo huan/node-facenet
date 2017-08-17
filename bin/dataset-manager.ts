@@ -5,6 +5,7 @@ import * as path          from 'path'
 import { ArgumentParser } from 'argparse'
 
 import {
+  Dataset,
   Lfw,
   log,
   MODULE_ROOT,
@@ -14,13 +15,26 @@ import {
 async function main(args: Args): Promise<number> {
   log.level(args.log as any)
 
-  const lfw = new Lfw(args.directory)
+  let dataset
+  switch (args.dataset) {
+    case 'lfw':
+      dataset = new Lfw(args.directory)
+      break
+
+    default:
+      log.error('DatasetManager', 'Dataset %s not support(yet)', args.dataset)
+      return 1
+  }
 
   let ret = 0
   switch (args.command) {
-    case 'dataset':
-      await lfw.setup()
-      const idImageList = await lfw.idImageList()
+    case 'setup':
+      await dataset.setup()
+      log.info('DatasetManager', 'setup done')
+      break
+
+    case 'list':
+      const idImageList = await dataset.idImageList()
       const keys = Object.keys(idImageList)
       for (let i = 0; i < 3; i++) {
         log.info('LfwManager', 'dataset: %s has %d images: %s',
@@ -30,12 +44,9 @@ async function main(args: Args): Promise<number> {
                 )
       }
       break
-    case 'setup':
-      await lfw.setup()
-      log.info('LfwManager', 'init done')
-      break
+
     case 'pairs':
-      const pairList = await lfw.pairList()
+      const pairList = await dataset.pairList()
       const sameNum = pairList.filter(p => p[2]).length
       log.info('LfwManager', 'pairList: total %d, same %d, not-same %d',
                               pairList.length,
@@ -43,6 +54,7 @@ async function main(args: Args): Promise<number> {
                               pairList.length - sameNum,
               )
       break
+
     default:
       log.error('LfwManager', 'not supported command: %s', args.command)
       ret = 1
@@ -52,7 +64,8 @@ async function main(args: Args): Promise<number> {
 }
 
 interface Args {
-  command:    string,
+  dataset:    string,
+  command:    string
   directory:  string,
   log:        string,
 }
@@ -65,17 +78,25 @@ function parseArguments(): Args {
   })
 
   parser.addArgument(
+    [ 'dataset' ],
+    {
+      help: 'Dataset Name: lfw, casia(not implement yet), ms-celeb-1m(not implement yet)',
+      defaultValue: 'lfw',
+    },
+  )
+
+  parser.addArgument(
     [ 'command' ],
     {
-      help: 'setup, dataset, pairs, align, embedding',
-      defaultValue: 'init',
+      help: 'setup, align, embedding',
+      defaultValue: 'setup',
     },
   )
 
   parser.addArgument(
     [ '-d', '--directory' ],
     {
-      help: 'LFW Dataset Directory',
+      help: 'Dataset Directory',
       defaultValue: path.join(MODULE_ROOT, 'datasets', 'lfw'),
     },
   )

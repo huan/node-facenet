@@ -36,7 +36,7 @@ export class EmbeddingCache implements Embeddingable {
   }
 
   public async embedding(face: Face): Promise<FaceEmbedding> {
-    log.verbose('EmbeddingCache', 'embedding(Face#%d)', face.id)
+    log.verbose('EmbeddingCache', 'embedding(%s)', face)
 
     const cacheKey = face.md5
 
