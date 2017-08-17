@@ -16,7 +16,7 @@
     "printf": "0.2.5",
     "python-bridge": "1.0.3",
     "rimraf": "2.6.1",
-    "tar": "3.1.11"
+    "tar": "3.1.14"
   },
   "devDependencies": {
     "@types/argparse": "1.0.30",
@@ -25,7 +25,7 @@
     "@types/leveldown": "1.7.0",
     "@types/levelup": "0.0.30",
     "@types/mkdirp": "0.5.0",
-    "@types/node": "8.0.21",
+    "@types/node": "8.0.24",
     "@types/numjs": "0.14.1",
     "@types/printf": "0.2.0",
     "@types/rimraf": "2.0.1",
