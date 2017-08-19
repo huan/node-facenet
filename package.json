@@ -5,9 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "@types/deasync": "^0.1.0",
     "argparse": "1.0.9",
     "brolog": "1.1.34",
     "canvas": "git+https://github.com/zixia/node-canvas.git",
+    "deasync": "^0.1.10",
     "glob": "7.1.2",
     "leveldown": "1.7.2",
     "levelup": "1.3.9",

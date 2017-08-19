@@ -2,6 +2,7 @@
  *
  */
 // import ndarray = require('ndarray')
+import * as deasync         from 'deasync'
 
 import {
   FaceEmbedding,
@@ -11,6 +12,8 @@ import {
   createImageData,
   cropImage,
   imageMd5,
+  imageToData,
+  loadImage,
 }                           from './misc'
 
 export interface Point {
@@ -48,6 +51,8 @@ export class Face {
   public id: number
   public md5: string
 
+  public imageData: ImageData
+
   public rect:            Rectangle
   public confidence:      number
   public facialLandmark:  FacialLandmark
@@ -55,20 +60,42 @@ export class Face {
   private _embedding: FaceEmbedding
 
   constructor(
-    public imageData:     ImageData,
-    private boundingBox?:  number[], // [x0, y0, x1, y1]
+    fileOrData:             ImageData | string,
+    private boundingBox?:   number[], // [x0, y0, x1, y1]
   ) {
     this.id = ++Face.id
 
-    log.verbose('Face', 'constructor(%dx%d, [%s]) #%d',
-                      imageData.width,
-                      imageData.height,
-                      boundingBox,
-                      this.id,
-              )
+    if (typeof fileOrData === 'string') {
+      const filename = fileOrData
+
+      log.verbose('Face', 'constructor(%s [%s]) #%d',
+                        filename,
+                        boundingBox,
+                        this.id,
+                )
+
+      loadImage(filename)
+      .then(imageToData)
+      .then(data => {
+        this.imageData = data
+      })
+
+      // inspired from numjs.images.readImage
+      // https://github.com/nicolaspanel/numjs/blob/master/src/images/read.js#L24
+      deasync.loopWhile(() => !this.imageData )
+
+    } else {
+      this.imageData = fileOrData
+      log.verbose('Face', 'constructor(%dx%d, [%s]) #%d',
+                        this.imageData.width,
+                        this.imageData.height,
+                        boundingBox,
+                        this.id,
+                )
+    }
 
     if (!boundingBox) {
-      boundingBox = [0, 0, imageData.width, imageData.height]
+      boundingBox = [0, 0, this.imageData.width, this.imageData.height]
     }
 
     this.rect = {
@@ -78,17 +105,17 @@ export class Face {
       h: boundingBox[3] - boundingBox[1],
     }
 
-    if (   this.rect.w !== imageData.width
-        || this.rect.h !== imageData.height
+    if (   this.rect.w !== this.imageData.width
+        || this.rect.h !== this.imageData.height
     ) { // need to corp and reset this.data
       log.verbose('Face', 'constructor() box.w=%d, box.h=%d; image.w=%d, image.h=%d',
                         this.rect.w,
                         this.rect.h,
-                        imageData.width,
-                        imageData.height,
+                        this.imageData.width,
+                        this.imageData.height,
               )
       this.imageData = cropImage(
-        imageData,
+        this.imageData,
         this.rect.x,
         this.rect.y,
         this.rect.w,

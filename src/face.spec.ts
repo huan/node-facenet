@@ -54,6 +54,21 @@ t.test('constructor()', async (t: any) => {
     t.equal(face.height, 2, 'should get height 2')
     t.equal(face.depth,  4,  'should get depth 4')
   })
+
+  t.test('via filename', async (t: any) => {
+    const IMAGE_RGB_BWT_FILE = `${__dirname}/../tests/fixtures/rgb-bwt.png`
+    const EXPECTED_IMAGE_RGB_BWT_ARRAY = new Uint8ClampedArray([
+      255, 0, 0, 255,
+      0, 255, 0, 255,
+      0, 0, 255, 255,
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      0, 0, 0, 0,
+    ])
+    const face = new Face(IMAGE_RGB_BWT_FILE)
+    t.deepEqual(face.imageData.data, EXPECTED_IMAGE_RGB_BWT_ARRAY, 'should load imageData with deasync')
+  })
+
 })
 
 t.test('JSON implementations', async (t: any) => {
