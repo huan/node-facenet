@@ -131,6 +131,10 @@ So I believe that Facenet will need at least 2GB memory, and >=4GB is recommende
 
 # API
 
+Neural Network alone is not enough. It's Neural Network married with pre-trained model, married with easy to use APIs, that yield us the result that makes our APP sing.
+
+Facenet is designed for bring the state-of-art neural network with bleeding-edge technology to full stack developers.
+
 ## Facenet
 
 ```ts
@@ -140,7 +144,7 @@ const facenet = new Facenet()
 facenet.quit()
 ```
 
-### 1. Facenet#align(image: FaceImage | string): Promise<Face[]>
+### 1. Facenet#align(filename: string): Promise\<Face[]\>
 
 Do face alignment for the image, return a list of faces.
 
