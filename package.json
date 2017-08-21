@@ -19,7 +19,7 @@
     "printf": "0.2.5",
     "python-bridge": "1.0.3",
     "rimraf": "2.6.1",
-    "tar": "4.0.0"
+    "tar": "4.0.1"
   },
   "devDependencies": {
     "@types/argparse": "1.0.30",
