@@ -29,7 +29,7 @@
     "@types/gm": "1.17.31",
     "@types/leveldown": "1.7.0",
     "@types/levelup": "0.0.30",
-    "@types/mkdirp": "0.5.0",
+    "@types/mkdirp": "0.5.1",
     "@types/node": "8.0.24",
     "@types/numjs": "0.14.1",
     "@types/printf": "0.2.0",
