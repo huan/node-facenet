@@ -6,6 +6,8 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "argparse": "1.0.9",
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.5",
     "brolog": "1.1.34",
     "canvas": "git+https://github.com/zixia/node-canvas.git",
     "deasync": "0.1.10",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@types/argparse": "1.0.30",
+    "@types/blessed": "0.1.6",
     "@types/deasync": "0.1.0",
     "@types/glob": "5.0.31",
     "@types/gm": "1.17.31",
