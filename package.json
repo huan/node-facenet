@@ -25,7 +25,7 @@
     "@types/argparse": "1.0.30",
     "@types/blessed": "0.1.6",
     "@types/deasync": "0.1.0",
-    "@types/glob": "5.0.31",
+    "@types/glob": "5.0.32",
     "@types/gm": "1.17.31",
     "@types/leveldown": "1.7.0",
     "@types/levelup": "0.0.30",
