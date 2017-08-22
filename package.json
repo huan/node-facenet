@@ -33,7 +33,7 @@
     "@types/node": "8.0.24",
     "@types/numjs": "0.14.1",
     "@types/printf": "0.2.0",
-    "@types/rimraf": "2.0.1",
+    "@types/rimraf": "2.0.2",
     "@types/tar": "1.0.29",
     "cross-env": "5.0.5",
     "gm": "1.23.0",
