@@ -22,7 +22,7 @@
     "tar": "4.0.1"
   },
   "devDependencies": {
-    "@types/argparse": "1.0.30",
+    "@types/argparse": "1.0.31",
     "@types/blessed": "0.1.6",
     "@types/deasync": "0.1.0",
     "@types/glob": "5.0.31",
