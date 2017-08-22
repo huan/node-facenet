@@ -132,8 +132,15 @@ export class Facenet implements Alignable, Embeddingable {
     return face.embedding
   }
 
-  public distance(v1: FaceEmbedding, v2: FaceEmbedding): number {
-    const l2 = v1.subtract(v2)
+  public distance(f1: Face | FaceEmbedding, f2: Face | FaceEmbedding): number {
+    if (f1 instanceof Face) {
+      f1 = f1.embedding
+    }
+    if (f2 instanceof Face) {
+      f2 = f2.embedding
+    }
+
+    const l2 = f1.subtract(f2)
                   .pow(2)
                   .sum()
 
