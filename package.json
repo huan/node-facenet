@@ -41,7 +41,7 @@
     "shx": "0.2.2",
     "tap": "10.7.2",
     "ts-node": "3.3.0",
-    "tslint": "5.4.2",
+    "tslint": "5.7.0",
     "typescript": "2.4.2"
   },
   "scripts": {
