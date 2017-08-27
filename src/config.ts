@@ -1,6 +1,7 @@
 import * as path  from 'path'
 
 import { Brolog } from 'brolog'
+import * as nj    from 'numjs'
 
 export const log = new Brolog()
 
@@ -18,3 +19,4 @@ const packageFile = path.join(MODULE_ROOT, 'package.json')
 export const VERSION = require(packageFile).version
 
 export type FaceEmbedding = nj.NdArray<number>  // 128 dim
+

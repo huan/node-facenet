@@ -1,6 +1,7 @@
 import * as crypto  from 'crypto'
 import * as fs      from 'fs'
 
+import * as nj      from 'numjs'
 import * as ndarray from 'ndarray'
 
 const _createCanvas     = require('canvas').createCanvas
@@ -163,4 +164,31 @@ export function createImageData(
   height: number,
 ): ImageData {
   return _createImageData(array, width, height)
+}
+
+export function distance(
+  source:       nj.NdArray<number>, // shape: (n)
+  destination:  nj.NdArray<number>, // shape: (m, n) or (n)
+): number[] {
+  if (!source.shape || source.shape.length > 1) {
+    throw new Error('array1 should be shape (n)')
+  }
+
+  if (source.shape[0] !== destination.shape[1]) {
+    throw new Error('the dim of embedding inside array2 should as same as the embedding in array1')
+  }
+
+  const broadCastedSource = nj.zeros(destination.shape)
+  for (let i = 0; i < destination.shape[0]; i++) {
+    broadCastedSource.slice([i, i + 1] as any)
+                      .assign(source.reshape(1, -1) as any, false)
+  }
+
+  const l2 = destination.subtract(broadCastedSource)
+                        .pow(2)
+                        .tolist() as number[][]
+  const distList = l2.map(numList => numList.reduce((prev, curr) => prev + curr, 0)) // sum for each row
+                      .map(Math.sqrt)
+
+  return distList
 }

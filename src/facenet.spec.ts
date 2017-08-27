@@ -1,23 +1,14 @@
 #!/usr/bin/env ts-node
 
-import * as nj from 'numjs'
 const t = require('tap')  // tslint:disable:no-shadowed-variable
+import * as nj      from 'numjs'
 
-import { Facenet } from './facenet'
+import { Facenet }  from './facenet'
+import { Face }     from './face'
 
 t.test('Facenet smoke testing', async (t: any) => {
   const f = new Facenet()
   t.ok(f, 'should inited a Facenet instance')
-  f.quit()
-})
-
-t.test('distance()', async (t: any) => {
-  const f = new Facenet()
-
-  const a = nj.array([0, 3])
-  const b = nj.array([4, 0])
-  const c = f.distance(a, b)
-  t.equal(c, 5, 'should get 5 for triangle 3&4&5')
   f.quit()
 })
 
@@ -84,4 +75,28 @@ t.test('transformLandmarks()', async (t: any) => {
   t.deepEqual(pairedLandmarks3, EXPECTED_3, 'should transform landmarks with dim #3 right')
 
   f.quit()
+})
+
+t.test('distance()', async (t: any) => {
+  const FACE = {
+    embedding: nj.array([0, 3]),
+  } as any as Face
+
+  const FACE_LIST = [
+    {
+      embedding: nj.array([4, 0]),
+    },
+    {
+      embedding: nj.array([0, 8]),
+    },
+    {
+      embedding: nj.array([0, -2]),
+    },
+  ] as any as Face[]
+  const EXPECTED_DISTANCE_ARRAY = [5, 5, 5]
+
+  const f = new Facenet()
+  const dist = f.distance(FACE, FACE_LIST)
+  t.deepEqual(dist, EXPECTED_DISTANCE_ARRAY, 'should get 5 for all three rows')
+  await f.quit()
 })

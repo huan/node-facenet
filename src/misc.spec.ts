@@ -4,6 +4,7 @@ import * as path          from 'path'
 const t             = require('tap')  // tslint:disable:no-shadowed-variable
 
 import * as ndarray from 'ndarray'
+import * as nj      from 'numjs'
 
 import {
   bufResizeUint8ClampedRGBA,
@@ -11,6 +12,7 @@ import {
   createImageData,
   cropImage,
   dataToImage,
+  distance,
   imageMd5,
   imageToData,
   loadImage,
@@ -130,4 +132,25 @@ t.test('Image/Data convert', async (t: any) => {
     const data = imageToData(IMAGE)
     t.deepEqual(data, IMAGE_DATA, 'should conver image to data right')
   })
+})
+
+t.test('distance()', async (t: any) => {
+  t.test('embedding list contains 1 row', async (t: any) => {
+    const a = nj.array([0, 3])
+    const b = nj.array([4, 0]).reshape(1, 2) as nj.NdArray
+    const c = distance(a, b)
+    t.equal(c[0], 5, 'should get 5 for triangle 3&4&5')
+  })
+
+  t.test('embedding list contains 3 row', async (t: any) => {
+    const a = nj.array([0, 3])
+    const b = nj.array([
+      4, 0,
+      0, 8,
+      0, -2,
+    ]).reshape(3, 2) as nj.NdArray
+    const c = distance(a, b)
+    t.deepEqual(c, [5, 5, 5], 'should get 5 for all three rows')
+  })
+
 })

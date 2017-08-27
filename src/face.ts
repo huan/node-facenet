@@ -11,6 +11,7 @@ import {
 import {
   createImageData,
   cropImage,
+  distance,
   imageMd5,
   imageToData,
   loadImage,
@@ -254,5 +255,10 @@ export class Face {
     return this.imageData.data.length
             / this.imageData.width
             / this.imageData.height
+  }
+
+  public similarity(face: Face): number {
+    const faceEmbeddingNdArray = face.embedding.reshape(1, -1) as nj.NdArray
+    return distance(this.embedding, faceEmbeddingNdArray)[0]
   }
 }

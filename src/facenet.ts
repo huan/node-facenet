@@ -9,6 +9,7 @@ import {
   Face,
 }                         from './face'
 import {
+  distance,
   imageToData,
   loadImage,
   resizeImage,
@@ -132,22 +133,6 @@ export class Facenet implements Alignable, Embeddingable {
     return face.embedding
   }
 
-  public distance(f1: Face | FaceEmbedding, f2: Face | FaceEmbedding): number {
-    if (f1 instanceof Face) {
-      f1 = f1.embedding
-    }
-    if (f2 instanceof Face) {
-      f2 = f2.embedding
-    }
-
-    const l2 = f1.subtract(f2)
-                  .pow(2)
-                  .sum()
-
-    return nj.sqrt(l2)
-            .get(0)
-  }
-
   public transformMtcnnLandmarks(landmarks: number[][]): number[][][] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
@@ -161,11 +146,11 @@ export class Facenet implements Alignable, Embeddingable {
     const xLandmarks = xyLandmarks.slice(null as any, [null,  xyLandmarks.shape[1], 2] as any)
     const yLandmarks = xyLandmarks.slice(null as any, [1,     xyLandmarks.shape[1], 2] as any)
     xLandmarks.assign(
-      nj.array(tLandmarks).slice(null as any, [null, 5] as any),
+      tLandmarks.slice(null as any, [null, 5] as any),
       false,
     )
     yLandmarks.assign(
-      nj.array(tLandmarks).slice(null as any, [5, 10] as any),
+    tLandmarks.slice(null as any, [5, 10] as any),
       false,
     )
 
@@ -213,8 +198,13 @@ export class Facenet implements Alignable, Embeddingable {
     return [x0, y0, x1, y1]
   }
 
-}
+  public distance(face: Face, faceList: Face[]): number[] {
+    const embeddingList     = faceList.map(f => f.embedding)
+    const embeddingNdArray  = nj.stack(embeddingList)
 
-export {
-  FaceEmbedding,
+    return distance(
+      face.embedding,
+      embeddingNdArray,
+    )
+  }
 }
