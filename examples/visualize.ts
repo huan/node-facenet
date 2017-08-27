@@ -49,8 +49,8 @@ async function main() {
         const faceC = faceList[col]
 
         let dist = await facenet.distance(
-          faceR.embedding,
-          faceC.embedding,
+          faceR,
+          [faceC],
         )
         dist = printf('%.2f ', dist)
 
@@ -84,8 +84,9 @@ async function main() {
       if (err) {
         throw err
       }
-      log.info('CLI', 'Visualized image saved to: ', visualizeFile)
-      log.info('CLI', 'Have a nice day!')
+      log.info('CLI', 'Orignal image file: ',     imageFile)
+      log.info('CLI', 'Visualized output file: ', visualizeFile)
+      log.info('CLI', 'Open those files and see the result. Have a nice day!')
     })
   } finally {
     facenet.quit()
