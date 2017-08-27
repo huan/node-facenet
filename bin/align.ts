@@ -7,11 +7,13 @@ import {
   Facenet,
   // FaceImage,
   log,
-  loadImage,
-  imageToData,
   VERSION,
 }                         from '../'
-log.level('silly')
+
+import {
+  loadImage,
+  imageToData,
+}                         from '../src/misc'
 
 function randomColor(): string {
   const hexStr = ['r', 'g', 'b'].map(_ => {
@@ -120,4 +122,5 @@ function parseArguments(): Args {
   return parser.parseArgs()
 }
 
+log.level('silly')
 main(parseArguments())

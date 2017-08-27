@@ -3,7 +3,7 @@ const t = require('tap')  // tslint:disable:no-shadowed-variable
 
 import { pythonBridge }   from 'python-bridge'
 
-import { PythonFacenet }  from '../'
+import { PythonFacenet }  from '../src/python3/python-facenet'
 
 t.test('tensorflow module import', async (t: any) => {
   const pf = new PythonFacenet()

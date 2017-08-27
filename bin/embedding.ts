@@ -4,11 +4,14 @@ import { ArgumentParser } from 'argparse'
 
 import {
   Facenet,
-  imageToData,
   log,
-  loadImage,
   VERSION,
 }                         from '../'
+
+import {
+  imageToData,
+  loadImage,
+}                         from '../src/misc'
 
 async function main(args: Args) {
   log.info('CLI', `Facenet v${VERSION}`)

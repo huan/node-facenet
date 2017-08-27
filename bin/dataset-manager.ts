@@ -8,9 +8,12 @@ import {
   // Dataset,
   Lfw,
   log,
-  MODULE_ROOT,
   VERSION,
 }                         from '../'
+
+import {
+  MODULE_ROOT,
+}                         from '../src/config'
 
 async function main(args: Args): Promise<number> {
   log.level(args.log as any)

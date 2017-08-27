@@ -20,3 +20,14 @@ export const VERSION = require(packageFile).version
 
 export type FaceEmbedding = nj.NdArray<number>  // 128 dim
 
+export interface Point {
+  x: number,
+  y: number,
+}
+
+export interface Rectangle {
+  x: number,  // left
+  y: number,  // top
+  w: number,  // width
+  h: number,  // height
+}

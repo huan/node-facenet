@@ -7,6 +7,8 @@ import * as deasync         from 'deasync'
 import {
   FaceEmbedding,
   log,
+  Point,
+  Rectangle,
 }                           from './config'
 import {
   createImageData,
@@ -16,18 +18,6 @@ import {
   imageToData,
   loadImage,
 }                           from './misc'
-
-export interface Point {
-  x: number,
-  y: number,
-}
-
-export interface Rectangle {
-  x: number,  // left
-  y: number,  // top
-  w: number,  // width
-  h: number,  // height
-}
 
 export interface FacialLandmark {
   [idx: string]:    Point,

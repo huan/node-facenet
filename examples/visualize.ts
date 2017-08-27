@@ -3,13 +3,18 @@ import * as gm        from 'gm'
 const printf          = require('printf')
 
 import {
-  Rectangle,
   Face,
   Facenet,
-  imageToData,
-  loadImage,
   log,
 }                   from '../'  // from 'facenet'
+
+import {
+  Rectangle,
+}                   from '../src/config'
+import {
+  imageToData,
+  loadImage,
+}                   from '../src/misc'
 
 async function main() {
   const facenet = new Facenet()

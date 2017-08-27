@@ -1,10 +1,12 @@
 import * as fs          from 'fs'
 
-import { log }          from '../config'
+import {
+  FaceEmbedding,
+  log,
+}                       from '../config'
 import {
   Embeddingable,
   Facenet,
-  FaceEmbedding,
 }                       from '../facenet'
 import { Face }         from '../face'
 

@@ -3,8 +3,10 @@ import * as assert  from 'assert'
 
 import {
   Facenet,
-  saveImage,
 }                   from '../'  // from 'facenet'
+import {
+  saveImage,
+}                   from '../src/misc'
 
 // import { log }      from '../'
 // log.level('silly')

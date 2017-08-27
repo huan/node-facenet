@@ -2,13 +2,14 @@
 
 const t                   = require('tap')  // tslint:disable:no-shadowed-variable
 
-// import { log }        from './config'
+import {
+  // log,
+  Rectangle,
+}                       from './config'
 // log.level('silly')
 import {
-  Rectangle,
   Face,
 }                       from './face'
-
 import {
   fixtureImageData3x3,
 }                       from './fixtures'
