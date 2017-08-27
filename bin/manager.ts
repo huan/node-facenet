@@ -1,9 +1,16 @@
 import * as fs    from 'fs'
 import * as path  from 'path'
 
-import * as blessed   from 'blessed'
-const contrib         = require('blessed-contrib')
-import * as glob      from 'glob'
+const contrib     = require('blessed-contrib')
+const charm       = require('charm')
+
+import * as updateNotifier  from 'update-notifier'
+import * as blessed         from 'blessed'
+import * as glob            from 'glob'
+
+import {
+  MODULE_ROOT,
+}               from '../src/config'
 
 const screen = blessed.screen()
 
@@ -119,7 +126,7 @@ tree.setData(explorer)
 
 // Handling select event. Every custom property that was added to node is
 // available like the 'node.getPath' defined above
-tree.on('select', function(node: any){
+tree.on('select', async function(node: any){
   let nodePath = node.getPath(node);
   let data = [];
 
@@ -136,18 +143,9 @@ tree.on('select', function(node: any){
                 .split('\n')
                 .map(e => [e]))
     message.log(nodePath)
-    image.setImage({
-      cols: 256,
-      file: nodePath,
-      // onReady: ready,
-      type: 'ansi',
-    })
 
-    // screen.render()
-    // table.setData({
-    //   headers: ['Info'],
-    //   data,
-    // })
+    await setImage(image, nodePath)
+
   } catch (e) {
     // table.setData({headers: ['Info'], data: [[e.toString()]]})
   }
@@ -155,12 +153,16 @@ tree.on('select', function(node: any){
   screen.render();
 });
 
-// set default table
-// table.setData({
-//   headers: ['Info'],
-//   data: [
-//     ['zixia'],
-//   ],
+let pause = false
+
+screen.key(['space'], () => {
+  pause = !pause
+  message.log('pause: ' + pause)
+})
+// screen.on('keypress', (ch, key) => {
+//   if (ch === ' ') {
+//     pause = !!pause
+//   }
 // })
 
 screen.key(['escape', 'q', 'C-c'], function(/* ch: any, key: any */) {
@@ -184,22 +186,45 @@ screen.render()
 let faceFileList: string[] = []
 let i = 0
 
-function refreshImage() {
-  if (i >= faceFileList.length) {
-    i = 0
+process.on('warning', (warning) => {
+  console.warn(warning.name);    // Print the warning name
+  console.warn(warning.message); // Print the warning message
+  console.warn(warning.stack);   // Print the stack trace
+});
+
+async function refreshImage() {
+  if (!pause) {
+    if (i >= faceFileList.length) {
+      i = 0
+    }
+    const file = faceFileList[i++]
+
+    message.log('#' + i + ', total: ' + faceFileList.length + ' : ' + file)
+
+    // EventEmitter memory leak #34
+    // https://github.com/substack/node-charm/issues/34
+    const c = charm()
+    c.removeAllListeners('close')
+    c.removeAllListeners('data')
+    c.removeAllListeners('end')
+    c.removeAllListeners('^C')
+
+    await setImage(image, faceFileList[i])
+    image.render()
   }
-  const file = faceFileList[i++]
 
-  message.log('#' + i + ', total: ' + faceFileList.length + ' : ' + file)
+  // setImmediate(refreshImage)
+  setTimeout(refreshImage, 1 * 1000)
+}
 
-  image.setImage({
-    cols: 40,
-    file: faceFileList[i],
-    onReady: () => {
-      image.render()
-      setTimeout(refreshImage, 1 * 1000)
-    },
-    type: 'ansi',
+async function setImage(imageWidget: any, file: string): Promise<void> {
+  return new Promise<void>((resolve) => {
+    imageWidget.setImage({
+      cols: 80,
+      file,
+      onReady: resolve,
+      type: 'ansi',
+    })
   })
 }
 
@@ -213,4 +238,24 @@ glob('/home/zixia/git/node-facenet/datasets/lfw/cache.face/*.png', (e, matches) 
   }
   message.log('Dataset ' + matches.length + ' loaded')
   faceFileList = matches
+})
+
+async function main(): Promise<number> {
+
+  const pkgFile   = path.join(MODULE_ROOT, 'package.json')
+  const pkg       = require(pkgFile)
+  const notifier  = updateNotifier({
+    pkg,
+    updateCheckInterval: 1000 * 60 * 60 * 24 * 7, // 1 week
+  })
+  notifier.notify()
+
+  return 1
+}
+
+main()
+.then(process.exit)
+.catch(e => {
+  console.error(e)
+  process.exit(1)
 })
