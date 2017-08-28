@@ -1,247 +1,42 @@
-import * as fs    from 'fs'
+// import * as fs    from 'fs'
 import * as path  from 'path'
 
-const contrib     = require('blessed-contrib')
-const charm       = require('charm')
+// import {
+//   widget,
+//   Widgets,  // just for typing, not defined in blessed
+// }                           from 'blessed'
+
+import {
+  widget,
+  Widgets,
+}             from 'blessed'
+
+declare module 'blessed' {
+  namespace widget {
+    // tslint:disable-next-line
+    class Image extends Widgets.ImageElement {}
+  }
+
+  namespace Widgets {
+    interface Border {
+      top?:    boolean,
+      bottom?: boolean,
+    }
+  }
+}
 
 import * as updateNotifier  from 'update-notifier'
-import * as blessed         from 'blessed'
-import * as glob            from 'glob'
+
+// const contrib               = require('blessed-contrib')
 
 import {
   MODULE_ROOT,
+  VERSION,
 }               from '../src/config'
 
-const screen = blessed.screen()
+const FILE_FACENET_ICON_PNG = path.join(MODULE_ROOT, 'docs', 'images', 'facenet-icon.png')
 
-// create layout and widgets
-const grid = new contrib.grid({
-  rows: 24,
-  cols: 4,
-  screen,
-})
-
-const tree =  grid.set(
-  0, 0, 20, 1,
-  contrib.tree,
-  {
-    style:    { text: 'red' },
-    template: { lines: true },
-    label:    'Filesystem Tree',
-  },
-)
-
-const image =  grid.set(
-  0, 1, 20, 3,
-  contrib.picture,
-  {
-    // cols: 0,
-    file: '/home/zixia/git/blessed-contrib/examples/media/flower.png',
-    // type: 'ansi',
-  },
-)
-
-  // contrib.table,
-  // {
-  //   keys: true,
-  //   fg: 'green',
-  //   label: 'Informations',
-  //   columnWidth: [24, 10, 10],
-  // },
-
-const message = grid.set(
-  20, 0, 4, 4,
-  contrib.log,
-  {
-    fg:     'green',
-    label:  'Server Log',
-    height: '20%',
-    tags:   true,
-    border: {
-      type: 'line',
-      fg:   'cyan',
-    },
-  },
-)
-
-// file explorer
-const explorer = {
-  name: '/',
-  extended: true,
-  // Custom function used to recursively determine the node path
-  getPath: function(self: any) {
-    // If we don't have any parent, we are at tree root, so return the base case
-    if (!self.parent) {
-      return '/home/zixia/git/blessed-contrib/examples/media/';
-      // return '/home/zixia/git/node-facenet/datasets/lfw/cache.face/';
-    }
-    // Get the parent node path and add this node name
-    return path.join(
-      self.parent.getPath(self.parent),
-      self.name,
-    )
-  },
-  // Child generation function
-  children: function(self: any) {
-    let result: any = {}
-    const selfPath = self.getPath(self);
-    try {
-      // List files in this directory
-      const children = fs.readdirSync(selfPath + '/');
-
-      // childrenContent is a property filled with self.children() result
-      // on tree generation (tree.setData() call)
-      if (!self.childrenContent) {
-        for (const child of children) {
-          const completePath = selfPath + '/' + child;
-          if (fs.lstatSync(completePath).isDirectory()) {
-            // If it's a directory we generate the child with the children generation function
-            result[child] = {
-              name: child,
-              getPath: self.getPath,
-              extended: false,
-              children: self.children,
-            };
-          } else {
-            // Otherwise children is not set (you can also set it to '{}' or 'null' if you want)
-            result[child] = {
-              name: child,
-              getPath: self.getPath,
-              extended: false ,
-            };
-          }
-        }
-      } else {
-        result = self.childrenContent;
-      }
-    } catch (e) {
-      // fail safe
-    }
-    return result
-  },
-}
-
-// set tree
-tree.setData(explorer)
-
-// Handling select event. Every custom property that was added to node is
-// available like the 'node.getPath' defined above
-tree.on('select', async function(node: any){
-  let nodePath = node.getPath(node);
-  let data = [];
-
-  // The filesystem root return an empty string as a base case
-  if ( nodePath === '')
-    nodePath = '/';
-
-  // Add data to right array
-  data.push([nodePath]);
-  data.push(['']);
-  try {
-    // Add results
-    data = data.concat(JSON.stringify(fs.lstatSync(nodePath), null, 2)
-                .split('\n')
-                .map(e => [e]))
-    message.log(nodePath)
-
-    await setImage(image, nodePath)
-
-  } catch (e) {
-    // table.setData({headers: ['Info'], data: [[e.toString()]]})
-  }
-
-  screen.render();
-});
-
-let pause = false
-
-screen.key(['space'], () => {
-  pause = !pause
-  message.log('pause: ' + pause)
-})
-// screen.on('keypress', (ch, key) => {
-//   if (ch === ' ') {
-//     pause = !!pause
-//   }
-// })
-
-screen.key(['escape', 'q', 'C-c'], function(/* ch: any, key: any */) {
-  return process.exit(0);
-});
-
-screen.key(['tab'], function(ch: any, key: any) {
-  message.log('' + ch)
-  message.log('' + JSON.stringify(key))
-
-  if (screen.focused === tree.rows)
-    // table.focus();
-    image.focus()
-  else
-    tree.focus();
-});
-
-tree.focus()
-screen.render()
-
-let faceFileList: string[] = []
-let i = 0
-
-process.on('warning', (warning) => {
-  console.warn(warning.name);    // Print the warning name
-  console.warn(warning.message); // Print the warning message
-  console.warn(warning.stack);   // Print the stack trace
-});
-
-async function refreshImage() {
-  if (!pause) {
-    if (i >= faceFileList.length) {
-      i = 0
-    }
-    const file = faceFileList[i++]
-
-    message.log('#' + i + ', total: ' + faceFileList.length + ' : ' + file)
-
-    // EventEmitter memory leak #34
-    // https://github.com/substack/node-charm/issues/34
-    const c = charm()
-    c.removeAllListeners('close')
-    c.removeAllListeners('data')
-    c.removeAllListeners('end')
-    c.removeAllListeners('^C')
-
-    await setImage(image, faceFileList[i])
-    image.render()
-  }
-
-  // setImmediate(refreshImage)
-  setTimeout(refreshImage, 1 * 1000)
-}
-
-async function setImage(imageWidget: any, file: string): Promise<void> {
-  return new Promise<void>((resolve) => {
-    imageWidget.setImage({
-      cols: 80,
-      file,
-      onReady: resolve,
-      type: 'ansi',
-    })
-  })
-}
-
-refreshImage()
-
-glob('/home/zixia/git/node-facenet/datasets/lfw/cache.face/*.png', (e, matches) => {
-// glob('/home/zixia/git/blessed-contrib/examples/media/*.png', (e, matches) => {
-  if (e) {
-    console.log(e)
-    message.log(e && e.message || e)
-  }
-  message.log('Dataset ' + matches.length + ' loaded')
-  faceFileList = matches
-})
-
-async function main(): Promise<number> {
-
+function checkUpdate() {
   const pkgFile   = path.join(MODULE_ROOT, 'package.json')
   const pkg       = require(pkgFile)
   const notifier  = updateNotifier({
@@ -249,8 +44,275 @@ async function main(): Promise<number> {
     updateCheckInterval: 1000 * 60 * 60 * 24 * 7, // 1 week
   })
   notifier.notify()
+}
 
-  return 1
+async function splashScreen(screen: widget.Screen): Promise<void> {
+  screen.title = 'FaceNet Manager';
+
+  const box = new widget.Box({
+    top: 0,
+    left: 0,
+    width: screen.width,
+    height: screen.height,
+    padding: 0,
+    // content: 'Hello {bold}world{/bold}!',
+    style: {
+      fg: 'green',
+      bg: 'blue',
+    },
+  })
+  screen.append(box)
+
+  const imageOptions: Widgets.ImageOptions = {
+    file: FILE_FACENET_ICON_PNG,
+    type: 'ansi',
+    left: 'center',
+    top: 0,
+    width: 32,
+    height: 16,
+  }
+  const icon = new widget.Image(imageOptions)
+
+  screen.append(icon)
+
+  // http://artscene.textfiles.com/ansi/artwork/face.ans
+  // const asciiArt = fs.readFileSync('face.ans').toString()
+  // const art = new widget.Terminal({
+  //   parent: screen,
+  //   top: 0,
+  //   left: 'center',
+  //   height: 24,
+  //   // some are 78/80, some are 80/82
+  //   width: 70,
+  //   // border: 'line',
+  //   // content: faceAns,
+  //   // tags: true,
+  //   // label: ' {bold}{cyan-fg}ANSI Art{/cyan-fg}{/bold} (Drag Me) ',
+  //   style: {
+  //     bg: 'blue',
+  //   },
+  //   handler: function() {/* */},
+  //   // draggable: true,
+  // })
+
+  // Append our box to the screen.
+  // screen.append(art)
+
+  // art.term.reset()
+  // art.term.write(asciiArt)
+  // art.term.cursorHidden = true
+
+  const bigText = new widget.BigText({
+    top: 16,
+    left: 'center',
+    // border: 'line',
+    width: 60,
+    height: 16,
+    content: 'FaceNet',
+    style: {
+      fg: 'green',
+      bg: 'blue',
+    },
+  })
+
+  // console.log(typeof bigText)
+  screen.append(bigText)
+
+  const version = new widget.Box({
+    top: 29,
+    left: 'center',
+    height: 1,
+    width: 50,
+    align: 'right',
+    style: {
+      fg: 'white',
+      bg: 'blue',
+
+    },
+    content: 'Manager version ' + VERSION,
+  })
+  screen.append(version)
+
+  const pressKey = new widget.Box({
+    top: (screen.height) as number - 5,
+    left: 'center',
+    height: 1,
+    width: 30,
+    style: {
+      fg: 'white',
+      bg: 'blue',
+    },
+    content: 'Press any key to continue...',
+  })
+
+  screen.append(pressKey)
+  const timer = setInterval(() => {
+    pressKey.visible
+      ? pressKey.hide()
+      : pressKey.show()
+  }, 1000)
+
+  screen.render()
+
+  return new Promise<void>((resolve) => {
+    screen.once('keypress', () => {
+      clearInterval(timer)
+      pressKey.hide()
+      resolve()
+    })
+
+    function onClick(data: any) {
+      if (data.action === 'mouseup') {
+        clearInterval(timer)
+        pressKey.hide()
+        screen.removeListener('mouse', onClick)
+        return resolve()
+      }
+    }
+    screen.on('mouse', onClick)
+
+  })
+}
+
+async function clear(screen: widget.Screen) {
+  let i = screen.children.length
+  while (i--) {
+    screen.children[i].detach()
+  }
+}
+
+async function mainScreen(screen: widget.Screen) {
+  const THUMB_HEIGHT = 20
+
+  let top   = 0
+
+  const header = new widget.Box({
+    top,
+    left: 0,
+    width: '100%',
+    height: 1,
+    style: {
+      bg: 'blue',
+    }
+  })
+  screen.append(header)
+  top += 1
+
+  const imageOptions: Widgets.ImageOptions = {
+    file: FILE_FACENET_ICON_PNG,
+    type: 'ansi',
+    right: 0,
+    top: 0,
+    border: 'line',
+    style: {
+      border: {
+        fg: 'red',
+      },
+    },
+    width: 40,
+    height: THUMB_HEIGHT,
+  }
+
+  imageOptions.top = top
+  // Blessed issue #309 https://github.com/chjj/blessed/issues/309
+  const thumb1 = new widget.Image(
+    Object.assign({}, imageOptions))
+  screen.append(thumb1)
+  top += THUMB_HEIGHT
+
+  const distance12 = new widget.Box({
+    top,
+    right: 0,
+    width: 40,
+    height: 1,
+    bg: 'green',
+    fg: 'white',
+    tags: true,
+    content: '{center}distance: 0.63{/center}',
+  })
+  screen.append(distance12)
+  top += 1
+
+  imageOptions.top = top
+  const thumb2 = new widget.Image(
+    Object.assign({}, imageOptions))
+  screen.append(thumb2)
+  top += THUMB_HEIGHT
+
+  const distance23 = new widget.Box({
+    top,
+    right: 0,
+    width: 40,
+    height: 1,
+    bg: 'red',
+    fg: 'white',
+    tags: true,
+    content: '{center}distance: 1.43{/center}',
+  })
+  screen.append(distance23)
+  top += 1
+
+  imageOptions.top = top
+  const thumb3 = new widget.Image(Object.assign({}, imageOptions))
+  screen.append(thumb3)
+
+  const status = new widget.Box({
+    parent: screen,
+    bottom: 0,
+    right: 0,
+    height: 1,
+    width: 'shrink',
+    style: {
+      bg: 'blue',
+    },
+    content: 'Select your piece of ANSI art (`/` to search).'
+  });
+  screen.append(status)
+  screen.render()
+
+  // const manager = new Manager(screen)
+
+  // ui.thumb = 'file1.png'
+  // ui.thumb = 'file2.png'
+  // ui.thumb = 'file3.png'
+
+  // ui.image = 'file-large.png'
+  // ui.
+
+}
+
+async function main(): Promise<number> {
+  checkUpdate()
+
+  const screen = new widget.Screen({
+    smartCSR: true,
+    warnings: true,
+  })
+
+  screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
+    screen.destroy()
+  })
+
+  screen.key('f5', () => {
+    //
+  })
+
+  // const grid = new contrib.grid({
+  //   rows: 1,
+  //   cols: 1,
+  //   screen,
+  // })
+
+  await splashScreen(screen)
+
+  clear(screen)
+  screen.render()
+
+  await mainScreen(screen)
+
+  return new Promise<number>((resolve) => {
+    screen.once('destroy', () => resolve(0))
+  })
 }
 
 main()
