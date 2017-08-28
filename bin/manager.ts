@@ -1,10 +1,8 @@
+/**
+ * ANSI Colors: https://i.stack.imgur.com/sbSCk.png
+ */
 // import * as fs    from 'fs'
 import * as path  from 'path'
-
-// import {
-//   widget,
-//   Widgets,  // just for typing, not defined in blessed
-// }                           from 'blessed'
 
 import {
   widget,
@@ -12,11 +10,13 @@ import {
 }             from 'blessed'
 
 declare module 'blessed' {
+  // tslint:disable-next-line
   namespace widget {
     // tslint:disable-next-line
     class Image extends Widgets.ImageElement {}
   }
 
+  // tslint:disable-next-line
   namespace Widgets {
     interface Border {
       top?:    boolean,
@@ -193,7 +193,7 @@ async function mainScreen(screen: widget.Screen) {
     height: 1,
     style: {
       bg: 'blue',
-    }
+    },
   })
   screen.append(header)
   top += 1
@@ -206,7 +206,7 @@ async function mainScreen(screen: widget.Screen) {
     border: 'line',
     style: {
       border: {
-        fg: 'red',
+        fg: 'cyan',
       },
     },
     width: 40,
@@ -265,7 +265,7 @@ async function mainScreen(screen: widget.Screen) {
     style: {
       bg: 'blue',
     },
-    content: 'Select your piece of ANSI art (`/` to search).'
+    content: 'Select your piece of ANSI art (`/` to search).',
   });
   screen.append(status)
   screen.render()
