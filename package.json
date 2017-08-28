@@ -62,6 +62,7 @@
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/python3/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/python3/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/python3/*.py",
+    "manager": "ts-node bin/manager",
     "preinstall": "npm run check-version",
     "postinstall": "npm run venv && npm run postinstall:facenet && npm run postinstall:models",
     "postinstall:facenet": "cd python3 && if [ -d facenet ]; then (cd facenet && git pull); else git clone https://github.com/davidsandberg/facenet.git; fi && cd -",

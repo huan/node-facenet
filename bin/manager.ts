@@ -26,8 +26,7 @@ declare module 'blessed' {
 }
 
 import * as updateNotifier  from 'update-notifier'
-
-// const contrib               = require('blessed-contrib')
+const contrib               = require('blessed-contrib')
 
 import {
   MODULE_ROOT,
@@ -75,33 +74,6 @@ async function splashScreen(screen: widget.Screen): Promise<void> {
 
   screen.append(icon)
 
-  // http://artscene.textfiles.com/ansi/artwork/face.ans
-  // const asciiArt = fs.readFileSync('face.ans').toString()
-  // const art = new widget.Terminal({
-  //   parent: screen,
-  //   top: 0,
-  //   left: 'center',
-  //   height: 24,
-  //   // some are 78/80, some are 80/82
-  //   width: 70,
-  //   // border: 'line',
-  //   // content: faceAns,
-  //   // tags: true,
-  //   // label: ' {bold}{cyan-fg}ANSI Art{/cyan-fg}{/bold} (Drag Me) ',
-  //   style: {
-  //     bg: 'blue',
-  //   },
-  //   handler: function() {/* */},
-  //   // draggable: true,
-  // })
-
-  // Append our box to the screen.
-  // screen.append(art)
-
-  // art.term.reset()
-  // art.term.write(asciiArt)
-  // art.term.cursorHidden = true
-
   const bigText = new widget.BigText({
     top: 16,
     left: 'center',
@@ -115,7 +87,6 @@ async function splashScreen(screen: widget.Screen): Promise<void> {
     },
   })
 
-  // console.log(typeof bigText)
   screen.append(bigText)
 
   const version = new widget.Box({
@@ -194,6 +165,8 @@ async function mainScreen(screen: widget.Screen) {
     style: {
       bg: 'blue',
     },
+    tags: true,
+    content: `FaceNet Manager v${VERSION}{|}https://github.com/zixia/node-facenet`,
   })
   screen.append(header)
   top += 1
@@ -256,6 +229,37 @@ async function mainScreen(screen: widget.Screen) {
   const thumb3 = new widget.Image(Object.assign({}, imageOptions))
   screen.append(thumb3)
 
+  const mainBox = new widget.Box({
+    top: 1,
+    right: 40,
+    width: (screen.width as number) - 40,
+    height: (screen.height as number) - 1,
+    padding: 0,
+    // border: 'line',
+  })
+  screen.append(mainBox)
+
+  const grid = new contrib.grid({
+    rows: 12,
+    cols: 12,
+    screen: mainBox,
+  })
+
+  const bigImage = grid.set(0, 6, 6, 6, widget.Image)
+  const logBox    = grid.set(6, 6, 6, 6, widget.Box, {
+    line: 'blue',
+    content: 'logger',
+  })
+  const tree =  grid.set(0, 0, 12, 6, contrib.tree, {
+    style: {
+      text: 'red',
+    },
+    template: {
+      lines: true,
+    },
+    label: 'Filesystem Tree',
+  })
+
   const status = new widget.Box({
     parent: screen,
     bottom: 0,
@@ -268,6 +272,7 @@ async function mainScreen(screen: widget.Screen) {
     content: 'Select your piece of ANSI art (`/` to search).',
   });
   screen.append(status)
+
   screen.render()
 
   // const manager = new Manager(screen)
@@ -279,6 +284,14 @@ async function mainScreen(screen: widget.Screen) {
   // ui.image = 'file-large.png'
   // ui.
 
+  screen.on('resize', function() {
+    mainBox.height  = (screen.height as number) - 1
+    mainBox.width   = (screen.width as number) - 40
+
+    bigImage.emit('attach')
+    tree.emit('attach')
+    logBox.emit('attach')
+  })
 }
 
 async function main(): Promise<number> {
@@ -296,12 +309,6 @@ async function main(): Promise<number> {
   screen.key('f5', () => {
     //
   })
-
-  // const grid = new contrib.grid({
-  //   rows: 1,
-  //   cols: 1,
-  //   screen,
-  // })
 
   await splashScreen(screen)
 
