@@ -99,6 +99,11 @@ landmarks: {
 embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
 ```
 
+FACENET MANAGER
+----------------
+
+[![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
+
 # Install & Requirement
 
 ```shell
@@ -316,11 +321,16 @@ This repository is heavily inspired by the following implementations:
 1. Facenet.embedding() to calculate the 128 dim feature vector of face
 1. Initial workable version
 
+## FAQ
+
+1. `facenet-manager` display not right under Windows
+
+See: [Running Terminal Dashboards on Windows](http://webservices20.blogspot.co.uk/2015/04/running-terminal-dashboards-on-windows.html)
+
+
 # Author
 
 Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
-
-I'm an active angel investor, serial entrepreneur with strong technical background and rich social network experience.
 
 <a href="http://stackoverflow.com/users/1123955/zixia">
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">

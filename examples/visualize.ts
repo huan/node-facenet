@@ -1,4 +1,6 @@
 #!/usr/bin/env ts-node
+import * as path      from 'path'
+
 import * as gm        from 'gm'
 const printf          = require('printf')
 
@@ -89,7 +91,7 @@ async function main() {
       if (err) {
         throw err
       }
-      log.info('CLI', 'Orignal image file: ',     imageFile)
+      log.info('CLI', 'Orignal image file: ',     path.resolve(imageFile))
       log.info('CLI', 'Visualized output file: ', visualizeFile)
       log.info('CLI', 'Open those files and see the result. Have a nice day!')
     })
