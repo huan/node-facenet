@@ -7,7 +7,14 @@ import * as path  from 'path'
 import {
   widget,
   Widgets,
-}             from 'blessed'
+}                           from 'blessed'
+import * as contrib         from 'blessed-contrib'
+import * as updateNotifier  from 'update-notifier'
+
+import {
+  MODULE_ROOT,
+  VERSION,
+}               from '../src/config'
 
 declare module 'blessed' {
   // tslint:disable-next-line
@@ -25,13 +32,33 @@ declare module 'blessed' {
   }
 }
 
-import * as updateNotifier  from 'update-notifier'
-const contrib               = require('blessed-contrib')
+declare module 'blessed-contrib' {
 
-import {
-  MODULE_ROOT,
-  VERSION,
-}               from '../src/config'
+    export interface GridOptions {
+      rows: number,
+      cols: number,
+      screen: Widgets.Node,
+    }
+
+    export interface Grid {
+      new (options: GridOptions): Grid
+
+      set<T>(
+        row: number,
+        col: number,
+        rowSpan: number,
+        colSpan: number,
+        widget: T,
+        options?: Widgets.BoxOptions
+                | Widgets.FileManagerOptions
+                | Widgets.ImageOptions
+                | any,
+      ): T
+    }
+
+    // class Tree extends Widgets.BoxElement {}
+
+  }
 
 const FILE_FACENET_ICON_PNG = path.join(MODULE_ROOT, 'docs', 'images', 'facenet-icon.png')
 

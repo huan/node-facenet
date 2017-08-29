@@ -7,7 +7,7 @@
   "dependencies": {
     "argparse": "^1.0.9",
     "blessed": "^0.1.81",
-    "blessed-contrib": "^4.8.5",
+    "blessed-contrib": "git+https://github.com/zixia/blessed-contrib.git",
     "brolog": "^1.1.34",
     "canvas": "git+https://github.com/zixia/node-canvas.git",
     "deasync": "^0.1.10",
