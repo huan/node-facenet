@@ -315,9 +315,11 @@ async function mainScreen(screen: widget.Screen) {
     mainBox.height  = (screen.height as number) - 1
     mainBox.width   = (screen.width as number) - 40
 
-    bigImage.emit('attach')
+    console.log(typeof bigImage, typeof logBox)
+    // FIXME: emit typing
+    // bigImage.emit('attach')
     tree.emit('attach')
-    logBox.emit('attach')
+    // logBox.emit('attach')
   })
 }
 
