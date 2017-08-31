@@ -21,7 +21,7 @@ import {
 
 import {
   fixtureImageData3x3,
-}                         from './fixtures'
+}                         from '../tests/fixtures/'
 
 t.test('bufResizeUint8ClampedRGBA()', async (t: any) => {
   const UINT8_CLAMPED_ARRAY = new Uint8ClampedArray([

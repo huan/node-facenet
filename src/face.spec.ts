@@ -3,6 +3,10 @@
 const t                   = require('tap')  // tslint:disable:no-shadowed-variable
 
 import {
+  fixtureImageData3x3,
+}                       from '../tests/fixtures/'
+
+import {
   // log,
   Rectangle,
 }                       from './config'
@@ -10,9 +14,6 @@ import {
 import {
   Face,
 }                       from './face'
-import {
-  fixtureImageData3x3,
-}                       from './fixtures'
 
 t.test('constructor()', async (t: any) => {
   const IMAGE_DATA_3_3 = fixtureImageData3x3()
@@ -38,9 +39,9 @@ t.test('constructor()', async (t: any) => {
     t.deepEqual(face.imageData.data, IMAGE_DATA_3_3.data, 'data should be equal')
     t.deepEqual(face.rect, EXPECTED_RECT_0_0_3_3, 'rectangle should be equal')
 
-    t.equal(face.width,  3,  'should get width 3')
+    t.equal(face.width,  3, 'should get width 3')
     t.equal(face.height, 3, 'should get height 3')
-    t.equal(face.depth,  4,  'should get depth 4')
+    t.equal(face.depth,  4, 'should get depth 4')
   })
 
   t.test('with sub bounding box that needs corp', async (t: any) => {

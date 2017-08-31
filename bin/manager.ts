@@ -16,50 +16,6 @@ import {
   VERSION,
 }               from '../src/config'
 
-declare module 'blessed' {
-  // tslint:disable-next-line
-  namespace widget {
-    // tslint:disable-next-line
-    class Image extends Widgets.ImageElement {}
-  }
-
-  // tslint:disable-next-line
-  namespace Widgets {
-    interface Border {
-      top?:    boolean,
-      bottom?: boolean,
-    }
-  }
-}
-
-declare module 'blessed-contrib' {
-
-    export interface GridOptions {
-      rows: number,
-      cols: number,
-      screen: Widgets.Node,
-    }
-
-    export interface Grid {
-      new (options: GridOptions): Grid
-
-      set<T>(
-        row: number,
-        col: number,
-        rowSpan: number,
-        colSpan: number,
-        widget: T,
-        options?: Widgets.BoxOptions
-                | Widgets.FileManagerOptions
-                | Widgets.ImageOptions
-                | any,
-      ): T
-    }
-
-    // class Tree extends Widgets.BoxElement {}
-
-  }
-
 const FILE_FACENET_ICON_PNG = path.join(MODULE_ROOT, 'docs', 'images', 'facenet-icon.png')
 
 function checkUpdate() {
@@ -97,7 +53,7 @@ async function splashScreen(screen: widget.Screen): Promise<void> {
     width: 32,
     height: 16,
   }
-  const icon = new widget.Image(imageOptions)
+  const icon = new (widget as any).Image(imageOptions) as Widgets.ImageElement
 
   screen.append(icon)
 
@@ -131,6 +87,35 @@ async function splashScreen(screen: widget.Screen): Promise<void> {
   })
   screen.append(version)
 
+  const list = new widget.List({
+    parent: screen,
+    label: '{bold}{cyan-fg} Menu {/cyan-fg}{/bold}',
+    tags: true,
+    top: 30,
+    left: 'center',
+    width: 30,
+    height: 8,
+    keys: true,
+    vi: true,
+    mouse: true,
+    border: 'line',
+    style: {
+      item: {
+        hover: {
+          bg: 'blue',
+        },
+      },
+      selected: {
+        bg: 'blue',
+        bold: true,
+      },
+    },
+  })
+  list.setItems([
+    'aaaaaaaaaaaaaaa', 'bbbbbbbbbbbbb', 'ccccccccccccccc',
+  ] as any)
+  screen.append(list)
+
   const pressKey = new widget.Box({
     top: (screen.height) as number - 5,
     left: 'center',
@@ -148,15 +133,16 @@ async function splashScreen(screen: widget.Screen): Promise<void> {
     pressKey.visible
       ? pressKey.hide()
       : pressKey.show()
+    screen.render() // have to do this to update screen
   }, 1000)
 
   screen.render()
 
-  return new Promise<void>((resolve) => {
+  return new Promise<void>((/* resolve */) => {
     screen.once('keypress', () => {
       clearInterval(timer)
       pressKey.hide()
-      resolve()
+      // resolve()
     })
 
     function onClick(data: any) {
@@ -164,11 +150,10 @@ async function splashScreen(screen: widget.Screen): Promise<void> {
         clearInterval(timer)
         pressKey.hide()
         screen.removeListener('mouse', onClick)
-        return resolve()
+        // return resolve()
       }
     }
     screen.on('mouse', onClick)
-
   })
 }
 
@@ -215,8 +200,8 @@ async function mainScreen(screen: widget.Screen) {
 
   imageOptions.top = top
   // Blessed issue #309 https://github.com/chjj/blessed/issues/309
-  const thumb1 = new widget.Image(
-    Object.assign({}, imageOptions))
+  const thumb1 = new (widget as any).Image(
+    Object.assign({}, imageOptions)) as Widgets.ImageElement
   screen.append(thumb1)
   top += THUMB_HEIGHT
 
@@ -234,8 +219,8 @@ async function mainScreen(screen: widget.Screen) {
   top += 1
 
   imageOptions.top = top
-  const thumb2 = new widget.Image(
-    Object.assign({}, imageOptions))
+  const thumb2 = new (widget as any).Image(
+    Object.assign({}, imageOptions)) as Widgets.ImageElement
   screen.append(thumb2)
   top += THUMB_HEIGHT
 
@@ -253,7 +238,7 @@ async function mainScreen(screen: widget.Screen) {
   top += 1
 
   imageOptions.top = top
-  const thumb3 = new widget.Image(Object.assign({}, imageOptions))
+  const thumb3 = new (widget as any).Image(Object.assign({}, imageOptions))  as Widgets.ImageElement
   screen.append(thumb3)
 
   const mainBox = new widget.Box({
@@ -272,11 +257,12 @@ async function mainScreen(screen: widget.Screen) {
     screen: mainBox,
   })
 
-  const bigImage = grid.set(0, 6, 6, 6, widget.Image)
+  const bigImage = grid.set(0, 6, 6, 6, (widget as any).Image) as Widgets.ImageElement
   const logBox    = grid.set(6, 6, 6, 6, widget.Box, {
     line: 'blue',
     content: 'logger',
-  })
+  }) as Widgets.BoxElement
+
   const tree =  grid.set(0, 0, 12, 6, contrib.tree, {
     style: {
       text: 'red',
@@ -297,7 +283,8 @@ async function mainScreen(screen: widget.Screen) {
       bg: 'blue',
     },
     content: 'Select your piece of ANSI art (`/` to search).',
-  });
+  }) as Widgets.BoxElement
+
   screen.append(status)
 
   screen.render()
@@ -314,12 +301,11 @@ async function mainScreen(screen: widget.Screen) {
   screen.on('resize', function() {
     mainBox.height  = (screen.height as number) - 1
     mainBox.width   = (screen.width as number) - 40
-
-    console.log(typeof bigImage, typeof logBox)
+    console.log(contrib)
     // FIXME: emit typing
-    // bigImage.emit('attach')
+    bigImage.emit('attach')
     tree.emit('attach')
-    // logBox.emit('attach')
+    logBox.emit('attach')
   })
 }
 
