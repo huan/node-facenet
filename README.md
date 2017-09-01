@@ -102,7 +102,12 @@ embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
 FACENET MANAGER
 ----------------
 
+**UNDER HEAVY DEVELOPMENT NOW**
+
+Roadmap: release facenet-manager on version 0.4
+
 [![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
+> The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
 
 # Install & Requirement
 
