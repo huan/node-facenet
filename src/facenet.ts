@@ -82,7 +82,7 @@ export class Facenet implements Alignable, Embeddingable {
     const faceList: Face[] = []
     for (const i in boundingBoxes) {
       const boundingBox = this.squareBox(boundingBoxes[i])
-      const confidence = boundingBox[4]
+      const confidence = boundingBoxes[i][4]
       const marks = xyLandmarks[i]
 
       // boundary out of image
