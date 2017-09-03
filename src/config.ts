@@ -31,3 +31,10 @@ export interface Rectangle {
   w: number,  // width
   h: number,  // height
 }
+
+export const FILE_FACENET_ICON_PNG = path.join(
+  MODULE_ROOT,
+  'docs',
+  'images',
+  'facenet-icon.png',
+)

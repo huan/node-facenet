@@ -1,4 +1,19 @@
-async function splashScreen(screen: widget.Screen): Promise<void> {
+import {
+  widget,
+  Widgets,
+}                         from 'blessed'
+
+import {
+  log,
+  FILE_FACENET_ICON_PNG,
+  VERSION,
+}                         from '../../config'
+
+export async function splashScreen(
+  screen: Widgets.Screen,
+): Promise<void> {
+  log.verbose('SplashScreen', 'splashScreen()')
+
   screen.title = 'FaceNet Manager';
 
   const box = new widget.Box({

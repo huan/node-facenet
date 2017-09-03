@@ -1,7 +1,11 @@
 import {
   widget,
   // Widgets,
-}                   from 'blessed'
+}               from 'blessed'
+
+import {
+  log,
+}               from '../config'
 
 import {
   MainFrame,
@@ -12,10 +16,7 @@ export class Manager {
   private mainFrame: MainFrame
 
   constructor() {
-    this.init()
-  }
-
-  private init() {
+    log.verbose('Manager', 'constructor()')
     this.screen = new widget.Screen({
       smartCSR: true,
       warnings: true,
@@ -24,45 +25,45 @@ export class Manager {
     this.mainFrame = new MainFrame(this.screen)
   }
 
-  public async start() {
+  public init() {
+    log.verbose('Manager', 'init()')
+    this.mainFrame.init()
+  }
 
+  public async start(): Promise<void> {
+    log.verbose('Manager', 'start()')
+    this.screen.render()
+
+    return new Promise<void>((resolve) => {
+      this.screen.once('destroy', resolve)
+    })
   }
 
   public async align(file: string) {
+    log.verbose('Manager', 'align(%s)', file)
 
   }
-  public async validate(path: string) { }
-  public async validateDatasetLFW(dataset = 'lfw') { }
-  public async visualize(file: string) { }
-  public async sort(path: string) { }
-  public async embedding(file: string) { }
 
+  public async validate(path: string) {
+    log.verbose('Manager', 'validate(%s)', path)
+  }
 
-}
+  public async validateDataset(dataset = 'lfw') {
+    log.verbose('Manager', 'validateDateset(%s)', dataset)
+  }
 
-// import * as fs    from 'fs'
+  public async visualize(file: string) {
+    log.verbose('Manager', 'visualize(%s)', file)
+  }
 
-async function main(): Promise<number> {
+  public async sort(path: string) {
+    log.verbose('Manager', 'sort(%s)', path)
+  }
 
+  public async embedding(file: string) {
+    log.verbose('Manager', 'embedding(%s)', file)
+  }
 
-  screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
-    screen.destroy()
-  })
-
-  screen.key('f5', () => {
-    //
-  })
-
-  await splashScreen(screen)
-
-  clear(screen)
-  screen.render()
-
-  await mainScreen(screen)
-
-  return new Promise<number>((resolve) => {
-    screen.once('destroy', () => resolve(0))
-  })
 }
 
 export default Manager

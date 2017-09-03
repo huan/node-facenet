@@ -1,4 +1,3 @@
-import * as path          from 'path'
 import { EventEmitter }   from 'events'
 
 import {
@@ -12,7 +11,7 @@ import {
 }                         from './ui'
 
 import {
-  MODULE_ROOT,
+  FILE_FACENET_ICON_PNG,
   VERSION,
 }                         from '../../config'
 
@@ -21,13 +20,6 @@ export type MainFrameEventName = 'title'
                                 | 'log'
                                 | 'image'
                                 | 'status'
-
-const FILE_FACENET_ICON_PNG = path.join(
-  MODULE_ROOT,
-  'docs',
-  'images',
-  'facenet-icon.png',
-)
 
 export class MainFrame extends EventEmitter {
   private thumbList: Widgets.ImageElement[]
@@ -39,7 +31,7 @@ export class MainFrame extends EventEmitter {
     super()
   }
 
-  public async init() {
+  public init() {
     this.thumbList    = []
     this.distanceList = []
     clear(this.screen)
@@ -53,10 +45,22 @@ export class MainFrame extends EventEmitter {
     this.imageElement(thumbWidth, imageWidth, imageHeight)
     this.gridElement(imageHeight, thumbWidth, imageWidth)
     this.statusElement()
+
+    this.bindKeys()
   }
 
   public emit(event: MainFrameEventName, data: any) {
     return super.emit(event, data)
+  }
+
+  private bindKeys() {
+    this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
+      this.screen.destroy()
+    })
+
+    this.screen.key('f5', () => {
+      //
+    })
   }
 
   private headerElement(): Widgets.BoxElement {
