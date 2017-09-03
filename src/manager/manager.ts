@@ -1,6 +1,27 @@
+import {
+  widget,
+  // Widgets,
+}                   from 'blessed'
+
+import {
+  MainFrame,
+}               from './ui/main-frame'
+
 export class Manager {
+  private screen: widget.Screen
+  private mainFrame: MainFrame
+
   constructor() {
-    //
+    this.init()
+  }
+
+  private init() {
+    this.screen = new widget.Screen({
+      smartCSR: true,
+      warnings: true,
+    })
+
+    this.mainFrame = new MainFrame(this.screen)
   }
 
   public async start() {

@@ -19,7 +19,7 @@ function checkUpdate() {
   notifier.notify()
 }
 
-function assertNever(obj: never) {
+function assertNever(obj: never): never {
   throw new Error('Unexpected object' + obj)
 }
 
@@ -39,11 +39,7 @@ async function main(args: Args): Promise<number> {
       await manager.align(pathname)
       break
     case 'validate':
-      if (pathname) {
-        await manager.validate(pathname)
-      } else {
-        await manager.validateDatasetLFW()
-      }
+      await manager.validate(pathname)
       break
     case 'visualize':
       await manager.visualize(pathname)

@@ -14,11 +14,10 @@ import {
   VERSION,
 }                   from '../../config'
 
-const FILE_FACENET_ICON_PNG = path.join(MODULE_ROOT, 'docs', 'images', 'facenet-icon.png')
 
 let _screen: widget.Screen
 
-export async function clear(theScreen: widget.Screen) {
+export function clear(theScreen: widget.Screen): void {
   let i = theScreen.children.length
   while (i--) {
     theScreen.children[i].detach()
