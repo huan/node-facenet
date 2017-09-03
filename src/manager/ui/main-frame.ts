@@ -54,10 +54,6 @@ export class MainFrame extends EventEmitter {
   }
 
   private bindKeys() {
-    this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
-      this.screen.destroy()
-    })
-
     this.screen.key('f5', () => {
       //
     })

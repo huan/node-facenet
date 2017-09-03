@@ -20,7 +20,7 @@ function checkUpdate() {
 }
 
 function assertNever(obj: never): never {
-  throw new Error('Unexpected object' + obj)
+  throw new Error('Unexpected object: ' + obj)
 }
 
 async function main(args: Args): Promise<number> {
@@ -29,7 +29,9 @@ async function main(args: Args): Promise<number> {
   checkUpdate()
 
   const manager = new Manager()
-  const [command, pathname] = args.commands
+
+  const command  = args.commands[0]
+  const pathname = args.commands[1]
 
   switch (command) {
     case 'blessed':
@@ -87,8 +89,8 @@ function parseArguments(): Args {
         validate:   validate on LFW dataset
         sort:       save photos to seprate directories based on identification.
       \n`,
-      defaultValue: 'blessed',
-      nargs: '+',
+      defaultValue: ['blessed'],
+      nargs: '*',
     },
   )
 

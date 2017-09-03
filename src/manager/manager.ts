@@ -11,6 +11,10 @@ import {
   MainFrame,
 }               from './ui/main-frame'
 
+import {
+  menuScreen,
+}               from './ui/splash-screen'
+
 export class Manager {
   private screen: widget.Screen
   private mainFrame: MainFrame
@@ -27,12 +31,18 @@ export class Manager {
 
   public init() {
     log.verbose('Manager', 'init()')
-    this.mainFrame.init()
   }
 
   public async start(): Promise<void> {
     log.verbose('Manager', 'start()')
-    this.screen.render()
+    // this.screen.render()
+
+    this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
+      this.screen.destroy()
+    })
+
+    await menuScreen(this.screen)
+    this.mainFrame.init()
 
     return new Promise<void>((resolve) => {
       this.screen.once('destroy', resolve)
