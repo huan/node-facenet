@@ -192,3 +192,29 @@ export function distance(
 
   return distList
 }
+
+export function toDataURL(
+  data: ImageData,
+): string {
+  const canvas  = createCanvas(data.width, data.height)
+  const ctx     = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('getContext found null')
+  }
+  ctx.putImageData(data, 0, 0)
+  return canvas.toDataURL()
+}
+
+export function toBuffer(
+  data: ImageData,
+): Buffer {
+  const canvas  = createCanvas(data.width, data.height)
+  const ctx     = canvas.getContext('2d')
+  if (!ctx) {
+    throw new Error('getContext found null')
+  }
+  ctx.putImageData(data, 0, 0)
+
+  // https://github.com/Automattic/node-canvas#canvastobuffer
+  return (canvas as any).toBuffer()
+}

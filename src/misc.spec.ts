@@ -17,11 +17,13 @@ import {
   imageToData,
   loadImage,
   resizeImage,
+  toDataURL,
+  toBuffer,
 }                         from './misc'
 
 import {
   fixtureImageData3x3,
-}                         from './fixtures'
+}                         from '../tests/fixtures/'
 
 t.test('bufResizeUint8ClampedRGBA()', async (t: any) => {
   const UINT8_CLAMPED_ARRAY = new Uint8ClampedArray([
@@ -153,4 +155,23 @@ t.test('distance()', async (t: any) => {
     t.deepEqual(c, [5, 5, 5], 'should get 5 for all three rows')
   })
 
+})
+
+t.test('Data Convertions', async (t: any) => {
+  const IMAGE_DATA = fixtureImageData3x3()
+  const EXPECTED_DATA_URL = 'data:image/png;base64,'
+    + 'iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAABmJLR0QA/wD/AP+gvaeTAA'
+    + 'AAHElEQVQImWNkZGT8z8jIyMDIyMjAwszMzICVAwAmtQEw+Y/4igAAAABJRU5ErkJggg=='
+
+  const EXPECTED_BUFFER = Buffer.from(EXPECTED_DATA_URL.split(',')[1], 'base64')
+
+  t.test('toDataURL()', async (t: any) => {
+    const dataURL = await toDataURL(IMAGE_DATA)
+    t.equal(dataURL, EXPECTED_DATA_URL, 'should convert image data to data url right')
+  })
+
+  t.test('toBuffer()', async (t: any) => {
+    const buffer = toBuffer(IMAGE_DATA)
+    t.ok(buffer.equals(EXPECTED_BUFFER), 'should convert image data to buffer right')
+  })
 })

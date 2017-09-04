@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.2.19",
+  "version": "0.2.24",
   "description": "node-facenet is a TensorFlow backed FaceNet implementation for Node.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,6 +10,7 @@
     "blessed-contrib": "git+https://github.com/zixia/blessed-contrib.git",
     "brolog": "^1.1.34",
     "canvas": "git+https://github.com/zixia/node-canvas.git",
+    "charm": "^1.0.2",
     "deasync": "^0.1.10",
     "event-stream": "^3.3.4",
     "glob": "^7.1.2",
@@ -62,7 +63,7 @@
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint src/python3/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/python3/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/python3/*.py",
-    "manager": "ts-node bin/manager",
+    "manager": "ts-node bin/manager-cli",
     "preinstall": "npm run check-version",
     "postinstall": "npm run venv && npm run postinstall:facenet && npm run postinstall:models",
     "postinstall:facenet": "cd python3 && if [ -d facenet ]; then (cd facenet && git pull); else git clone https://github.com/davidsandberg/facenet.git; fi && cd -",
@@ -111,9 +112,7 @@
     "src/"
   ],
   "bin": {
-    "facenet-align": "dist/bin/align.js",
-    "facenet-embedding": "dist/bin/embedding.js",
-    "facenet-manager": "dist/bin/manager.js"
+    "facenet-manager": "dist/bin/facenet-manager.js"
   },
   "facenet": {
     "env": {

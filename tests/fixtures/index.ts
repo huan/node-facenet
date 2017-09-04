@@ -1,6 +1,6 @@
 import {
     createCanvas,
-}                   from './misc'
+}                   from '../../src/misc'
 
 export function fixtureImageData3x3(): ImageData {
   const canvas = createCanvas(3, 3)

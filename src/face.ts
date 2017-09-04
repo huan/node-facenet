@@ -17,6 +17,8 @@ import {
   imageMd5,
   imageToData,
   loadImage,
+  toBuffer,
+  toDataURL,
 }                           from './misc'
 
 export interface FacialLandmark {
@@ -247,8 +249,17 @@ export class Face {
             / this.imageData.height
   }
 
-  public similarity(face: Face): number {
+  public distance(face: Face): number {
     const faceEmbeddingNdArray = face.embedding.reshape(1, -1) as nj.NdArray
     return distance(this.embedding, faceEmbeddingNdArray)[0]
   }
+
+  public toDataUrl(): string {
+    return toDataURL(this.imageData)
+  }
+
+  public toBuffer(): Buffer {
+    return toBuffer(this.imageData)
+  }
+
 }
