@@ -12,31 +12,20 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
 
+# Install
+
+```shell
+$ npm install facenet
+```
+
 # Example
 
 The follow examples will give you some intuitions for using the code.
 
-1. **visualize** example will calculate the similarity between faces and draw them on the photo.
 1. **demo** exmaple will show you how to do `align` for face alignment and `embedding` to get face feature vector.
+1. **visualize** example will calculate the similarity between faces and draw them on the photo.
 
-## 1. Visualize for Intuition
-
-![FaceNet Visualization](https://zixia.github.io/node-facenet/images/landing-twins-ricky-martin-visualized.jpg)
-
-1. Face is in the green rectangle.
-1. Similarity(distance) between faces showed as a number in the middle of the line.
-1. To identify if two faces belong to the same person, we could use an experiential threshold of distance: 0.75.
-
-```shell
-$ git clone git@github.com:zixia/node-facenet.git
-$ cd facenet
-$ npm install
-$ npm run example:visualize
-
-01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
-```
-
-## 2. Demo for API Usage
+## 1. Demo for API Usage
 
 TL;DR: Talk is cheap, show me the code!
 
@@ -61,14 +50,9 @@ for (const face of faceList) {
 
 Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/demo.ts>
 
-Try it by run:
+The output should be something like:
 
 ```shell
-$ git clone git@github.com:zixia/node-facenet.git
-$ cd facenet
-$ npm install
-$ npm run example:demo
-
 image file: /home/zixia/git/facenet/examples/../tests/fixtures/two-faces.jpg
 face file: 1-1.jpg
 bounding box: {
@@ -97,6 +81,23 @@ landmarks: {
   rightMouthCorner: { x: 303, y: 281 } 
 }
 embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
+```
+
+## 2. Visualize for Intuition
+
+![FaceNet Visualization](https://zixia.github.io/node-facenet/images/landing-twins-ricky-martin-visualized.jpg)
+
+1. Face is in the green rectangle.
+1. Similarity(distance) between faces showed as a number in the middle of the line.
+1. To identify if two faces belong to the same person, we could use an experiential threshold of distance: 0.75.
+
+```shell
+$ git clone git@github.com:zixia/node-facenet.git
+$ cd facenet
+$ npm install
+$ npm run example:visualize
+
+01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
 ```
 
 FACENET MANAGER
