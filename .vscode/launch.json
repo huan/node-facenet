@@ -12,7 +12,8 @@
             "args": ["${relativeFile}"],
             "sourceMaps": true,
             "cwd": "${workspaceRoot}",
-            "protocol": "inspector"
+            "protocol": "inspector",
+            "console": "externalTerminal"
         }
     ]
 }

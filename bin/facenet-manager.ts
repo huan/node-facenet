@@ -29,34 +29,41 @@ async function main(args: Args): Promise<number> {
   checkUpdate()
 
   const manager = new Manager()
+  await manager.init()
 
   const command  = args.commands[0]
   const pathname = args.commands[1]
 
-  switch (command) {
-    case 'blessed':
-      await manager.start()
-      break
-    case 'align':
-      await manager.align(pathname)
-      break
-    case 'validate':
-      await manager.validate(pathname)
-      break
-    case 'visualize':
-      await manager.visualize(pathname)
-      break
-    case 'embedding':
-      await manager.embedding(pathname)
-      break
-    case 'sort':
-      await manager.sort(pathname)
-      break
+  try {
+    switch (command) {
+      case 'blessed':
+        await manager.start()
+        break
+      case 'align':
+        await manager.align(pathname)
+        break
+      case 'validate':
+        await manager.validate(pathname)
+        break
+      case 'visualize':
+        await manager.visualize(pathname)
+        break
+      case 'embedding':
+        await manager.embedding(pathname)
+        break
+      case 'sort':
+        await manager.sort(pathname)
+        break
 
-    default:
-      assertNever(command)
+      default:
+        assertNever(command)
+    }
+    return 0
+  } catch (e) {
+    log.error('ManagerCli', 'Exception: %s', e)
+    console.error(e)
+    return 1
   }
-  return 0
 }
 
 type Command =    'align'
@@ -114,6 +121,7 @@ function parseArguments(): Args {
 }
 
 log.level('silly')
+
 main(parseArguments())
 .then(process.exit)
 .catch(e => {

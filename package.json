@@ -10,6 +10,7 @@
     "blessed-contrib": "git+https://github.com/zixia/blessed-contrib.git",
     "brolog": "^1.1.34",
     "canvas": "git+https://github.com/zixia/node-canvas.git",
+    "charm": "^1.0.2",
     "deasync": "^0.1.10",
     "event-stream": "^3.3.4",
     "glob": "^7.1.2",
@@ -111,7 +112,7 @@
     "src/"
   ],
   "bin": {
-    "facenet-manager": "dist/bin/manager-cli.js"
+    "facenet-manager": "dist/bin/facenet-manager.js"
   },
   "facenet": {
     "env": {

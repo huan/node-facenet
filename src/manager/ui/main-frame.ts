@@ -160,6 +160,8 @@ export class MainFrame extends EventEmitter {
       },
     })
 
+    this.screen.append(box)
+
     const grid = new contrib.grid({
       screen: box,
       rows: 6,

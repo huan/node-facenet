@@ -12,12 +12,20 @@ import {
 }               from './ui/main-frame'
 
 import {
-  menuScreen,
-}               from './ui/splash-screen'
+  SplashMenu,
+}               from './ui/splash-menu'
+
+interface MenuItem {
+  text:     string,
+  callback: Function,
+}
 
 export class Manager {
-  private screen: widget.Screen
-  private mainFrame: MainFrame
+  private mainFrame:  MainFrame
+  private screen:     widget.Screen
+  private splashMenu: SplashMenu
+
+  private menuItemList: MenuItem[]
 
   constructor() {
     log.verbose('Manager', 'constructor()')
@@ -25,24 +33,58 @@ export class Manager {
       smartCSR: true,
       warnings: true,
     })
-
-    this.mainFrame = new MainFrame(this.screen)
   }
 
-  public init() {
+  public async init(): Promise<void> {
     log.verbose('Manager', 'init()')
+
+    this.mainFrame = new MainFrame(this.screen)
+
+    this.menuItemList = [
+      {
+        text: 'Validate on LFW',
+        callback: () => console.log('validate lfw'),
+      },
+      {
+        text: 'Photo Alignment',
+        callback: () => console.log('alignment'),
+      },
+      {
+        text: 'Face Embedding',
+        callback: () => console.log('embedding'),
+      },
+      {
+        text: 'Show Distance Between Faces',
+        callback: () => console.log('visulize'),
+      },
+      {
+        text: 'Sort Photos Group by Face',
+        callback: () => console.log('sort'),
+      },
+    ]
+
+    this.splashMenu = new SplashMenu(
+      this.screen,
+      this.menuItemList.map(m => m.text),
+    )
   }
 
   public async start(): Promise<void> {
     log.verbose('Manager', 'start()')
-    // this.screen.render()
+
+    const menuIndex = await this.splashMenu.start()
+
+    const callback = this.menuItemList
+                          .map(m => m.callback)
+                          [menuIndex]
+
+    callback()
 
     this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
       this.screen.destroy()
     })
 
-    await menuScreen(this.screen)
-    this.mainFrame.init()
+    await this.mainFrame.init()
 
     return new Promise<void>((resolve) => {
       this.screen.once('destroy', resolve)

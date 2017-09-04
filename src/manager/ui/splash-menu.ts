@@ -15,6 +15,11 @@ export class SplashMenu {
     public menuList:  string[],
   ) {
     log.verbose('SplashMenu', 'constructor()')
+
+    for (const i in this.menuList) {
+      menuList[i] = ' ' + (parseInt(i) + 1) + '. ' + menuList[i]
+    }
+
   }
 
   public async start(): Promise<number> {
@@ -34,11 +39,12 @@ export class SplashMenu {
   }
 
   private backgroundElement() {
+    log.verbose('SplashMenu', 'backgroundElement()')
     const box = new widget.Box({
       top:     0,
       left:    0,
-      width:   screen.width,
-      height:  screen.height,
+      width:   this.screen.width,
+      height:  this.screen.height,
       padding: 0,
       // content: 'Hello {bold}world{/bold}!',
       style: {
@@ -50,6 +56,7 @@ export class SplashMenu {
   }
 
   private logoElement() {
+    log.verbose('SplashMenu', 'logoElement()')
     const icon = new (widget as any).Image({
       file  : FILE_FACENET_ICON_PNG,
 
@@ -63,6 +70,7 @@ export class SplashMenu {
   }
 
   private textElement() {
+    log.verbose('SplashMenu', 'textElement()')
     const bigText = new widget.BigText({
       top : 16,
       left: 'center',
@@ -79,6 +87,8 @@ export class SplashMenu {
   }
 
   private versionElement() {
+    log.verbose('SplashMenu', 'versionElement()')
+
     const version = new widget.Box({
       content: 'Manager version ' + VERSION,
       top:     29,
@@ -96,8 +106,10 @@ export class SplashMenu {
   }
 
   private pressElement(): Promise<void> {
+    log.verbose('SplashMenu', 'pressElement()')
+
     const pressKey = new widget.Box({
-      top:    (screen.height) as number - 5,
+      top:    (this.screen.height) as number - 5,
       left:   'center',
       height: 1,
       width:  30,
@@ -120,21 +132,21 @@ export class SplashMenu {
       this.screen.once('keypress', () => {
         clearInterval(timer)
         pressKey.hide()
-        resolve()
+        return resolve()
       })
     })
   }
 
   private async menuElement(): Promise<number> {
-    const menuItemList = this.menuList.map(m => m.text)
+    log.verbose('SplashMenu', 'menuElement()')
 
     const list = new widget.List({
       label:  '{bold}{cyan-fg} Menu {/cyan-fg}{/bold}',
       tags:   true,
-      top:    30,
+      top:    31,
       left:   'center',
-      width:  30,
-      height: menuItemList.length + 2,
+      width:  40,
+      height: this.menuList.length + 2,
       keys:   true,
       vi:     true,
       mouse:  true,
@@ -151,20 +163,19 @@ export class SplashMenu {
         },
       },
     })
-
-    for (const i in menuItemList) {
-      menuItemList[i] = (parseInt(i) + 1) + '. ' + menuItemList[i]
-    }
-    list.setItems(menuItemList as any)
-
-    // list.items.forEach(function(item, i) {
-    //   const text = item.getText();
-    //   item.setHover(map[text]);
-    // });
+    list.setItems(this.menuList as any)
+    ;
+    // (list as any).items.forEach(function(item: any/*,  i */) {
+    //   const text = item.getText()
+    //   item.setHover(text)
+    // })
 
     list.focus()
     ; // seprate the following ()
     (list as any).enterSelected(0)
+
+    this.screen.append(list)
+    this.screen.render()
 
     return new Promise<number>(resolve => {
       list.once('select', (_, selected) => resolve(selected))
