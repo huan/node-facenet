@@ -1,19 +1,25 @@
+import * as path  from 'path'
 import {
   widget,
   // Widgets,
-}               from 'blessed'
+}                 from 'blessed'
 
 import {
   log,
-}               from '../config'
+  MODULE_ROOT,
+}                 from '../config'
+
+import {
+  clear,
+}                 from './ui/'
 
 import {
   MainFrame,
-}               from './ui/main-frame'
+}                 from './ui/main-frame'
 
 import {
   SplashMenu,
-}               from './ui/splash-menu'
+}                 from './ui/splash-menu'
 
 interface MenuItem {
   text:     string,
@@ -32,6 +38,7 @@ export class Manager {
     this.screen = new widget.Screen({
       smartCSR: true,
       warnings: true,
+      // log: '/tmp/fm.log' as any,
     })
   }
 
@@ -74,6 +81,8 @@ export class Manager {
 
     const menuIndex = await this.splashMenu.start()
 
+    clear(this.screen)
+
     const callback = this.menuItemList
                           .map(m => m.callback)
                           [menuIndex]
@@ -86,6 +95,13 @@ export class Manager {
 
     await this.mainFrame.init()
 
+    this.mainFrame.emit('image', path.join(
+      MODULE_ROOT,
+      'c850a18960ef7ba5370ad4032ff882c6.png',
+    ))
+
+    this.screen.render()
+
     return new Promise<void>((resolve) => {
       this.screen.once('destroy', resolve)
     })
@@ -96,8 +112,8 @@ export class Manager {
 
   }
 
-  public async validate(path: string) {
-    log.verbose('Manager', 'validate(%s)', path)
+  public async validate(filepath: string) {
+    log.verbose('Manager', 'validate(%s)', filepath)
   }
 
   public async validateDataset(dataset = 'lfw') {
@@ -108,8 +124,8 @@ export class Manager {
     log.verbose('Manager', 'visualize(%s)', file)
   }
 
-  public async sort(path: string) {
-    log.verbose('Manager', 'sort(%s)', path)
+  public async sort(filepath: string) {
+    log.verbose('Manager', 'sort(%s)', filepath)
   }
 
   public async embedding(file: string) {

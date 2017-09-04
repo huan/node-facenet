@@ -1,3 +1,4 @@
+
 import { EventEmitter }   from 'events'
 
 import {
@@ -7,23 +8,22 @@ import {
 const contrib             = require('blessed-contrib')
 
 import {
-  clear,
-}                         from './ui'
-
-import {
   FILE_FACENET_ICON_PNG,
   VERSION,
 }                         from '../../config'
 
-export type MainFrameEventName = 'title'
-                                | 'thumb'
-                                | 'log'
+import {
+  Face,
+}                         from '../../face'
+
+export type MainFrameEventName = 'face'
                                 | 'image'
+                                | 'log'
                                 | 'status'
+                                | 'title'
 
 export class MainFrame extends EventEmitter {
-  private thumbList: Widgets.ImageElement[]
-  private distanceList: Widgets.BoxElement[]
+  private elementList = [] as Widgets.Node[]
 
   constructor(
     public screen: Widgets.Screen,
@@ -32,98 +32,134 @@ export class MainFrame extends EventEmitter {
   }
 
   public init() {
-    this.thumbList    = []
-    this.distanceList = []
-    clear(this.screen)
-
     const thumbWidth  = 40
-    const imageHeight = 3 * (thumbWidth / 2)
     const imageWidth  = 4 * (thumbWidth / 2)
+    const imageHeight = (3 * (imageWidth / 4)) / 2  // height in console is twice times of width
 
-    this.headerElement()
-    this.thumbElementList(thumbWidth)
-    this.imageElement(thumbWidth, imageWidth, imageHeight)
-    this.gridElement(imageHeight, thumbWidth, imageWidth)
-    this.statusElement()
-
-    this.bindKeys()
+    this.addHeaderElement()
+    this.addThumbElementList(thumbWidth)
+    this.addImageElement(thumbWidth, imageWidth, imageHeight)
+    this.addGridElement(1 + imageHeight, thumbWidth, imageWidth)
+    this.addStatusElement()
   }
+
+  public emit(event: 'image',   filename: string): boolean
+  public emit(event: 'log',     message:  string): boolean
+  public emit(event: 'title',   title:    string): boolean
+  public emit(event: 'status',  message:  string): boolean
+  public emit(event: 'face',    face:     Face):   boolean
 
   public emit(event: MainFrameEventName, data: any) {
     return super.emit(event, data)
   }
 
-  private bindKeys() {
-    this.screen.key('f5', () => {
-      //
-    })
+  public clean() {
+    let i = this.screen.children.length
+    while (i--) {
+      const child = this.screen.children[i]
+      if (!this.elementList.includes(child)) {
+        child.detach()
+      }
+    }
   }
 
-  private headerElement(): Widgets.BoxElement {
+  private append(element: Widgets.Node) {
+    this.elementList.push(element)
+    this.screen.append(element)
+  }
+
+  private addHeaderElement(): void {
     const box = new widget.Box({
-      top   : 0,
-      left  : 0,
-      width : '100%',
-      height: 1,
-      style : {
+      top:     0,
+      left:    0,
+      width:   '100%',
+      height:  1,
+      tags:    true,
+      content: `{center}FaceNet Manager v${VERSION}{/center} `,
+      style:   {
         bg: 'blue',
       },
-      tags   : true,
-      content: `FaceNet Manager v${VERSION}{|}https://github.com/zixia/node-facenet`,
     })
+    this.append(box)
     this.on('title', title => box.setContent(title))
-    return box
   }
 
-  private thumbElementList(height: number): void {
-    let top = 1
+  private addThumbElementList(width: number): void {
+    let top       = 1
+    const height  = Math.floor(width / 2)
+
+    const faceList     = [] as Face[]
+    const thumbList    = [] as Widgets.ANSIImageElement[]
+    const distanceList = [] as Widgets.BoxElement[]
 
     do {
       const thumbElement = new (widget as any).Image({
-        top   : top,
-        width : height,
-        height: height,
-        file  : FILE_FACENET_ICON_PNG,
-
-        type  : 'ansi',
-        right : 0,
-        border: 'line',
-        style : {
+        width,
+        height,
+        top    : top,
+        file   : FILE_FACENET_ICON_PNG,
+        type   : 'ansi',
+        right  : 0,
+        border : 'line',
+        style  : {
           border: {
             fg: 'cyan',
           },
         },
-      }) as Widgets.ImageElement
+      }) as Widgets.ANSIImageElement
 
       const distanceElement = new widget.Box({
-        top    : top + height,
-        width  : height,
-        right  : 0,
-        height : 1,
-        bg     : 'green',
-        fg     : 'white',
-        tags   : true,
-        content: '{center}distance: 0.75{/center}',
+        width,
+        top     : top + height,
+        right   : 0,
+        height  : 1,
+        bg      : 'grey',
+        fg      : 'white',
+        tags    : true,
+        content : '{center}distance: 0.75{/center}',
+        // border:  'line',
       })
 
-      this.thumbList.push(thumbElement)
-      this.distanceList.push(distanceElement)
+      thumbList.push(thumbElement)
+      distanceList.push(distanceElement)
 
-      this.screen.append(thumbElement)
-      this.screen.append(distanceElement)
+      this.append(thumbElement)
+      this.append(distanceElement)
 
-      top += height
+      top += height + 1 // face(height) + distance(1)
 
     } while (top < this.screen.height)
+
+    this.on('face', (face: Face) => {
+      let i = thumbList.length
+      while (i--) {
+        if (i === 0) {
+          faceList[0] = face
+          thumbList[0].setImage(face.toBuffer() as any, () => {
+            console.log('image loaded')
+          })
+        } else {
+          faceList[i] = faceList[i - 1]
+          thumbList[i].setContent(thumbList[i - 1].content)
+        }
+      }
+      i = distanceList.length
+      while (i--) {
+        if (faceList[i + 1] && faceList[i]) {
+          const distance = faceList[i + 1].distance(faceList[i])
+          distanceList[i].setContent(` | distance: ${distance} | `)
+        }
+      }
+    })
   }
 
-  private imageElement(
+  private addImageElement(
     paddingRight: number,
     width:        number,
     height:       number,
   ): void {
     const image = new (widget as any).Image({
-      paddingRight,
+      right: paddingRight,
       width,
       height,
       file  : FILE_FACENET_ICON_PNG,
@@ -137,12 +173,11 @@ export class MainFrame extends EventEmitter {
         },
       },
     })
-    // FIXME setImage
-    this.on('image', filepath => image.setImage(filepath))
-    this.screen.append(image)
+    this.on('image', filename => image.setImage(filename))
+    this.append(image)
   }
 
-  private gridElement(
+  private addGridElement(
     paddingTop:   number,
     paddingRight: number,
     width:        number,
@@ -153,14 +188,14 @@ export class MainFrame extends EventEmitter {
       width,
       height: (this.screen.height as number) - paddingTop,
 
-      bottom: 0,
+      // bottom: 0,
 
       style: {
         bg: 'blue',
       },
     })
 
-    this.screen.append(box)
+    this.append(box)
 
     const grid = new contrib.grid({
       screen: box,
@@ -176,7 +211,7 @@ export class MainFrame extends EventEmitter {
     this.on('log', text => log.log(text))
   }
 
-  private statusElement(): void {
+  private addStatusElement(): void {
     const status = new widget.Box({
       bottom: 0,
       right: 0,
@@ -188,7 +223,7 @@ export class MainFrame extends EventEmitter {
       content: 'Status messages here.',
     })
     this.on('status', text => status.setContent(text))
-    this.screen.append(status)
+    this.append(status)
   }
   // hit/miss    process time
 
