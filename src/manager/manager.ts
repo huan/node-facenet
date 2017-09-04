@@ -10,6 +10,10 @@ import {
 }                 from '../config'
 
 import {
+  Face,
+}                 from '../face'
+
+import {
   clear,
 }                 from './ui/'
 
@@ -95,9 +99,23 @@ export class Manager {
 
     await this.mainFrame.init()
 
+    this.mainFrame.emit('face', new Face(
+      path.join(
+        MODULE_ROOT,
+        'c850a18960ef7ba5370ad4032ff882c6.png',
+      ),
+    ))
+
     this.mainFrame.emit('image', path.join(
       MODULE_ROOT,
       'c850a18960ef7ba5370ad4032ff882c6.png',
+    ))
+
+    this.mainFrame.emit('face', new Face(
+      path.join(
+        MODULE_ROOT,
+        '4ad418045fee324dc97d8fe7700559e2.png',
+      ),
     ))
 
     this.screen.render()
