@@ -75,7 +75,7 @@ export class MainFrame extends EventEmitter {
       width:   '100%',
       height:  1,
       tags:    true,
-      content: `{center}FaceNet Manager v${VERSION}{/center} `,
+      content: `{center} FaceNet Manager v${VERSION} {/center}`,
       style:   {
         bg: 'blue',
       },
@@ -131,23 +131,36 @@ export class MainFrame extends EventEmitter {
     } while (top < this.screen.height)
 
     this.on('face', (face: Face) => {
+      this.emit('log', 'new face. thumbList length: ' + thumbList.length + ', faceList.length: ' + faceList.length)
+
       let i = thumbList.length
       while (i--) {
         if (i === 0) {
           faceList[0] = face
           thumbList[0].setImage(face.toBuffer() as any, () => {
-            console.log('image loaded')
+            // XXX no this callback??
+            this.emit('log', 'image loaded')
           })
-        } else {
+        } else if (faceList[i - 1]) {
           faceList[i] = faceList[i - 1]
-          thumbList[i].setContent(thumbList[i - 1].content)
+          // thumbList[i].setContent(thumbList[i - 1].content)
+          thumbList[i].setImage(faceList[i].toBuffer() as any, () => {
+            // XXX no this callback??
+            this.emit('log', 'image > 0 loaded')
+          })
+
         }
       }
       i = distanceList.length
       while (i--) {
         if (faceList[i + 1] && faceList[i]) {
-          const distance = faceList[i + 1].distance(faceList[i])
-          distanceList[i].setContent(` | distance: ${distance} | `)
+          let distance
+          try {
+            distance = faceList[i + 1].distance(faceList[i])
+          } catch (e) { // no embedding
+            distance = -1
+          }
+          distanceList[i].setContent(`{center} | distance: ${distance} | {/center}`)
         }
       }
     })

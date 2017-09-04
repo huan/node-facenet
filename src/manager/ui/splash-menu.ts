@@ -46,7 +46,6 @@ export class SplashMenu {
       width:   this.screen.width,
       height:  this.screen.height,
       padding: 0,
-      // content: 'Hello {bold}world{/bold}!',
       style: {
         fg: 'green',
         bg: 'blue',
@@ -58,8 +57,7 @@ export class SplashMenu {
   private logoElement() {
     log.verbose('SplashMenu', 'logoElement()')
     const icon = new (widget as any).Image({
-      file  : FILE_FACENET_ICON_PNG,
-
+      file:   FILE_FACENET_ICON_PNG,
       type:   'ansi',
       left:   'center',
       top:    0,
@@ -72,9 +70,8 @@ export class SplashMenu {
   private textElement() {
     log.verbose('SplashMenu', 'textElement()')
     const bigText = new widget.BigText({
-      top : 16,
-      left: 'center',
-      // border: 'line',
+      top:     16,
+      left:    'center',
       width:   60,
       height:  16,
       content: 'FaceNet',
@@ -164,12 +161,6 @@ export class SplashMenu {
       },
     })
     list.setItems(this.menuList as any)
-    ;
-    // (list as any).items.forEach(function(item: any/*,  i */) {
-    //   const text = item.getText()
-    //   item.setHover(text)
-    // })
-
     list.focus()
     ; // seprate the following ()
     (list as any).enterSelected(0)

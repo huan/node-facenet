@@ -15,15 +15,9 @@ import {
 
 import {
   clear,
-}                 from './ui/'
-
-import {
   MainFrame,
-}                 from './ui/main-frame'
-
-import {
   SplashMenu,
-}                 from './ui/splash-menu'
+}                 from './ui/'
 
 interface MenuItem {
   text:     string,
@@ -115,6 +109,34 @@ export class Manager {
       path.join(
         MODULE_ROOT,
         '4ad418045fee324dc97d8fe7700559e2.png',
+      ),
+    ))
+
+    this.mainFrame.emit('face', new Face(
+      path.join(
+        MODULE_ROOT,
+        'c850a18960ef7ba5370ad4032ff882c6.png',
+      ),
+    ))
+
+    this.mainFrame.emit('face', new Face(
+      path.join(
+        MODULE_ROOT,
+        'c850a18960ef7ba5370ad4032ff882c6.png',
+      ),
+    ))
+
+    this.mainFrame.emit('face', new Face(
+      path.join(
+        MODULE_ROOT,
+        'c850a18960ef7ba5370ad4032ff882c6.png',
+      ),
+    ))
+
+    this.mainFrame.emit('face', new Face(
+      path.join(
+        MODULE_ROOT,
+        'c850a18960ef7ba5370ad4032ff882c6.png',
       ),
     ))
 
