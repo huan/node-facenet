@@ -101,7 +101,7 @@ t.test('JSON implementations', async (t: any) => {
 
   t.test('fromSON()', async (t: any) => {
     const face = Face.fromJSON(JSON_TEXT)
-
+    // TODO: add _embedding with nj.array type test
     t.deepEqual(face.imageData.data, EXPECTED_IMAGE_ARRAY_2_2, 'should restore imageData right')
 
     t.equal(face.rect.x, BOX[0], 'rectangle x should equal to BOX[0]')
@@ -116,6 +116,8 @@ t.test('JSON implementations', async (t: any) => {
     t.equal(face.confidence, CONFIDENCE, 'should get the same confidence')
   })
 })
+
+// TODO: add distance test
 
 t.test('squareBox()', async (t: any) => {
   t.pass('ok')

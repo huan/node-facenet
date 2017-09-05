@@ -17,3 +17,4 @@ export { Dataset }          from './src/dataset/'
 export { Lfw }              from './src/dataset/lfw'
 
 // export { PythonFacenet }    from './src/python3/python-facenet'
+export *                    from './src/misc'
