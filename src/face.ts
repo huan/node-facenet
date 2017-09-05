@@ -166,7 +166,7 @@ export class Face {
       ],
     )
 
-    face._embedding     = nj.array(obj._embedding)
+    face._embedding     = obj._embedding && nj.array(obj._embedding)
     face.boundingBox    = obj.boundingBox
     face.facialLandmark = obj.facialLandmark
     face.rect           = obj.rect

@@ -175,7 +175,7 @@ export function distance(
   }
 
   if (source.shape[0] !== destination.shape[1]) {
-    throw new Error('the dim of embedding inside array2 should as same as the embedding in array1')
+    throw new Error('Shape error: ' + source.shape + ' vs ' + destination.shape)
   }
 
   const broadCastedSource = nj.zeros(destination.shape)
