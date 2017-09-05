@@ -3,6 +3,7 @@
  */
 // import ndarray = require('ndarray')
 import * as deasync         from 'deasync'
+import * as nj              from 'numjs'
 
 import {
   FaceEmbedding,
@@ -165,7 +166,7 @@ export class Face {
       ],
     )
 
-    face._embedding     = obj._embedding
+    face._embedding     = nj.array(obj._embedding)
     face.boundingBox    = obj.boundingBox
     face.facialLandmark = obj.facialLandmark
     face.rect           = obj.rect
