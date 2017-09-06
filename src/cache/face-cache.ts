@@ -97,4 +97,3 @@ export class FaceCache {
 }
 
 export default FaceCache
-
