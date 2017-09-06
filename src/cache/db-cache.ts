@@ -9,11 +9,6 @@ export interface DbEntryList {
   [key: string]: Object,
 }
 
-export interface DbData {
-  key:   string,
-  value: string,
-}
-
 export class DbCache {
   public db:        levelup.LevelUp
   public entryList: DbEntryList
@@ -61,24 +56,6 @@ export class DbCache {
         }
       })
     })
-  }
-
-  public keys(): IterableIterator<string> {
-    db.createKeyStream()
-    .on('data', function (data) {
-      console.log('key=', data)
-    })
-  }
-
-  public * [Symbol.iterator](): IterableIterator<DbData> {
-    this.db.createReadStream()
-      .on('data', (data: DbData) => {
-        log.silly('DbCache', '* [Symbol.iterator]() on(data) %s', data)
-        yield data
-      })
-      .on('error', reject)
-      .on('close', () => resolve(this.entryList))
-      .on('end', () => resolve(this.entryList))
   }
 
   public async list(): Promise<DbEntryList> {
