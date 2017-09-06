@@ -21,7 +21,7 @@ import {
 
 interface MenuItem {
   text:     string,
-  callback: Function,
+  callback: () => Promise<void>,
 }
 
 export class Manager {
@@ -48,23 +48,23 @@ export class Manager {
     this.menuItemList = [
       {
         text: 'Validate on LFW',
-        callback: () => console.log('validate lfw'),
+        callback: async () => console.log('validate lfw'),
       },
       {
         text: 'Photo Alignment',
-        callback: () => console.log('alignment'),
+        callback: async () => console.log('alignment'),
       },
       {
         text: 'Face Embedding',
-        callback: () => console.log('embedding'),
+        callback: async () => console.log('embedding'),
       },
       {
         text: 'Show Distance Between Faces',
-        callback: () => console.log('visulize'),
+        callback: async () => console.log('visulize'),
       },
       {
         text: 'Sort Photos Group by Face',
-        callback: () => console.log('sort'),
+        callback: async () => console.log('sort'),
       },
     ]
 
@@ -85,58 +85,51 @@ export class Manager {
                           .map(m => m.callback)
                           [menuIndex]
 
-    callback()
-
     this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
       this.screen.destroy()
     })
 
-    await this.mainFrame.init()
+    await callback()
 
-    this.mainFrame.emit('face', new Face(
-      path.join(
-        MODULE_ROOT,
-        'c850a18960ef7ba5370ad4032ff882c6.png',
-      ),
-    ))
+    await this.mainFrame.init()
 
     this.mainFrame.emit('image', path.join(
       MODULE_ROOT,
-      'c850a18960ef7ba5370ad4032ff882c6.png',
+      'tests/fixtures/aligned-face.png',
     ))
 
     this.mainFrame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
-        '4ad418045fee324dc97d8fe7700559e2.png',
+        'tests/fixtures/aligned-face.png',
       ),
     ))
 
     this.mainFrame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
-        'c850a18960ef7ba5370ad4032ff882c6.png',
+        'tests/fixtures/aligned-face.png',
       ),
     ))
 
     this.mainFrame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
-        'c850a18960ef7ba5370ad4032ff882c6.png',
+        'tests/fixtures/aligned-face.png',
       ),
     ))
 
     this.mainFrame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
-        'c850a18960ef7ba5370ad4032ff882c6.png',
+        'tests/fixtures/aligned-face.png',
       ),
     ))
 
     this.mainFrame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
-        'c850a18960ef7ba5370ad4032ff882c6.png',
+        'tests/fixtures/aligned-face.png',
       ),
     ))
 

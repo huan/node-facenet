@@ -1,4 +1,4 @@
-
+import * as path          from 'path'
 import { EventEmitter }   from 'events'
 
 import {
@@ -9,6 +9,7 @@ const contrib             = require('blessed-contrib')
 
 import {
   FILE_FACENET_ICON_PNG,
+  MODULE_ROOT,
   VERSION,
 }                         from '../../config'
 
@@ -93,30 +94,47 @@ export class MainFrame extends EventEmitter {
     const distanceList = [] as Widgets.BoxElement[]
 
     do {
-      const thumbElement = new (widget as any).Image({
+      // const thumbElement = new (widget as any).Image({
+      //   width,
+      //   height,
+      //   top,
+      //   file   : FILE_FACENET_ICON_PNG,
+      //   type   : 'ansi',
+      //   right  : 0,
+      //   border : 'line',
+      //   style  : {
+      //     border: {
+      //       fg: 'cyan',
+      //     },
+      //   },
+      // }) as Widgets.ANSIImageElement
+      const thumbElement = contrib.picture({
         width,
+        cols: width,
         height,
-        top    : top,
-        file   : FILE_FACENET_ICON_PNG,
-        type   : 'ansi',
-        right  : 0,
-        border : 'line',
-        style  : {
+        top,
+
+        file:   FILE_FACENET_ICON_PNG,
+        right:  0,
+        // border: 'line',
+        style:  {
           border: {
             fg: 'cyan',
           },
         },
-      }) as Widgets.ANSIImageElement
+        // cols: 25,
+        onReady: () => this.screen.render(),
+      })
 
       const distanceElement = new widget.Box({
         width,
-        top     : top + height,
-        right   : 0,
-        height  : 1,
-        bg      : 'grey',
-        fg      : 'white',
-        tags    : true,
-        content : '{center}distance: 0.75{/center}',
+        top:     top + height,
+        right:   0,
+        height:  1,
+        bg:      'grey',
+        fg:      'white',
+        tags:    true,
+        content: '{center}distance: 0.75{/center}',
         // border:  'line',
       })
 
@@ -171,23 +189,43 @@ export class MainFrame extends EventEmitter {
     width:        number,
     height:       number,
   ): void {
-    const image = new (widget as any).Image({
+    const pic = contrib.picture({
       right: paddingRight,
       width,
+      cols: width - 2,  // 2 is padding for border
       height,
-      file  : FILE_FACENET_ICON_PNG,
 
       top   : 1,
-      type  : 'ansi',
       border: 'line',
       style : {
         border: {
           fg: 'cyan',
         },
       },
+      file: path.join(
+        MODULE_ROOT,
+        'tests/fixtures/aligned-face.png',
+      ),
+      onReady: () => this.screen.render(),
     })
-    this.on('image', filename => image.setImage(filename))
-    this.append(image)
+    this.append(pic)
+    // const image = new (widget as any).Image({
+    //   right: paddingRight,
+    //   width,
+    //   height,
+    //   file  : FILE_FACENET_ICON_PNG,
+
+    //   top   : 1,
+    //   type  : 'ansi',
+    //   border: 'line',
+    //   style : {
+    //     border: {
+    //       fg: 'cyan',
+    //     },
+    //   },
+    // })
+    // this.on('image', filename => image.setImage(filename))
+    // this.append(image)
   }
 
   private addGridElement(
