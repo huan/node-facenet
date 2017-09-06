@@ -276,10 +276,10 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 - [ ] Neural Network Models
     - [x] Facenet
     - [x] Mtcnn
-    - [ ] [Chinese Whispter](https://en.wikipedia.org/wiki/Chinese_Whispers_(clustering_method))
     - [ ] Batch Support
 - [ ] ~~Python3 `async` & `await`~~
-- [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn/ChineseWhisper)
+- [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn)
+- [x] K(?)NN Alghorithm [Chinese Whispers](https://github.com/zixia/chinese-whispers)
 - [ ] TensorFlow Sereving
 - [ ] OpenAPI Specification(Swagger)
 
