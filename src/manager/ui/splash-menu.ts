@@ -118,6 +118,7 @@ export class SplashMenu {
     })
     this.screen.append(pressKey)
 
+    pressKey.hide() // show message at first, because setInterval will run immediately
     const timer = setInterval(() => {
       pressKey.visible
         ? pressKey.hide()
