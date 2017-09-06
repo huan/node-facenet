@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.2.31",
+  "version": "0.2.32",
   "description": "node-facenet is a TensorFlow backed FaceNet implementation for Node.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
