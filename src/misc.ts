@@ -1,5 +1,6 @@
 import * as crypto  from 'crypto'
 import * as fs      from 'fs'
+import * as path    from 'path'
 
 import * as nj      from 'numjs'
 import * as ndarray from 'ndarray'
@@ -120,11 +121,10 @@ export function createCanvas(
 }
 
 export async function saveImage(
-  imageData:  ImageData,
-  file:       string,
-  ext:        'png' | 'jpg' = 'png',
+  imageData: ImageData,
+  filename:  string,
 ): Promise<void> {
-  const out = fs.createWriteStream(`${file}.${ext}`)
+  const ext = path.extname(filename) as '.png' | '.jpg'
 
   const canvas = createCanvas(imageData.width, imageData.height)
   const ctx = canvas.getContext('2d')
@@ -135,25 +135,27 @@ export async function saveImage(
 
   let stream: NodeJS.ReadableStream
   switch (ext) {
-    case 'jpg':
+    case '.jpg':
       stream = (canvas as any).createJPEGStream({
         bufsize: 2048,
         quality: 80,
       })
       break
 
-    case 'png':
+    case '.png':
       stream = (canvas as any).createPNGStream()
       break
 
     default:
-      throw new Error('unsupported type:' + ext)
+      throw new Error('unsupported type: ' + ext)
   }
-  stream.pipe(out)
+
+  const outFile = fs.createWriteStream(filename)
+  stream.pipe(outFile)
 
   return new Promise<void>((resolve, reject) => {
-    out.on('close', resolve)
-    out.on('error', reject)
+    outFile.on('close', resolve)
+    outFile.on('error', reject)
     stream.on('error', reject)
   })
 }

@@ -1,4 +1,5 @@
 import * as fs          from 'fs'
+import * as path        from 'path'
 
 import {
   log,
@@ -32,23 +33,25 @@ export class AlignmentCache implements Alignable {
 
   constructor(
     public facenet: Facenet,
-    public rootDir: string,
+    public workDir: string,
   ) {
-    log.verbose('AlignmentCache', 'constructor(%s)', rootDir)
+    log.verbose('AlignmentCache', 'constructor(%s)', workDir)
   }
 
   public init(): void {
     log.verbose('AlignmentCache', 'init()')
 
-    if (!fs.existsSync(this.rootDir)) {
-      throw new Error(`directory not exist: ${this.rootDir}`)
+    if (!fs.existsSync(this.workDir)) {
+      throw new Error(`directory not exist: ${this.workDir}`)
     }
 
     if (!this.db) {
-      this.db = new DbCache(this.rootDir, this.dbName)
+      this.db = new DbCache(
+        path.join(this.workDir, this.dbName),
+      )
     }
 
-    this.faceCache = new FaceCache(this.rootDir)
+    this.faceCache = new FaceCache(this.workDir)
   }
 
   public async clean(): Promise<void> {

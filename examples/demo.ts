@@ -29,7 +29,7 @@ async function main() {
             'Save embedding to face. Also return it for convenience')
 
       const faceFile = `${face.md5}.png`
-      saveImage(face.imageData, face.md5, 'png')
+      saveImage(face.imageData, faceFile)
 
       console.log('image file:',    imageFile)
       console.log('face file:',     faceFile)

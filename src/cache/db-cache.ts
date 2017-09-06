@@ -1,5 +1,4 @@
 import * as fs        from 'fs'
-import * as path      from 'path'
 
 import * as levelup   from 'levelup'
 import * as rimraf    from 'rimraf'
@@ -10,29 +9,24 @@ export interface DbEntryList {
   [key: string]: Object,
 }
 
+export interface DbData {
+  key:   string,
+  value: string,
+}
+
 export class DbCache {
   public db:        levelup.LevelUp
   public entryList: DbEntryList
 
   constructor(
-    public directory: string,
-    public dbName?:   string,
+    public workDir: string,
   ) {
-    if (!this.dbName) {
-      this.dbName = 'leveldb.default'
-    } else {
-      this.dbName = 'leveldb.' + this.dbName
+    if (!fs.existsSync(this.workDir)) {
+      throw new Error(`directory not exist: ${this.workDir}`)
     }
-
-    if (!fs.existsSync(this.directory)) {
-      throw new Error(`directory not exist: ${this.directory}`)
-    }
-    this.db = levelup(
-      path.join(directory, this.dbName),
-      {
-        valueEncoding: 'json',
-      },
-    )
+    this.db = levelup(workDir, {
+      valueEncoding: 'json',
+    })
     this.entryList = {}
   }
 
@@ -67,6 +61,24 @@ export class DbCache {
         }
       })
     })
+  }
+
+  public keys(): IterableIterator<string> {
+    db.createKeyStream()
+    .on('data', function (data) {
+      console.log('key=', data)
+    })
+  }
+
+  public * [Symbol.iterator](): IterableIterator<DbData> {
+    this.db.createReadStream()
+      .on('data', (data: DbData) => {
+        log.silly('DbCache', '* [Symbol.iterator]() on(data) %s', data)
+        yield data
+      })
+      .on('error', reject)
+      .on('close', () => resolve(this.entryList))
+      .on('end', () => resolve(this.entryList))
   }
 
   public async list(): Promise<DbEntryList> {
@@ -106,12 +118,7 @@ export class DbCache {
     log.verbose('DbCache', 'clean()')
     this.db.close()
     return new Promise<void>((resolve, reject) => {
-      const dbName = this.dbName
-      if (!dbName) {
-        return reject('no dbName')
-      }
-      const dbPath = path.join(this.directory, dbName)
-      rimraf(dbPath, (err) => {
+      rimraf(this.workDir, (err) => {
         if (err) {
           return reject(err)
         }

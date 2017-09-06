@@ -1,4 +1,5 @@
 import * as fs          from 'fs'
+import * as path        from 'path'
 
 import {
   FaceEmbedding,
@@ -34,7 +35,9 @@ export class EmbeddingCache implements Embeddingable {
       throw new Error(`directory not exist: ${this.rootDir}`)
     }
 
-    this.db = new DbCache(this.rootDir, this.dbName)
+    this.db = new DbCache(
+      path.join(this.rootDir, this.dbName),
+    )
   }
 
   public async embedding(face: Face): Promise<FaceEmbedding> {

@@ -10,11 +10,16 @@ export {
 export { Facenet }          from './src/facenet'
 export *                    from './src/misc'
 
-export { AlignmentCache }   from './src/cache/alignment-cache'
-export { DbCache }          from './src/cache/db-cache'
-export { EmbeddingCache }   from './src/cache/embedding-cache'
+export {
+  AlignmentCache,
+  DbCache,
+  EmbeddingCache,
+  FaceCache,
+}                           from './src/cache/'
 
-export { Dataset }          from './src/dataset/'
-export { Lfw }              from './src/dataset/lfw'
+export {
+  Dataset,
+  Lfw,
+}                           from './src/dataset/'
 
 // export { PythonFacenet }    from './src/python3/python-facenet'

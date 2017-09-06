@@ -21,24 +21,26 @@ export class FaceCache {
   public cacheDir = 'cache.face'
 
   constructor(
-    public rootDir: string,
+    public workDir: string,
   ) {
-    log.verbose('FaceCache', 'constructor(%s)', rootDir)
+    log.verbose('FaceCache', 'constructor(%s)', workDir)
     this.init()
   }
 
   public init(): void {
     log.verbose('FaceCache', 'init()')
 
-    if (!fs.existsSync(this.rootDir)) {
-      throw new Error(`directory not exist: ${this.rootDir}`)
+    if (!fs.existsSync(this.workDir)) {
+      throw new Error(`directory not exist: ${this.workDir}`)
     }
 
     if (!this.db) {
-      this.db = new DbCache(this.rootDir, this.dbName)
+      this.db = new DbCache(
+        path.join(this.workDir, this.dbName),
+      )
     }
 
-    const fullCacheDir = path.join(this.rootDir, this.cacheDir)
+    const fullCacheDir = path.join(this.workDir, this.cacheDir)
     if (!fs.existsSync(fullCacheDir)) {
       fs.mkdirSync(fullCacheDir)
     }
@@ -48,7 +50,7 @@ export class FaceCache {
   public async clean(): Promise<void> {
     log.verbose('FaceCache', 'clean()')
     await this.db.clean()
-    const cacheDir = path.join(this.rootDir, this.cacheDir)
+    const cacheDir = path.join(this.workDir, this.cacheDir)
     rimraf.sync(cacheDir)
   }
 
@@ -69,11 +71,11 @@ export class FaceCache {
   ): Promise<void> {
     await this.db.put(face.md5, face)  // Face.toJSON()
 
-    const faceFile = path.join(
-      this.rootDir,
-      this.cacheDir,
-      face.md5,
-    )
+    const faceFile = this.file(face.md5)
+
+    if (fs.existsSync(faceFile)) {
+      return
+    }
 
     let imageData = face.imageData
     if (imageData.width !== 160) {
@@ -82,4 +84,17 @@ export class FaceCache {
     await saveImage(imageData, faceFile)
   }
 
+  public file(
+    md5: string,
+  ): string {
+    const filename = path.join(
+      this.workDir,
+      this.cacheDir,
+      `${md5}.png`,
+    )
+    return filename
+  }
 }
+
+export default FaceCache
+
