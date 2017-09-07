@@ -1,5 +1,5 @@
-import { SplashMenu }   from './splash-menu'
-import { MainFrame }    from './main-frame'
+import { Menu }   from './menu'
+import { Frame }    from './frame'
 
 import {
   clear,
@@ -7,6 +7,6 @@ import {
 
 export {
   clear,
-  MainFrame,
-  SplashMenu,
+  Frame,
+  Menu,
 }

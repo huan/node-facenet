@@ -15,8 +15,8 @@ import {
 
 import {
   clear,
-  MainFrame,
-  SplashMenu,
+  Frame,
+  Menu,
 }                 from './ui/'
 
 interface MenuItem {
@@ -25,9 +25,9 @@ interface MenuItem {
 }
 
 export class Manager {
-  private mainFrame:  MainFrame
-  private screen:     widget.Screen
-  private splashMenu: SplashMenu
+  private frame:  Frame
+  private screen: widget.Screen
+  private menu:   Menu
 
   private menuItemList: MenuItem[]
 
@@ -43,7 +43,7 @@ export class Manager {
   public async init(): Promise<void> {
     log.verbose('Manager', 'init()')
 
-    this.mainFrame = new MainFrame(this.screen)
+    this.frame = new Frame(this.screen)
 
     this.menuItemList = [
       {
@@ -68,7 +68,7 @@ export class Manager {
       },
     ]
 
-    this.splashMenu = new SplashMenu(
+    this.menu = new Menu(
       this.screen,
       this.menuItemList.map(m => m.text),
     )
@@ -77,7 +77,7 @@ export class Manager {
   public async start(): Promise<void> {
     log.verbose('Manager', 'start()')
 
-    const menuIndex = await this.splashMenu.start()
+    const menuIndex = await this.menu.start()
 
     clear(this.screen)
 
@@ -91,28 +91,30 @@ export class Manager {
 
     await callback()
 
-    await this.mainFrame.init()
+    await this.frame.init()
 
-    this.mainFrame.emit('image', path.join(
+    this.frame.emit('image', path.join(
       MODULE_ROOT,
       'tests/fixtures/aligned-face.png',
     ))
 
-    this.mainFrame.emit('face', new Face(
+    this.frame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
         'tests/fixtures/aligned-face.png',
       ),
     ))
 
-    this.mainFrame.emit('face', new Face(
+    this.frame.emit('face', new Face(
       path.join(
         MODULE_ROOT,
         'tests/fixtures/aligned-face.png',
       ),
     ))
 
+    const frameBox = this.frame.box
 
+    this.frame.emit('log', typeof frameBox)
     this.screen.render()
 
     return new Promise<void>((resolve) => {

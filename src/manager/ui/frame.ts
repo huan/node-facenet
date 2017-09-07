@@ -17,14 +17,22 @@ import {
   Face,
 }                         from '../../face'
 
-export type MainFrameEventName = 'face'
-                                | 'image'
-                                | 'log'
-                                | 'status'
-                                | 'title'
+export type FrameEventName = 'face'
+                            | 'image'
+                            | 'log'
+                            | 'status'
+                            | 'title'
 
-export class MainFrame extends EventEmitter {
+export class Frame extends EventEmitter {
   private elementList = [] as Widgets.Node[]
+
+  private _box: Widgets.BoxElement // for external usage, mainly to draw a contrib.grid
+
+  private thumbWidth  = 40
+  private imageWidth  = 2 * this.thumbWidth
+  // (* 4 / 3) image width/height = 4/3
+  // (/2) // characters' height is about twice times of width in console
+  private imageHeight = this.imageWidth * 3 / 4 / 2
 
   constructor(
     public screen: Widgets.Screen,
@@ -33,18 +41,13 @@ export class MainFrame extends EventEmitter {
   }
 
   public init() {
-    const thumbWidth  = 40
-
-    // image width/height = 4/3
-    const imageWidth  = 4 * (thumbWidth / 2)
-    let   imageHeight = 3 * (thumbWidth / 2)
-    imageHeight /= 2  // characters' height is about twice times of width in console
-
     this.addHeaderElement()
-    this.addThumbElementList(thumbWidth)
-    this.addImageElement(thumbWidth, imageWidth, imageHeight)
-    this.addGridElement(1 + imageHeight, thumbWidth, imageWidth)
+    this.addThumbElementList()
+    this.addImageElement()
+    this.addMeterElement()
     this.addStatusElement()
+
+    this.addBoxElement()
   }
 
   public emit(event: 'image',   filename: string): boolean
@@ -53,7 +56,8 @@ export class MainFrame extends EventEmitter {
   public emit(event: 'status',  message:  string): boolean
   public emit(event: 'face',    face:     Face):   boolean
 
-  public emit(event: MainFrameEventName, data: any) {
+  public emit(event: never,     data: any): boolean
+  public emit(event: FrameEventName, data: any) {
     return super.emit(event, data)
   }
 
@@ -65,6 +69,32 @@ export class MainFrame extends EventEmitter {
         child.detach()
       }
     }
+  }
+
+  get box() {
+    if (this._box) {
+      this._box.detach()
+    }
+    this.addBoxElement()
+    return this._box
+  }
+
+  private addBoxElement(): void {
+    const right = this.thumbWidth + this.imageWidth
+    const width = (this.screen.width as number) - right
+    const height = (this.screen.height as number) - 1
+
+    const box = new widget.Box({
+      right,
+      width,
+      height,
+
+      top:    1,
+      // border: 'line',
+    })
+    this.append(box)
+
+    this._box = box
   }
 
   private append(element: Widgets.Node) {
@@ -88,7 +118,9 @@ export class MainFrame extends EventEmitter {
     this.on('title', title => box.setContent(title))
   }
 
-  private addThumbElementList(width: number): void {
+  private addThumbElementList(): void {
+    const width = this.thumbWidth
+
     const cols   = width - 2 - 1          // 2 is padding for border, +1 is becasue in picture-tube `dx = png.width / opts.cols`
     let   top    = 1
     const height = Math.floor(width / 2)  // characters' height is about twice of width in console
@@ -177,11 +209,11 @@ export class MainFrame extends EventEmitter {
     }
   }
 
-  private addImageElement(
-    paddingRight: number,
-    width:        number,
-    height:       number,
-  ): void {
+  private addImageElement(): void {
+    const paddingRight = this.thumbWidth
+    const width        = this.imageWidth
+    const height       = this.imageHeight
+
     console.log('width ' + width)
     const cols = width - 2 - 1  // 2 is padding for border, +1 is becasue in picture-tube `dx = png.width / opts.cols`
 
@@ -237,24 +269,21 @@ export class MainFrame extends EventEmitter {
           this.screen.render()
           resolve()
         },
-        // type: 'ansi',
       })
     })
   }
 
-  private addGridElement(
-    paddingTop:   number,
-    paddingRight: number,
-    width:        number,
-  ): void {
+  private addMeterElement(): void {
+    const top    = 1 + this.imageHeight
+    const right  = this.thumbWidth
+    const width  = this.imageWidth
+    const height = (this.screen.height as number) - top
+
     const box = new widget.Box({
-      top:    paddingTop,
-      right:  paddingRight,
+      top,
+      right,
       width,
-      height: (this.screen.height as number) - paddingTop,
-
-      // bottom: 0,
-
+      height,
       style: {
         bg: 'blue',
       },
@@ -278,14 +307,14 @@ export class MainFrame extends EventEmitter {
 
   private addStatusElement(): void {
     const status = new widget.Box({
-      bottom: 0,
-      right: 0,
-      height: 1,
-      width: 'shrink',
-      style: {
+      bottom:  0,
+      right:   0,
+      height:  1,
+      width:   'shrink',
+      content: 'Status messages here.',
+      style:   {
         bg: 'blue',
       },
-      content: 'Status messages here.',
     })
     this.on('status', text => status.setContent(text))
     this.append(status)
@@ -305,3 +334,6 @@ export class MainFrame extends EventEmitter {
 //     tree.emit('attach')
 //     logBox.emit('attach')
 //   })
+
+export default Frame
+

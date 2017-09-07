@@ -9,7 +9,7 @@ import {
   VERSION,
 }                         from '../../config'
 
-export class SplashMenu {
+export class Menu {
   constructor(
     public screen:    Widgets.Screen,
     public menuList:  string[],
@@ -175,4 +175,4 @@ export class SplashMenu {
   }
 }
 
-export default SplashMenu
+export default Menu
