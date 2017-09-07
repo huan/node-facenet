@@ -34,8 +34,11 @@ export class MainFrame extends EventEmitter {
 
   public init() {
     const thumbWidth  = 40
+
+    // image width/height = 4/3
     const imageWidth  = 4 * (thumbWidth / 2)
-    const imageHeight = (3 * (imageWidth / 4)) / 2  // height in console is twice times of width
+    let   imageHeight = 3 * (thumbWidth / 2)
+    imageHeight /= 2  // characters' height is about twice times of width in console
 
     this.addHeaderElement()
     this.addThumbElementList(thumbWidth)
@@ -86,43 +89,29 @@ export class MainFrame extends EventEmitter {
   }
 
   private addThumbElementList(width: number): void {
-    let top       = 1
-    const height  = Math.floor(width / 2)
+    const cols   = width - 2 - 1          // 2 is padding for border, +1 is becasue in picture-tube `dx = png.width / opts.cols`
+    let   top    = 1
+    const height = Math.floor(width / 2)  // characters' height is about twice of width in console
 
     const faceList     = [] as Face[]
     const thumbList    = [] as Widgets.ANSIImageElement[]
     const distanceList = [] as Widgets.BoxElement[]
 
     do {
-      // const thumbElement = new (widget as any).Image({
-      //   width,
-      //   height,
-      //   top,
-      //   file   : FILE_FACENET_ICON_PNG,
-      //   type   : 'ansi',
-      //   right  : 0,
-      //   border : 'line',
-      //   style  : {
-      //     border: {
-      //       fg: 'cyan',
-      //     },
-      //   },
-      // }) as Widgets.ANSIImageElement
       const thumbElement = contrib.picture({
+        cols,
         width,
-        cols: width,
         height,
         top,
 
-        file:   FILE_FACENET_ICON_PNG,
         right:  0,
-        // border: 'line',
+        file:   FILE_FACENET_ICON_PNG,
+        border: 'line',
         style:  {
           border: {
             fg: 'cyan',
           },
         },
-        // cols: 25,
         onReady: () => this.screen.render(),
       })
 
@@ -135,7 +124,6 @@ export class MainFrame extends EventEmitter {
         fg:      'white',
         tags:    true,
         content: '{center}distance: 0.75{/center}',
-        // border:  'line',
       })
 
       thumbList.push(thumbElement)
@@ -144,44 +132,49 @@ export class MainFrame extends EventEmitter {
       this.append(thumbElement)
       this.append(distanceElement)
 
-      top += height + 1 // face(height) + distance(1)
+      top += height + 1 // thumb(height) + distance(1)
 
     } while (top < this.screen.height)
+    this.screen.render()
+    this.on('face', (face: Face) => this.addFace(face, faceList, thumbList, distanceList))
+  }
 
-    this.on('face', (face: Face) => {
-      this.emit('log', 'new face. thumbList length: ' + thumbList.length + ', faceList.length: ' + faceList.length)
+  private addFace(
+    face:         Face,
+    faceList:     Face[],
+    thumbList:    any[],  // contrib.picture
+    distanceList: widget.Box[],
+  ) {
+    this.emit('log', 'new face. thumbList length: ' + thumbList.length + ', faceList.length: ' + faceList.length)
 
-      let i = thumbList.length
-      while (i--) {
-        if (i === 0) {
-          faceList[0] = face
-          thumbList[0].setImage(face.toBuffer() as any, () => {
-            // XXX no this callback??
-            this.emit('log', 'image loaded')
-          })
-        } else if (faceList[i - 1]) {
-          faceList[i] = faceList[i - 1]
-          // thumbList[i].setContent(thumbList[i - 1].content)
-          thumbList[i].setImage(faceList[i].toBuffer() as any, () => {
-            // XXX no this callback??
-            this.emit('log', 'image > 0 loaded')
-          })
+    let i = thumbList.length
 
+    while (i--) {
+      if (i === 0) {
+        faceList[0] = face
+        this.showPicture(thumbList[i], face)
+            .then(() => this.emit('log', 'addFace(' + face.md5 + ')'))
+      } else {
+        const prevFace = faceList[i - 1]
+        if (prevFace) {
+          faceList[i] = prevFace
+          this.showPicture(thumbList[i], prevFace)
+              .then(() => this.emit('log', 'addFace(' + prevFace.md5 + ')'))
         }
       }
-      i = distanceList.length
-      while (i--) {
-        if (faceList[i + 1] && faceList[i]) {
-          let distance
-          try {
-            distance = faceList[i + 1].distance(faceList[i])
-          } catch (e) { // no embedding
-            distance = -1
-          }
-          distanceList[i].setContent(`{center} | distance: ${distance} | {/center}`)
+    }
+    i = distanceList.length
+    while (i--) {
+      if (faceList[i + 1] && faceList[i]) {
+        let distance
+        try {
+          distance = faceList[i + 1].distance(faceList[i])
+        } catch (e) { // no embedding
+          distance = -1
         }
+        distanceList[i].setContent(`{center} | distance: ${distance} | {/center}`)
       }
-    })
+    }
   }
 
   private addImageElement(
@@ -189,10 +182,13 @@ export class MainFrame extends EventEmitter {
     width:        number,
     height:       number,
   ): void {
+    console.log('width ' + width)
+    const cols = width - 2 - 1  // 2 is padding for border, +1 is becasue in picture-tube `dx = png.width / opts.cols`
+
     const pic = contrib.picture({
       right: paddingRight,
       width,
-      cols: width - 2,  // 2 is padding for border
+      cols,
       height,
 
       top   : 1,
@@ -209,23 +205,41 @@ export class MainFrame extends EventEmitter {
       onReady: () => this.screen.render(),
     })
     this.append(pic)
-    // const image = new (widget as any).Image({
-    //   right: paddingRight,
-    //   width,
-    //   height,
-    //   file  : FILE_FACENET_ICON_PNG,
+    this.on('image', async file => {
+      await this.showPicture(pic, file)
+      this.emit('log', 'showPicture: ' + file)
+    })
+  }
 
-    //   top   : 1,
-    //   type  : 'ansi',
-    //   border: 'line',
-    //   style : {
-    //     border: {
-    //       fg: 'cyan',
-    //     },
-    //   },
-    // })
-    // this.on('image', filename => image.setImage(filename))
-    // this.append(image)
+  private async showPicture(
+    picture: any,
+    fileOrFace?:   string | Face,
+  ): Promise<void> {
+    let file:   string | undefined
+    let base64: string | undefined
+
+    if (fileOrFace instanceof Face) {
+      file   = undefined
+      base64 = fileOrFace.toBuffer().toString('base64')
+    } else {
+      file   = fileOrFace
+      base64 = undefined
+    }
+
+    const cols = picture.width - 2 - 1  // 2 for lines and 1 for workaround of float '/'
+
+    return new Promise<void>(resolve => {
+      picture.setImage({
+        cols,
+        file,
+        base64,
+        onReady: () => {
+          this.screen.render()
+          resolve()
+        },
+        // type: 'ansi',
+      })
+    })
   }
 
   private addGridElement(
