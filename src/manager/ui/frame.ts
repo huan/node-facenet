@@ -336,4 +336,3 @@ export class Frame extends EventEmitter {
 //   })
 
 export default Frame
-
