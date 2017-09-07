@@ -1,7 +1,6 @@
 /**
  *
  */
-// import ndarray = require('ndarray')
 import * as deasync         from 'deasync'
 import * as nj              from 'numjs'
 
