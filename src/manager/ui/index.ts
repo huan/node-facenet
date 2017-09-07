@@ -1,9 +1,9 @@
 import { Menu }   from './menu'
-import { Frame }    from './frame'
+import { Frame }  from './frame'
 
 import {
   clear,
-}                       from './misc'
+}                 from './misc'
 
 export {
   clear,
