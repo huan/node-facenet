@@ -112,26 +112,6 @@ export class Manager {
       ),
     ))
 
-    this.mainFrame.emit('face', new Face(
-      path.join(
-        MODULE_ROOT,
-        'tests/fixtures/aligned-face.png',
-      ),
-    ))
-
-    this.mainFrame.emit('face', new Face(
-      path.join(
-        MODULE_ROOT,
-        'tests/fixtures/aligned-face.png',
-      ),
-    ))
-
-    this.mainFrame.emit('face', new Face(
-      path.join(
-        MODULE_ROOT,
-        'tests/fixtures/aligned-face.png',
-      ),
-    ))
 
     this.screen.render()
 
