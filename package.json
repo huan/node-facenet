@@ -37,7 +37,7 @@
     "@types/numjs": "^0.14.2",
     "@types/printf": "^0.2.0",
     "@types/rimraf": "^2.0.2",
-    "@types/tar": "^1.0.29",
+    "@types/tar": "^4.0.0",
     "@types/update-notifier": "^1.0.2",
     "cross-env": "^5.0.5",
     "gm": "^1.23.0",
