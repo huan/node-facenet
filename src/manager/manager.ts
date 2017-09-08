@@ -1,4 +1,4 @@
-import * as path  from 'path'
+// import * as path  from 'path'
 import {
   widget,
   // Widgets,
@@ -6,11 +6,11 @@ import {
 
 import {
   log,
-  MODULE_ROOT,
+  // MODULE_ROOT,
 }                 from '../config'
 
 import {
-  Face,
+  // Face,
 }                 from '../face'
 
 import {
@@ -93,24 +93,20 @@ export class Manager {
 
     await this.frame.init()
 
-    this.frame.emit('image', path.join(
-      MODULE_ROOT,
-      'tests/fixtures/aligned-face.png',
-    ))
+    // const testFile = path.join(
+    //   MODULE_ROOT,
+    //   'tests/fixtures/rgb-bwt.png',
+    // )
+    // const testFace = new Face(
+    //   path.join(
+    //     MODULE_ROOT,
+    //     'tests/fixtures/aligned-face.png',
+    //   ),
+    // )
 
-    this.frame.emit('face', new Face(
-      path.join(
-        MODULE_ROOT,
-        'tests/fixtures/aligned-face.png',
-      ),
-    ))
-
-    this.frame.emit('face', new Face(
-      path.join(
-        MODULE_ROOT,
-        'tests/fixtures/aligned-face.png',
-      ),
-    ))
+    // this.frame.emit('image', testFile)
+    // this.frame.emit('face', testFace)
+    // this.frame.emit('face', testFace)
 
     const frameBox = this.frame.box
 

@@ -1,4 +1,4 @@
-import * as path          from 'path'
+import * as path from 'path'
 import { EventEmitter }   from 'events'
 
 import {
@@ -8,7 +8,7 @@ import {
 const contrib             = require('blessed-contrib')
 
 import {
-  FILE_FACENET_ICON_PNG,
+  // FILE_FACENET_ICON_PNG,
   MODULE_ROOT,
   VERSION,
 }                         from '../../config'
@@ -28,7 +28,7 @@ export class Frame extends EventEmitter {
 
   private _box: Widgets.BoxElement // for external usage, mainly to draw a contrib.grid
 
-  private thumbWidth  = 40
+  private thumbWidth  = 44  // 2 for border line, 2 for float "/" workaround
   private imageWidth  = 2 * this.thumbWidth
   // (* 4 / 3) image width/height = 4/3
   // (/2) // characters' height is about twice times of width in console
@@ -47,6 +47,7 @@ export class Frame extends EventEmitter {
     this.addMeterElement()
     this.addStatusElement()
 
+    // provide box area for external usage
     this.addBoxElement()
   }
 
@@ -80,8 +81,8 @@ export class Frame extends EventEmitter {
   }
 
   private addBoxElement(): void {
-    const right = this.thumbWidth + this.imageWidth
-    const width = (this.screen.width as number) - right
+    const right  = this.thumbWidth + this.imageWidth
+    const width  = (this.screen.width as number) - right
     const height = (this.screen.height as number) - 1
 
     const box = new widget.Box({
@@ -121,7 +122,7 @@ export class Frame extends EventEmitter {
   private addThumbElementList(): void {
     const width = this.thumbWidth
 
-    const cols   = width - 2 - 1          // 2 is padding for border, +1 is becasue in picture-tube `dx = png.width / opts.cols`
+    const cols   = width - 2 - 2          // 2 is padding for border, 2 is for in picture-tube `dx = png.width / opts.cols`
     let   top    = 1
     const height = Math.floor(width / 2)  // characters' height is about twice of width in console
 
@@ -137,7 +138,11 @@ export class Frame extends EventEmitter {
         top,
 
         right:  0,
-        file:   FILE_FACENET_ICON_PNG,
+        // file:   FILE_FACENET_ICON_PNG,
+        file: path.join(
+          MODULE_ROOT,
+          'tests/fixtures/aligned-face.png',
+        ),
         border: 'line',
         style:  {
           border: {
@@ -177,7 +182,7 @@ export class Frame extends EventEmitter {
     thumbList:    any[],  // contrib.picture
     distanceList: widget.Box[],
   ) {
-    this.emit('log', 'new face. thumbList length: ' + thumbList.length + ', faceList.length: ' + faceList.length)
+    this.emit('log', 'addFace() thumbList length: ' + thumbList.length + ', faceList.length: ' + faceList.length)
 
     let i = thumbList.length
 
@@ -191,7 +196,6 @@ export class Frame extends EventEmitter {
         if (prevFace) {
           faceList[i] = prevFace
           this.showPicture(thumbList[i], prevFace)
-              .then(() => this.emit('log', 'addFace(' + prevFace.md5 + ')'))
         }
       }
     }
@@ -214,8 +218,8 @@ export class Frame extends EventEmitter {
     const width        = this.imageWidth
     const height       = this.imageHeight
 
-    console.log('width ' + width)
-    const cols = width - 2 - 1  // 2 is padding for border, +1 is becasue in picture-tube `dx = png.width / opts.cols`
+    // 2 is padding for border, 2 is for picture-tube `dx = png.width / opts.cols`
+    const cols = width - 2 - 2
 
     const pic = contrib.picture({
       right: paddingRight,
@@ -236,6 +240,7 @@ export class Frame extends EventEmitter {
       ),
       onReady: () => this.screen.render(),
     })
+    console.log(MODULE_ROOT)
     this.append(pic)
     this.on('image', async file => {
       await this.showPicture(pic, file)
@@ -244,21 +249,22 @@ export class Frame extends EventEmitter {
   }
 
   private async showPicture(
-    picture: any,
-    fileOrFace?:   string | Face,
+    picture:         any,
+    filenameOrFace?: string | Face,
   ): Promise<void> {
     let file:   string | undefined
     let base64: string | undefined
 
-    if (fileOrFace instanceof Face) {
+    if (filenameOrFace instanceof Face) {
       file   = undefined
-      base64 = fileOrFace.toBuffer().toString('base64')
+      base64 = filenameOrFace.toBuffer()
+                          .toString('base64')
     } else {
-      file   = fileOrFace
+      file   = filenameOrFace
       base64 = undefined
     }
 
-    const cols = picture.width - 2 - 1  // 2 for lines and 1 for workaround of float '/'
+    const cols = picture.width - 2 - 2  // 2 for lines and 1 for workaround of float '/'
 
     return new Promise<void>(resolve => {
       picture.setImage({
