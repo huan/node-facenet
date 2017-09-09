@@ -1,12 +1,3 @@
-import { Menu }   from './menu'
-import { Frame }  from './frame'
-
-import {
-  clear,
-}                 from './misc'
-
-export {
-  clear,
-  Frame,
-  Menu,
-}
+export * from './menu'
+export * from './frame'
+export * from './misc'

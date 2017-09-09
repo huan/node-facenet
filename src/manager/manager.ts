@@ -10,14 +10,14 @@ import {
 }                 from '../config'
 
 import {
-  // Face,
-}                 from '../face'
-
-import {
   clear,
   Frame,
   Menu,
 }                 from './ui/'
+
+import {
+  Visualizer,
+}                 from './visualizer/'
 
 interface MenuItem {
   text:     string,
@@ -93,6 +93,9 @@ export class Manager {
 
     await this.frame.init()
 
+    const visualizer = new Visualizer(this.frame)
+    await visualizer.start()
+
     // const testFile = path.join(
     //   MODULE_ROOT,
     //   'tests/fixtures/rgb-bwt.png',
@@ -108,9 +111,6 @@ export class Manager {
     // this.frame.emit('face', testFace)
     // this.frame.emit('face', testFace)
 
-    const frameBox = this.frame.box
-
-    this.frame.emit('log', typeof frameBox)
     this.screen.render()
 
     return new Promise<void>((resolve) => {

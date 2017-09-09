@@ -17,6 +17,12 @@ import {
   Face,
 }                         from '../../face'
 
+import {
+  imageToData,
+  loadImage,
+  toBuffer,
+}                         from '../../misc'
+
 export type FrameEventName = 'face'
                             | 'image'
                             | 'log'
@@ -242,26 +248,30 @@ export class Frame extends EventEmitter {
     })
     console.log(MODULE_ROOT)
     this.append(pic)
-    this.on('image', async file => {
-      await this.showPicture(pic, file)
-      this.emit('log', 'showPicture: ' + file)
+    this.on('image', async (file: string) => {
+      try {
+        const image = await loadImage(file)
+        const data = imageToData(image)
+        const buffer = toBuffer(data)
+        await this.showPicture(pic, buffer.toString('base64'))
+        this.emit('log', 'showPicture: ' + file)
+      } catch (e) {
+        this.emit('log', 'image event: not support file: ' + e.message)
+      }
     })
   }
 
   private async showPicture(
     picture:         any,
-    filenameOrFace?: string | Face,
+    base64OrFace?: string | Face,
   ): Promise<void> {
-    let file:   string | undefined
     let base64: string | undefined
 
-    if (filenameOrFace instanceof Face) {
-      file   = undefined
-      base64 = filenameOrFace.toBuffer()
-                          .toString('base64')
+    if (base64OrFace instanceof Face) {
+      base64 = base64OrFace.toBuffer()
+                            .toString('base64')
     } else {
-      file   = filenameOrFace
-      base64 = undefined
+      base64 = base64OrFace
     }
 
     const cols = picture.width - 2 - 2  // 2 for lines and 1 for workaround of float '/'
@@ -269,7 +279,6 @@ export class Frame extends EventEmitter {
     return new Promise<void>(resolve => {
       picture.setImage({
         cols,
-        file,
         base64,
         onReady: () => {
           this.screen.render()
