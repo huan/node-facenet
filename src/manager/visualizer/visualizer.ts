@@ -11,6 +11,11 @@ import {
 }                 from '../../face'
 
 import {
+  AlignmentCache,
+  EmbeddingCache,
+}                 from '../../cache/'
+
+import {
   MODULE_ROOT,
 }                 from '../../config'
 
@@ -19,10 +24,12 @@ import {
 }                 from '../ui/'
 
 export class Visualizer {
+
   constructor(
     public frame: Frame,
+    public alignmentCache: AlignmentCache,
+    public embeddingCache: EmbeddingCache,
   ) {
-    //
   }
 
   public async start(): Promise<void> {
@@ -45,8 +52,8 @@ export class Visualizer {
 
     const rootDir = path.join(
       MODULE_ROOT,
-      'tests',
-      'fixtures',
+      'docs',
+      'images',
     )
 
     // file explorer
@@ -129,8 +136,11 @@ export class Visualizer {
                     .split('\n')
                     .map(e => [e]))
         this.frame.emit('image', nodePath)
-        this.frame.emit('face', new Face(nodePath))
-
+        const faceList = await this.alignmentCache.align(nodePath)
+        faceList.forEach(face => {
+          this.embeddingCache.embedding(face)
+          this.frame.emit('face', face)
+        })
       } catch (e) {
         // table.setData({headers: ['Info'], data: [[e.toString()]]})
       }

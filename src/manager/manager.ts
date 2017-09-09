@@ -1,4 +1,5 @@
-// import * as path  from 'path'
+import * as path  from 'path'
+
 import {
   widget,
   // Widgets,
@@ -6,8 +7,17 @@ import {
 
 import {
   log,
-  // MODULE_ROOT,
+  MODULE_ROOT,
 }                 from '../config'
+
+import {
+  Facenet,
+}                 from '../facenet'
+
+import {
+  AlignmentCache,
+  EmbeddingCache,
+}                 from '../cache/'
 
 import {
   clear,
@@ -25,6 +35,10 @@ interface MenuItem {
 }
 
 export class Manager {
+  private facenet:        Facenet
+  private alignmentCache: AlignmentCache
+  private embeddingCache: EmbeddingCache
+
   private frame:  Frame
   private screen: widget.Screen
   private menu:   Menu
@@ -33,6 +47,13 @@ export class Manager {
 
   constructor() {
     log.verbose('Manager', 'constructor()')
+
+    const cacheDir = path.join(MODULE_ROOT, 'cache')
+
+    this.facenet        = new Facenet()
+    this.alignmentCache = new AlignmentCache(this.facenet, cacheDir)
+    this.embeddingCache = new EmbeddingCache(this.facenet, cacheDir)
+
     this.screen = new widget.Screen({
       smartCSR: true,
       warnings: true,
@@ -42,6 +63,9 @@ export class Manager {
 
   public async init(): Promise<void> {
     log.verbose('Manager', 'init()')
+
+    await this.alignmentCache.init()
+    await this.embeddingCache.init()
 
     this.frame = new Frame(this.screen)
 

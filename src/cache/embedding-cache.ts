@@ -19,7 +19,6 @@ export interface EmbeddingCacheData {
 
 export class EmbeddingCache implements Embeddingable {
   public  db: DbCache
-  private dbName = 'embedding'
 
   constructor(
     public facenet: Facenet,
@@ -35,8 +34,9 @@ export class EmbeddingCache implements Embeddingable {
       throw new Error(`directory not exist: ${this.rootDir}`)
     }
 
+    const dbName = 'embedding'
     this.db = new DbCache(
-      path.join(this.rootDir, this.dbName),
+      path.join(this.rootDir, dbName),
     )
   }
 

@@ -26,10 +26,8 @@ export interface AlignmentCacheData {
 }
 
 export class AlignmentCache implements Alignable {
-  public db: DbCache
+  public db:        DbCache
   public faceCache: FaceCache
-
-  public dbName   = 'alignment'
 
   constructor(
     public facenet: Facenet,
@@ -46,8 +44,9 @@ export class AlignmentCache implements Alignable {
     }
 
     if (!this.db) {
+      const dbName = 'alignment'
       this.db = new DbCache(
-        path.join(this.workDir, this.dbName),
+        path.join(this.workDir, dbName),
       )
     }
 
