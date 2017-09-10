@@ -7,7 +7,7 @@ import {
 const contrib     = require('blessed-contrib')
 
 import {
-  Face,
+  // Face,
 }                 from '../../face'
 
 import {

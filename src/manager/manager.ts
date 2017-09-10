@@ -1,3 +1,4 @@
+import * as fs    from 'fs'
 import * as path  from 'path'
 
 import {
@@ -49,7 +50,9 @@ export class Manager {
     log.verbose('Manager', 'constructor()')
 
     const cacheDir = path.join(MODULE_ROOT, 'cache')
-
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir)
+    }
     this.facenet        = new Facenet()
     this.alignmentCache = new AlignmentCache(this.facenet, cacheDir)
     this.embeddingCache = new EmbeddingCache(this.facenet, cacheDir)
@@ -117,7 +120,11 @@ export class Manager {
 
     await this.frame.init()
 
-    const visualizer = new Visualizer(this.frame)
+    const visualizer = new Visualizer(
+      this.frame,
+      this.alignmentCache,
+      this.embeddingCache,
+    )
     await visualizer.start()
 
     // const testFile = path.join(
