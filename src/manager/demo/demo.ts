@@ -2,7 +2,7 @@ import * as fs    from 'fs'
 import * as path  from 'path'
 
 import {
-  // Widgets,
+  Widgets,
 }                 from 'blessed'
 const contrib     = require('blessed-contrib')
 
@@ -23,17 +23,26 @@ import {
   Frame,
 }                 from '../ui/'
 
-export class Visualizer {
+export class Demo {
 
   constructor(
-    public frame: Frame,
-    public alignmentCache: AlignmentCache,
-    public embeddingCache: EmbeddingCache,
+    public frame:           Frame,
+    public alignmentCache:  AlignmentCache,
+    public embeddingCache:  EmbeddingCache,
   ) {
   }
 
   public async start(): Promise<void> {
     const box = this.frame.box
+
+    const tree = this.createTreeElement(box)
+    const explorer = this.createExplorerData()
+    tree.setData(explorer)
+    tree.focus()
+    this.bindSelectAction(tree)
+  }
+
+  private createTreeElement(box: Widgets.BoxElement) {
     const grid = new contrib.grid({
       screen: box,
       rows:   12,
@@ -50,6 +59,10 @@ export class Visualizer {
       },
     )
 
+    return tree
+  }
+
+  private createExplorerData() {
     const rootDir = path.join(
       MODULE_ROOT,
       'docs',
@@ -75,37 +88,31 @@ export class Visualizer {
       },
       // Child generation function
       children: function(self: any) {
-        let result: any = {}
-        const selfPath = self.getPath(self);
+        // childrenContent is a property filled with self.children() result
+        // on tree generation (tree.setData() call)
+        if (self.childrenContent) {
+          return self.childrenContent;
+        }
+
+        const selfPath = self.getPath(self)
+        const result = {} as any
         try {
           // List files in this directory
-          const children = fs.readdirSync(selfPath + '/');
+          const fileList = fs.readdirSync(selfPath + '/')
 
-          // childrenContent is a property filled with self.children() result
-          // on tree generation (tree.setData() call)
-          if (!self.childrenContent) {
-            for (const child of children) {
-              const completePath = selfPath + '/' + child;
-              if (fs.lstatSync(completePath).isDirectory()) {
-                // If it's a directory we generate the child with the children generation function
-                result[child] = {
-                  name: child,
-                  getPath: self.getPath,
-                  extended: false,
-                  children: self.children,
-                };
-              } else {
-                // Otherwise children is not set (you can also set it to '{}' or 'null' if you want)
-                result[child] = {
-                  name: child,
-                  getPath: self.getPath,
-                  extended: false ,
-                };
-              }
+          for (const file of fileList) {
+            const completePath = path.join(selfPath, file)
+            result[file] = {
+              name:     file,
+              getPath:  self.getPath,
+              extended: false,
             }
-          } else {
-            result = self.childrenContent;
+            if (fs.lstatSync(completePath).isDirectory()) {
+              // If it's a directory we generate the child with the children generation function
+              result[file] = self.children
+            }
           }
+
         } catch (e) {
           // fail safe
         }
@@ -113,28 +120,28 @@ export class Visualizer {
       },
     }
 
-    // set tree
-    tree.setData(explorer)
-    tree.focus()
+    return explorer
+  }
 
+  private bindSelectAction(tree: any) {
     // Handling select event. Every custom property that was added to node is
     // available like the 'node.getPath' defined above
     tree.on('select', async (node: any) => {
-      let nodePath = node.getPath(node);
-      let data = [];
+      let nodePath = node.getPath(node)
+      // let data = []
 
       // The filesystem root return an empty string as a base case
       if ( nodePath === '')
-        nodePath = '/';
+        nodePath = '/'
 
       // Add data to right array
-      data.push([nodePath]);
-      data.push(['']);
+      // data.push([nodePath])
+      // data.push([''])
       try {
         // Add results
-        data = data.concat(JSON.stringify(fs.lstatSync(nodePath), null, 2)
-                    .split('\n')
-                    .map(e => [e]))
+        // data = data.concat(JSON.stringify(fs.lstatSync(nodePath), null, 2)
+        //             .split('\n')
+        //             .map(e => [e]))
         this.frame.emit('image', nodePath)
         const faceList = await this.alignmentCache.align(nodePath)
         faceList.forEach(face => {
@@ -142,6 +149,7 @@ export class Visualizer {
           this.frame.emit('face', face)
         })
       } catch (e) {
+        this.frame.emit('log', 'tree on select exception: ' + e)
         // table.setData({headers: ['Info'], data: [[e.toString()]]})
       }
 

@@ -27,8 +27,8 @@ import {
 }                 from './ui/'
 
 import {
-  Visualizer,
-}                 from './visualizer/'
+  Demo,
+}                 from './demo/'
 
 interface MenuItem {
   text:     string,
@@ -53,6 +53,7 @@ export class Manager {
     if (!fs.existsSync(cacheDir)) {
       fs.mkdirSync(cacheDir)
     }
+
     this.facenet        = new Facenet()
     this.alignmentCache = new AlignmentCache(this.facenet, cacheDir)
     this.embeddingCache = new EmbeddingCache(this.facenet, cacheDir)
@@ -74,20 +75,12 @@ export class Manager {
 
     this.menuItemList = [
       {
+        text: 'Face Alignment & Embedding Demo',
+        callback: async () => console.log('demo'),
+      },
+      {
         text: 'Validate on LFW',
         callback: async () => console.log('validate lfw'),
-      },
-      {
-        text: 'Photo Alignment',
-        callback: async () => console.log('alignment'),
-      },
-      {
-        text: 'Face Embedding',
-        callback: async () => console.log('embedding'),
-      },
-      {
-        text: 'Show Distance Between Faces',
-        callback: async () => console.log('visulize'),
       },
       {
         text: 'Sort Photos Group by Face',
@@ -120,12 +113,12 @@ export class Manager {
 
     await this.frame.init()
 
-    const visualizer = new Visualizer(
+    const demo = new Demo(
       this.frame,
       this.alignmentCache,
       this.embeddingCache,
     )
-    await visualizer.start()
+    await demo.start()
 
     // const testFile = path.join(
     //   MODULE_ROOT,
@@ -145,35 +138,17 @@ export class Manager {
     this.screen.render()
 
     return new Promise<void>((resolve) => {
-      this.screen.once('destroy', resolve)
+      this.screen.once('destroy', async () => {
+        await this.quit()
+        return resolve()
+      })
     })
   }
 
-  public async align(file: string) {
-    log.verbose('Manager', 'align(%s)', file)
-
+  public async quit(): Promise<void> {
+    await this.facenet.quit()
+    this.screen.destroy()
   }
-
-  public async validate(filepath: string) {
-    log.verbose('Manager', 'validate(%s)', filepath)
-  }
-
-  public async validateDataset(dataset = 'lfw') {
-    log.verbose('Manager', 'validateDateset(%s)', dataset)
-  }
-
-  public async visualize(file: string) {
-    log.verbose('Manager', 'visualize(%s)', file)
-  }
-
-  public async sort(filepath: string) {
-    log.verbose('Manager', 'sort(%s)', filepath)
-  }
-
-  public async embedding(file: string) {
-    log.verbose('Manager', 'embedding(%s)', file)
-  }
-
 }
 
 export default Manager

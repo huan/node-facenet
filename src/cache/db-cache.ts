@@ -17,7 +17,7 @@ export class DbCache {
     public workDir: string,
   ) {
     if (!fs.existsSync(this.workDir)) {
-      throw new Error(`directory not exist: ${this.workDir}`)
+      fs.mkdirSync(this.workDir)
     }
     this.db = levelup(workDir, {
       valueEncoding: 'json',

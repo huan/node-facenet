@@ -45,6 +45,7 @@ export class AlignmentCache implements Alignable {
 
     if (!this.db) {
       const dbName = 'alignment'
+
       this.db = new DbCache(
         path.join(this.workDir, dbName),
       )

@@ -150,7 +150,7 @@ export class Facenet implements Alignable, Embeddingable {
       false,
     )
     yLandmarks.assign(
-    tLandmarks.slice(null as any, [5, 10] as any),
+      tLandmarks.slice(null as any, [5, 10] as any),
       false,
     )
 

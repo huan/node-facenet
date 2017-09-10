@@ -135,4 +135,5 @@ models/
 /*.jpg
 /*.png
 /datasets/
-package-lock.json
+/package-lock.json
+/cache/
