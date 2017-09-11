@@ -184,7 +184,7 @@ export class Frame extends EventEmitter {
         bg:      'grey',
         fg:      'white',
         tags:    true,
-        content: '{center}distance: 0.75{/center}',
+        // content: '{center}distance: 0.75{/center}',
       })
 
       thumbList.push(thumbElement)

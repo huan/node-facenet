@@ -148,9 +148,16 @@ export class AlignmentEmbedding {
         //             .map(e => [e]))
         this.frame.emit('image', nodePath)
         const faceList = await this.alignmentCache.align(nodePath)
+        this.frame.emit('log', 'faceList.length = ' + faceList.length)
         faceList.forEach(face => {
-          this.embeddingCache.embedding(face)
-          this.frame.emit('face', face)
+          try {
+            this.frame.emit('log', 'face ' + face.md5)
+            this.embeddingCache.embedding(face)
+            this.frame.emit('face', face)
+            this.frame.emit('log', face.embedding.toString())
+          } catch (e) {
+            this.frame.emit('log', 'on select exception: ' + e)
+          }
         })
       } catch (e) {
         this.frame.emit('log', 'tree on select exception: ' + e)

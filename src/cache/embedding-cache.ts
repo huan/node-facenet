@@ -1,5 +1,8 @@
+import { EventEmitter } from 'events'
 import * as fs          from 'fs'
 import * as path        from 'path'
+
+import * as nj          from 'numjs'
 
 import {
   FaceEmbedding,
@@ -17,26 +20,46 @@ export interface EmbeddingCacheData {
   [key: string]: FaceEmbedding,
 }
 
-export class EmbeddingCache implements Embeddingable {
+export type EmbeddingCacheEvent = 'hit' | 'miss'
+
+export class EmbeddingCache extends EventEmitter implements Embeddingable {
   public  db: DbCache
 
   constructor(
     public facenet: Facenet,
-    public rootDir: string,
+    public workDir: string,
   ) {
-    log.verbose('EmbeddingCache', 'constructor(%s)', rootDir)
+    super()
+    log.verbose('EmbeddingCache', 'constructor(%s)', workDir)
+  }
+
+  public on(event: 'hit', listener: (face: Face) => void):  this
+  public on(event: 'miss', listener: (face: Face) => void): this
+
+  public on(event: never, listener: any):                                this
+  public on(event: EmbeddingCacheEvent, listener: (face: Face) => void): this {
+    super.on(event, listener)
+    return this
+  }
+
+  public emit(event: 'hit', face: Face):  boolean
+  public emit(event: 'miss', face: Face): boolean
+
+  public emit(event: never, face: Face):               boolean
+  public emit(event: EmbeddingCacheEvent, face: Face): boolean {
+    return super.emit(event, face)
   }
 
   public init(): void {
     log.verbose('EmbeddingCache', 'init()')
 
-    if (!fs.existsSync(this.rootDir)) {
-      throw new Error(`directory not exist: ${this.rootDir}`)
+    if (!fs.existsSync(this.workDir)) {
+      fs.mkdirSync(this.workDir)
     }
 
     const dbName = 'embedding'
     this.db = new DbCache(
-      path.join(this.rootDir, dbName),
+      path.join(this.workDir, dbName),
     )
   }
 
@@ -45,15 +68,18 @@ export class EmbeddingCache implements Embeddingable {
 
     const cacheKey = face.md5
 
-    const v = await this.db.get(cacheKey)
-    if (v) {
+    const array = await this.db.get(cacheKey)
+    if (array) {
       log.silly('EmbeddingCache', 'embedding() cache HIT')
-      return v as FaceEmbedding
+      this.emit('hit', face)
+      face.embedding = nj.array(array as any)
+    } else {
+      log.silly('EmbeddingCache', 'embedding() cache MISS')
+      this.emit('miss', face)
+      await this.facenet.embedding(face)
+      await this.db.put(cacheKey, face.embedding.tolist())
     }
-
-    await this.facenet.embedding(face)
-    await this.db.put(cacheKey, face.embedding)
-    log.silly('EmbeddingCache', 'embedding() cache MISS')
+    // console.log('embedding: ', face.embedding.toString())
     return face.embedding
   }
 
