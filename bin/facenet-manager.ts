@@ -6,8 +6,10 @@ import {
   log,
   MODULE_ROOT,
   VERSION,
-}                   from '../src/config'
-import { Manager }  from '../src/manager/'
+}               from '../src/config'
+import {
+  Manager,
+}               from '../src/manager/'
 
 function checkUpdate() {
   const pkgFile   = path.join(MODULE_ROOT, 'package.json')
@@ -24,7 +26,7 @@ function assertNever(obj: never): never {
 }
 
 async function main(args: Args): Promise<number> {
-  log.info('Manager', `Facenet v${VERSION}`)
+  log.verbose('Manager', `Facenet v${VERSION}`)
 
   checkUpdate()
 
@@ -39,17 +41,12 @@ async function main(args: Args): Promise<number> {
       case 'blessed':
         await manager.start()
         break
-      case 'align':
-        await manager.align(pathname)
+      case 'alignment':
+      case 'embedding':
+        await manager.alignmentEmbedding(pathname)
         break
       case 'validate':
-        await manager.validate(pathname)
-        break
-      case 'visualize':
-        await manager.visualize(pathname)
-        break
-      case 'embedding':
-        await manager.embedding(pathname)
+        await manager.validate()
         break
       case 'sort':
         await manager.sort(pathname)
@@ -66,16 +63,16 @@ async function main(args: Args): Promise<number> {
   }
 }
 
-type Command =    'align'
+type Command =    'alignment'
                 | 'embedding'
                 | 'validate'
-                | 'visualize'
                 | 'sort'
                 | 'blessed'
+
 interface Args {
   commands: [
     Command,
-    string
+    string    // path
   ]
 }
 
@@ -126,7 +123,7 @@ process.on('warning', (warning) => {
   console.warn(warning.stack);   // Print the stack trace
 });
 
-log.level('silly')
+// log.level('silly')
 
 main(parseArguments())
 .then(process.exit)

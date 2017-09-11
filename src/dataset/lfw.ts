@@ -25,13 +25,13 @@ export class Lfw extends Dataset {
   private pairListCache:  LfwPair[]
 
   constructor(
-    directory: string,
-    ext = 'jpg',
+    public workDir = path.join(MODULE_ROOT, 'datasets', 'lfw'),
+    public ext     = 'jpg',
   ) {
-    super(directory, ext)
+    super(workDir, ext)
     log.verbose('Lfw', 'constructor()')
 
-    this.downloadFile = path.join(directory, 'lfw.tgz')
+    this.downloadFile = path.join(workDir, 'lfw.tgz')
   }
 
   public async setup(): Promise<void> {

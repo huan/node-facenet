@@ -1,38 +1,38 @@
-import * as fs    from 'fs'
-import * as path  from 'path'
+import * as fs            from 'fs'
+import * as path          from 'path'
 
 import {
   widget,
   // Widgets,
-}                 from 'blessed'
+}                       from 'blessed'
 
 import {
   log,
   MODULE_ROOT,
-}                 from '../config'
+}                       from '../config'
 
 import {
   Facenet,
-}                 from '../facenet'
+}                       from '../facenet'
 
 import {
   AlignmentCache,
   EmbeddingCache,
-}                 from '../cache/'
+}                       from '../cache/'
 
 import {
   clear,
   Frame,
   Menu,
-}                 from './ui/'
+}                       from './ui/'
 
 import {
-  Demo,
-}                 from './demo/'
+  AlignmentEmbedding,
+}                       from './alignment-embedding/'
 
 interface MenuItem {
   text:     string,
-  callback: () => Promise<void>,
+  callback: () => Promise<boolean>,
 }
 
 export class Manager {
@@ -43,8 +43,6 @@ export class Manager {
   private frame:  Frame
   private screen: widget.Screen
   private menu:   Menu
-
-  private menuItemList: MenuItem[]
 
   constructor() {
     log.verbose('Manager', 'constructor()')
@@ -73,52 +71,65 @@ export class Manager {
 
     this.frame = new Frame(this.screen)
 
-    this.menuItemList = [
+    this.menu = new Menu(
+      this.screen,
+      this.menuItemList().map(m => m.text),
+    )
+  }
+
+  private menuItemList(): MenuItem[] {
+    return [
       {
-        text: 'Face Alignment & Embedding Demo',
-        callback: async () => console.log('demo'),
+        text:     'Face Alignment & Embedding Demo',
+        callback: async () => {
+          await this.alignmentEmbedding()
+          return true
+        },
       },
       {
         text: 'Validate on LFW',
-        callback: async () => console.log('validate lfw'),
+        callback: async () => {
+          console.log('validate lfw')
+          return true
+        },
       },
       {
         text: 'Sort Photos Group by Face',
-        callback: async () => console.log('sort'),
+        callback: async () => {
+          console.log('sort')
+          return true
+        },
+      },
+      {
+        text: 'Quit',
+        callback: async () => {
+          this.quit()
+          return false
+        },
       },
     ]
-
-    this.menu = new Menu(
-      this.screen,
-      this.menuItemList.map(m => m.text),
-    )
   }
 
   public async start(): Promise<void> {
     log.verbose('Manager', 'start()')
 
-    const menuIndex = await this.menu.start()
+    let menuCallback = async () => {
+      log.error('Manager', 'start() no menuCallback!')
+      return false
+    }
 
-    clear(this.screen)
+    const menuCallbackList = this.menuItemList()
+                                  .map(m => m.callback)
 
-    const callback = this.menuItemList
-                          .map(m => m.callback)
-                          [menuIndex]
+    do {
+      clear(this.screen)
+      const idx = await this.menu.start()
 
-    this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
-      this.screen.destroy()
-    })
+      clear(this.screen)
+      await this.frame.init()
 
-    await callback()
-
-    await this.frame.init()
-
-    const demo = new Demo(
-      this.frame,
-      this.alignmentCache,
-      this.embeddingCache,
-    )
-    await demo.start()
+      menuCallback = menuCallbackList[idx]
+    } while (await menuCallback())
 
     // const testFile = path.join(
     //   MODULE_ROOT,
@@ -135,19 +146,32 @@ export class Manager {
     // this.frame.emit('face', testFace)
     // this.frame.emit('face', testFace)
 
-    this.screen.render()
-
-    return new Promise<void>((resolve) => {
-      this.screen.once('destroy', async () => {
-        await this.quit()
-        return resolve()
-      })
-    })
   }
 
   public async quit(): Promise<void> {
     await this.facenet.quit()
     this.screen.destroy()
+  }
+
+  public async alignmentEmbedding(
+    pathname?: string,
+  ): Promise<void> {
+    const ae = new AlignmentEmbedding(
+      this.frame,
+      this.alignmentCache,
+      this.embeddingCache,
+    )
+    await ae.start(pathname)
+  }
+
+  public sort(pathname: string) {
+    console.log(pathname)
+    //
+  }
+
+  public validate() {
+    console.log('validate')
+    //
   }
 }
 

@@ -23,7 +23,7 @@ import {
   Frame,
 }                 from '../ui/'
 
-export class Demo {
+export class AlignmentEmbedding {
 
   constructor(
     public frame:           Frame,
@@ -32,14 +32,16 @@ export class Demo {
   ) {
   }
 
-  public async start(): Promise<void> {
+  public async start(workDir?: string): Promise<void> {
     const box = this.frame.box
 
     const tree = this.createTreeElement(box)
-    const explorer = this.createExplorerData()
+    const explorer = this.createExplorerData(workDir)
     tree.setData(explorer)
     tree.focus()
     this.bindSelectAction(tree)
+
+    return new Promise<void>(resolve => this.frame.bindQuitKey(resolve))
   }
 
   private createTreeElement(box: Widgets.BoxElement) {
@@ -62,12 +64,14 @@ export class Demo {
     return tree
   }
 
-  private createExplorerData() {
-    const rootDir = path.join(
-      MODULE_ROOT,
-      'docs',
-      'images',
-    )
+  private createExplorerData(workDir?: string) {
+    if (!workDir) {
+      workDir = path.join(
+        MODULE_ROOT,
+        'docs',
+        'images',
+      )
+    }
 
     // file explorer
     const explorer = {
@@ -77,7 +81,7 @@ export class Demo {
       getPath: function(self: any) {
         // If we don't have any parent, we are at tree root, so return the base case
         if (!self.parent) {
-          return rootDir;
+          return workDir;
           // return '/home/zixia/git/node-facenet/datasets/lfw/cache.face/';
         }
         // Get the parent node path and add this node name

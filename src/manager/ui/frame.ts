@@ -86,6 +86,24 @@ export class Frame extends EventEmitter {
     return this._box
   }
 
+  public bindQuitKey(callback: Function) {
+    const quitKeyList = ['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10']
+    const quitRegexp = new RegExp('^[' + quitKeyList.join('|') + ']$', 'i')
+
+    const listener = (_: any, key: any) => {
+      if (quitRegexp.test(key.name)) {
+        this.screen.removeListener('keypress', listener)
+        callback()
+      }
+    }
+
+    this.screen.addListener('keypress', listener)
+
+    // this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
+    //   this.screen.destroy()
+    // })
+
+  }
   private addBoxElement(): void {
     const right  = this.thumbWidth + this.imageWidth
     const width  = (this.screen.width as number) - right

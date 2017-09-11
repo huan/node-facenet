@@ -33,7 +33,7 @@ export class Facenet implements Alignable, Embeddingable {
   private pythonFacenet: PythonFacenet
 
   constructor() {
-    log.info('Facenet', `constructor() v${VERSION}`)
+    log.verbose('Facenet', `constructor() v${VERSION}`)
     this.pythonFacenet = new PythonFacenet()
   }
 
@@ -43,21 +43,21 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   public async initFacenet(): Promise<void> {
-    log.info('Facenet', 'initFacenet()')
+    log.verbose('Facenet', 'initFacenet()')
     const start = Date.now()
     await this.pythonFacenet.initFacenet()
-    log.info('Facenet', 'initFacenet() cost %d milliseconds', Date.now() - start)
+    log.verbose('Facenet', 'initFacenet() cost %d milliseconds', Date.now() - start)
   }
 
   public async initMtcnn(): Promise<void> {
-    log.info('Facenet', 'initMtcnn()')
+    log.verbose('Facenet', 'initMtcnn()')
     const start = Date.now()
     await this.pythonFacenet.initMtcnn()
-    log.info('Facenet', 'initMtcnn() cost %d milliseconds', Date.now() - start)
+    log.verbose('Facenet', 'initMtcnn() cost %d milliseconds', Date.now() - start)
   }
 
   public async quit(): Promise<void> {
-    log.info('Facenet', 'quit()')
+    log.verbose('Facenet', 'quit()')
     await this.pythonFacenet.quit()
   }
 

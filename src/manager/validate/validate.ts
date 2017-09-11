@@ -13,6 +13,10 @@ import {
 }                 from '../../face'
 
 import {
+  Lfw,
+}                 from '../../dataset/lfw'
+
+import {
   AlignmentCache,
   EmbeddingCache,
 }                 from '../../cache/'
@@ -25,7 +29,7 @@ import {
   Frame,
 }                 from '../ui/'
 
-type ValidateEventName = 'start' | 'pause' | 'quit'
+type ValidateEventName = 'start' | 'stop' | 'quit'
 
 interface MenuEventMap {
   [text:  string]: ValidateEventName,
@@ -33,6 +37,7 @@ interface MenuEventMap {
 
 export class Validate extends EventEmitter {
   private grid: any
+  private lfw:  Lfw
 
   constructor(
     public frame:           Frame,
@@ -40,6 +45,7 @@ export class Validate extends EventEmitter {
     public embeddingCache:  EmbeddingCache,
   ) {
     super()
+    this.lfw = new Lfw()
   }
 
   public async start(): Promise<void> {
@@ -51,8 +57,17 @@ export class Validate extends EventEmitter {
     })
 
     this.createMenuElement(0, 0, 4, 12)
-    this.createProgressElement(4, 0, 2, 12)
-    this.createOutputElement(6, 0, 6, 12)
+    this.createDonutElement(4, 0, 2, 12)
+    this.createProgressElement(6, 0, 2, 12)
+    this.createOutputElement(8, 0, 4, 12)
+
+    this.on('start', () => {
+      //
+    })
+
+    this.on('stop', () => {
+      //
+    })
 
     return new Promise<void>(resolve => {
       this.once('quit', resolve)
@@ -91,7 +106,7 @@ export class Validate extends EventEmitter {
 
     const menuEventMap: MenuEventMap = {
       Start: 'start',
-      Pause: 'pause',
+      Stop:  'stop',
       Quit:  'quit',
     }
 
@@ -105,6 +120,33 @@ export class Validate extends EventEmitter {
       this.emit(event)
       this.frame.emit('log', 'menu select: ' + text + ', ' + selected)
     })
+  }
+
+  private createDonutElement(
+    row:     number,
+    col:     number,
+    rowSpan: number,
+    colSpan: number,
+  ): void {
+    const donut = this.grid.set(
+      row, col, rowSpan, colSpan,
+      contrib.donut,
+      {
+        label: 'Data Sets Status',
+        radius: 8,
+        arcWidth: 3,
+        remainColor: 'black',
+        yPadding: 2,
+        // data: [
+        //   {percent: 80, label: 'web1', color: 'green'}
+        // ],
+      },
+    )
+
+    donut.setData([
+      {percent: 87, label: 'rcp', 'color': 'green'},
+      {percent: 43, label: 'rcp', 'color': 'cyan'},
+    ])
   }
 
   private createProgressElement(
