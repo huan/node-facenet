@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events'
 import * as fs          from 'fs'
 import * as path        from 'path'
 
@@ -25,7 +26,9 @@ export interface AlignmentCacheData {
   [key: string]: FaceEmbedding,
 }
 
-export class AlignmentCache implements Alignable {
+export type AlignmentCacheEvent = 'hit' | 'miss'
+
+export class AlignmentCache extends EventEmitter implements Alignable {
   public db:        DbCache
   public faceCache: FaceCache
 
@@ -33,7 +36,25 @@ export class AlignmentCache implements Alignable {
     public facenet: Facenet,
     public workDir: string,
   ) {
+    super()
     log.verbose('AlignmentCache', 'constructor(%s)', workDir)
+  }
+
+  public on(event: 'hit',  listener: (image: ImageData | string) => void): this
+  public on(event: 'miss', listener: (image: ImageData | string) => void): this
+
+  public on(event: never, listener: any):                                               this
+  public on(event: AlignmentCacheEvent, listener: (image: ImageData | string) => void): this {
+    super.on(event, listener)
+    return this
+  }
+
+  public emit(event: 'hit',  image: ImageData | string):  boolean
+  public emit(event: 'miss', image: ImageData | string): boolean
+
+  public emit(event: never, image: any):                              boolean
+  public emit(event: AlignmentCacheEvent, image: ImageData | string): boolean {
+    return super.emit(event, image)
   }
 
   public init(): void {
@@ -59,30 +80,32 @@ export class AlignmentCache implements Alignable {
     await this.db.clean()
   }
 
-  public async align(imageData: ImageData | string ): Promise<Face[]> {
-    if (typeof imageData === 'string') {
-      const filename = imageData
+  public async align(image: ImageData | string ): Promise<Face[]> {
+    if (typeof image === 'string') {
+      const filename = image
       log.verbose('AlignmentCache', 'align(%s)', filename)
-      imageData = imageToData(
+      image = imageToData(
         await loadImage(filename),
       )
     } else {
       log.verbose('AlignmentCache', 'align(%dx%d)',
-                                    imageData.width,
-                                    imageData.height,
+                                    image.width,
+                                    image.height,
                   )
     }
 
-    const md5 = imageMd5(imageData)
+    const md5 = imageMd5(image)
     let faceList = await this.get(md5)
 
     if (faceList !== null) {
       log.silly('AlignmentCache', 'align() HIT')
+      this.emit('hit', image)
       return faceList
     }
     log.silly('AlignmentCache', 'align() MISS')
+    this.emit('miss', image)
 
-    faceList = await this.facenet.align(imageData)
+    faceList = await this.facenet.align(image)
     await this.put(md5, faceList)
 
     return faceList
