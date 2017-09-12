@@ -77,7 +77,7 @@ t.test('transformLandmarks()', async (t: any) => {
   f.quit()
 })
 
-t.test('distance()', async (t: any) => {
+t.test('distance() for multiple rows', async (t: any) => {
   const FACE = {
     embedding: nj.array([0, 3]),
   } as any as Face

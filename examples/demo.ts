@@ -24,9 +24,7 @@ async function main() {
 
     for (const face of faceList) {
       // Calculate Face Embedding, return feature vector
-      const embedding = await facenet.embedding(face)
-      assert(face.embedding === embedding,
-            'Save embedding to face. Also return it for convenience')
+      face.embedding = await facenet.embedding(face)
 
       const faceFile = `${face.md5}.png`
       saveImage(face.imageData, faceFile)

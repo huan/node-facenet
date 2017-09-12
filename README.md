@@ -163,6 +163,10 @@ Do face alignment for the image, return a list of faces.
 
 Get the embedding for a face.
 
+```ts
+face.embedding = await facenet.embedding(face)
+```
+
 ## Face
 
 Get the 128 dim embedding vector for this face.(After alignment)

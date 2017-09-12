@@ -34,7 +34,7 @@ async function main() {
     const outputImage = gm(imageFile)
 
     for (const face of faceList) {
-      await facenet.embedding(face)
+      face.embedding = await facenet.embedding(face)
 
       const color = 'green'
       const {x, y, w, h} = face.rect

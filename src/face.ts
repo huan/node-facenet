@@ -120,7 +120,7 @@ export class Face {
   }
 
   public toString(): string {
-    return `Face#${this.id}#${this.md5}<${this._embedding}>`
+    return `Face#${this.id}(${this.md5})`
   }
 
   public toJSON(): FaceJsonObject {
