@@ -72,15 +72,14 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     if (array) {
       log.silly('EmbeddingCache', 'embedding() cache HIT')
       this.emit('hit', face)
-      face.embedding = nj.array(array as any)
-    } else {
-      log.silly('EmbeddingCache', 'embedding() cache MISS')
-      this.emit('miss', face)
-      await this.facenet.embedding(face)
-      await this.db.put(cacheKey, face.embedding.tolist())
+      return nj.array(array as any)
     }
-    // console.log('embedding: ', face.embedding.toString())
-    return face.embedding
+
+    log.silly('EmbeddingCache', 'embedding() cache MISS')
+    this.emit('miss', face)
+    const embedding = await this.facenet.embedding(face)
+    await this.db.put(cacheKey, embedding.tolist())
+    return embedding
   }
 
   public async count(): Promise<number> {

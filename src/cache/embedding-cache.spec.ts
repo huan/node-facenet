@@ -42,54 +42,62 @@ t.test('Create workdir by init()', async (t: any) => {
   }
 })
 
-t.test('Cache', sinonTest(async (t: any) => {
+t.test('Cache', sinonTest(async function (t: any) {
   const EXPECTED_EMBEDDING = nj.arange(128)
 
   const embeddingStub = sinon.stub(
     Facenet.prototype,
     'embedding',
   )
-  embeddingStub.callsFake(
-    (face: Face) => face.embedding = EXPECTED_EMBEDDING,
-  )
+  // embeddingStub.returns(Promise.resolve(EXPECTED_EMBEDDING))
+  embeddingStub.callsFake(() => {
+    // console.log('fake')
+    return Promise.resolve(EXPECTED_EMBEDDING)
+  })
 
   const hitSpy = sinon.spy()
   const missSpy = sinon.spy()
 
-  const facenet   = new Facenet()
-  const workDir   = await promisify(fs.mkdtemp)(TMP_PREFIX)
+  const workDir        = await promisify(fs.mkdtemp)(TMP_PREFIX)
 
+  const facenet        = new Facenet()
   const embeddingCache = new EmbeddingCache(facenet, workDir)
+
   await embeddingCache.init()
 
   embeddingCache.on('hit', hitSpy)
   embeddingCache.on('miss', missSpy)
 
-  t.test('catch miss', async (t: any) => {
+  t.test('miss', async (t: any) => {
     const face = new Face(fixtureImageData3x3())
 
+    embeddingStub.resetHistory()
     hitSpy.reset()
     missSpy.reset()
-    embeddingCache.embedding(face)
 
-    t.equal(embeddingStub.calledOnce, 'should call embedding() at 1st time')
-    t.equal(hitSpy.notCalled, 'should hit none')
-    t.equal(missSpy.calledOnce, 'should miss once')
+    face.embedding = await embeddingCache.embedding(face)
+
+    t.ok(embeddingStub.calledOnce, 'should call embedding() at 1st time')
+    t.ok(hitSpy.notCalled, 'should hit none')
+    t.ok(missSpy.calledOnce, 'should miss once')
     t.deepEqual(face.embedding.tolist(), EXPECTED_EMBEDDING.tolist(), 'should be equal to embedding data')
   })
 
-  t.test('catch hit', async (t: any) => {
+  t.test('hit', async (t: any) => {
     const face = new Face(fixtureImageData3x3())
 
+    embeddingStub.resetHistory()
     hitSpy.reset()
     missSpy.reset()
-    embeddingCache.embedding(face)
 
-    t.equal(embeddingStub.calledOnce, 'should not call embedding() at 2nd time for a same face(md5)')
-    t.equal(hitSpy.calledOnce, 'should hit once')
-    t.equal(missSpy.calledOnce, 'should miss none')
+    face.embedding = await embeddingCache.embedding(face)
+
+    t.ok(embeddingStub.notCalled, 'should not call embedding() at 2nd time for a same face(md5)')
+    t.ok(hitSpy.calledOnce, 'should hit once')
+    t.ok(missSpy.notCalled, 'should miss none')
     t.deepEqual(face.embedding.tolist(), EXPECTED_EMBEDDING.tolist(), 'should be equal to embedding data')
   })
 
   await facenet.quit()
+
 }))
