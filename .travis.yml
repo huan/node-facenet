@@ -9,6 +9,8 @@ matrix:
 language: node_js
 node_js:
   - "7"
+python:
+  - "3.5"
 
 cache:
   directories:
