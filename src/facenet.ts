@@ -128,9 +128,9 @@ export class Facenet implements Alignable, Embeddingable {
     const embedding = await this.pythonFacenet.embedding(imageData)
 
     // Set embedding to face
-    face.embedding =  nj.array(embedding)
+    // face.embedding =  nj.array(embedding)
 
-    return face.embedding
+    return nj.array(embedding)
   }
 
   public transformMtcnnLandmarks(landmarks: number[][]): number[][][] {
