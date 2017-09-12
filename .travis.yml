@@ -9,12 +9,13 @@ matrix:
 language: node_js
 node_js:
   - "7"
-python:
-  - "3.5"
 
 cache:
   directories:
     - node_modules
+
+before_install: # switch to python 3.5
+  - source ~/virtualenv/python3.5/bin/activate
 
 install:
   - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng; fi # jpeg giflib
