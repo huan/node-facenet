@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
-import * as assert  from 'assert'
+#
 
 import {
   Facenet,
