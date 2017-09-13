@@ -1,4 +1,4 @@
-# FaceNet
+# FACENET
 
 [![Build Status](https://travis-ci.org/zixia/node-facenet.svg?branch=master)](https://travis-ci.org/zixia/node-facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
@@ -12,13 +12,13 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
 
-# Install
+# INSTALL
 
 ```shell
 $ npm install facenet
 ```
 
-# Example
+# EXAMPLE
 
 The follow examples will give you some intuitions for using the code.
 
@@ -110,7 +110,7 @@ Roadmap: release facenet-manager on version 0.4
 [![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
 > The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
 
-# Install & Requirement
+# INSTALL & REQUIREMENT
 
 ```shell
 $ npm install facenet
@@ -179,7 +179,7 @@ console.log('landmarks:',     face.facialLandmark)
 console.log('embedding:',     face.embedding)
 ```
 
-# Environment Variables
+# ENVIRONMENT VARIABLES
 
 ## FACENET_MODEL
 
@@ -198,11 +198,11 @@ model-20170512-110547.ckpt-250000.data-00000-of-00001
 model-20170512-110547.meta
 ```
 
-# Docker
+# DOCKER
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/zixia/facenet.svg?maxAge=2592000)](https://hub.docker.com/r/zixia/facenet/) [![Docker Stars](https://img.shields.io/docker/stars/zixia/facenet.svg?maxAge=2592000)](https://hub.docker.com/r/zixia/facenet/) [![Docker Layers](https://images.microbadger.com/badges/image/zixia/facenet.svg)](https://microbadger.com/#/images/zixia/facenet)
 
-# Develop
+# DEVELOP
 
 [![Issue Stats](http://issuestats.com/github/zixia/node-facenet/badge/pr)](http://issuestats.com/github/zixia/node-facenet) [![Issue Stats](http://issuestats.com/github/zixia/node-facenet/badge/issue)](http://issuestats.com/github/zixia/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/zixia/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/zixia/node-facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/node-facenet.svg)](https://greenkeeper.io/)
 
@@ -213,7 +213,7 @@ $ npm install
 $ npm test
 ```
 
-# Command Line Interface
+# COMMAND LINE INTERFACES
 
 
 ## align
@@ -233,7 +233,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 ```
 
 
-# Resources
+# RESOURCES
 
 ## Machine Learning
 * [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
@@ -268,7 +268,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 
 1. [LFW - Labeled Faces in the Wild](http://vis-www.cs.umass.edu/lfw/)
 
-# Todo
+# TODO
 
 - [x] NPM Module: `facenet`
 - [x] Docker Image: `zixia/facenet`
@@ -287,20 +287,20 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
 - [ ] TensorFlow Sereving
 - [ ] OpenAPI Specification(Swagger)
 
-# Inspiration
+# INSPIRATION
 
 This repository is heavily inspired by the following implementations:
 
 * [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
 * [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
 
-# Credits
+# CREDITS
 
 1. Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
 1. Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
 1. TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
-# Contribute
+# CONTRIBUTE
 
 ## FaceNet Badge
 
@@ -310,7 +310,7 @@ This repository is heavily inspired by the following implementations:
 [![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet)
 ```
 
-# Changelog
+# CHANGELOG
 
 ## v0.3 / Master
 
@@ -331,14 +331,14 @@ This repository is heavily inspired by the following implementations:
 1. Facenet.embedding() to calculate the 128 dim feature vector of face
 1. Initial workable version
 
-## FAQ
+# FAQ
 
 1. `facenet-manager` display not right under Windows
 
 See: [Running Terminal Dashboards on Windows](http://webservices20.blogspot.co.uk/2015/04/running-terminal-dashboards-on-windows.html)
 
 
-# Author
+# AUTHOR
 
 Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
 
@@ -346,7 +346,7 @@ Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
 </a>
 
-# Copyright & License
+# COPYRIGHT & LICENSE
 
 * Code & Docs © 2017 Huan LI \<zixia@zixia.net\>
 * Code released under the Apache-2.0 License
