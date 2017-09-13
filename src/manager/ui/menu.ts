@@ -14,7 +14,7 @@ export class Menu {
     public screen:    Widgets.Screen,
     public menuList:  string[],
   ) {
-    log.verbose('SplashMenu', 'constructor()')
+    log.verbose('Menu', 'constructor()')
 
     for (const i in this.menuList) {
       menuList[i] = ' ' + (parseInt(i) + 1) + '. ' + menuList[i]
@@ -23,7 +23,7 @@ export class Menu {
   }
 
   public async start(): Promise<number> {
-    log.verbose('SplashMenu', 'start()')
+    log.verbose('Menu', 'start()')
 
     this.screen.title = 'FaceNet Manager'
 
@@ -39,7 +39,7 @@ export class Menu {
   }
 
   private backgroundElement() {
-    log.verbose('SplashMenu', 'backgroundElement()')
+    log.verbose('Menu', 'backgroundElement()')
     const box = new widget.Box({
       top:     0,
       left:    0,
@@ -55,7 +55,7 @@ export class Menu {
   }
 
   private logoElement() {
-    log.verbose('SplashMenu', 'logoElement()')
+    log.verbose('Menu', 'logoElement()')
     const icon = new (widget as any).Image({
       file:   FILE_FACENET_ICON_PNG,
       type:   'ansi',
@@ -68,7 +68,7 @@ export class Menu {
   }
 
   private textElement() {
-    log.verbose('SplashMenu', 'textElement()')
+    log.verbose('Menu', 'textElement()')
     const bigText = new widget.BigText({
       top:     16,
       left:    'center',
@@ -84,7 +84,7 @@ export class Menu {
   }
 
   private versionElement() {
-    log.verbose('SplashMenu', 'versionElement()')
+    log.verbose('Menu', 'versionElement()')
 
     const version = new widget.Box({
       content: 'Manager version ' + VERSION,
@@ -103,7 +103,7 @@ export class Menu {
   }
 
   private pressElement(): Promise<void> {
-    log.verbose('SplashMenu', 'pressElement()')
+    log.verbose('Menu', 'pressElement()')
 
     const pressKey = new widget.Box({
       top:    (this.screen.height) as number - 5,
@@ -136,7 +136,7 @@ export class Menu {
   }
 
   private async menuElement(): Promise<number> {
-    log.verbose('SplashMenu', 'menuElement()')
+    log.verbose('Menu', 'menuElement()')
 
     const list = new widget.List({
       label:  '{bold}{cyan-fg} Menu {/cyan-fg}{/bold}',
