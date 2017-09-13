@@ -81,7 +81,7 @@ export class AlignmentEmbedding {
       getPath: function(self: any) {
         // If we don't have any parent, we are at tree root, so return the base case
         if (!self.parent) {
-          return workDir;
+          return '/' // workDir
           // return '/home/zixia/git/node-facenet/datasets/lfw/cache.face/';
         }
         // Get the parent node path and add this node name
@@ -132,39 +132,34 @@ export class AlignmentEmbedding {
     // available like the 'node.getPath' defined above
     tree.on('select', async (node: any) => {
       let nodePath = node.getPath(node)
-      // let data = []
 
       // The filesystem root return an empty string as a base case
       if ( nodePath === '')
         nodePath = '/'
 
-      // Add data to right array
-      // data.push([nodePath])
-      // data.push([''])
       try {
-        // Add results
-        // data = data.concat(JSON.stringify(fs.lstatSync(nodePath), null, 2)
-        //             .split('\n')
-        //             .map(e => [e]))
-        this.frame.emit('image', nodePath)
-        const faceList = await this.alignmentCache.align(nodePath)
-        this.frame.emit('log', 'faceList.length = ' + faceList.length)
-        faceList.forEach(face => {
-          try {
-            this.frame.emit('log', 'face ' + face.md5)
-            this.embeddingCache.embedding(face)
-            this.frame.emit('face', face)
-            this.frame.emit('log', face.embedding.toString())
-          } catch (e) {
-            this.frame.emit('log', 'on select exception: ' + e)
-          }
-        })
+        await this.process(nodePath)
+        this.frame.screen.render()
       } catch (e) {
         this.frame.emit('log', 'tree on select exception: ' + e)
-        // table.setData({headers: ['Info'], data: [[e.toString()]]})
       }
-
-      this.frame.screen.render()
     })
+  }
+
+  public async process(file: string): Promise<void> {
+    this.frame.emit('image', file)
+    const faceList = await this.alignmentCache.align(file)
+    this.frame.emit('log', 'faceList.length = ' + faceList.length)
+
+    for (const face of faceList) {
+      try {
+        this.frame.emit('log', 'face ' + face.md5)
+        this.frame.emit('face', face)
+        face.embedding = await this.embeddingCache.embedding(face)
+        this.frame.emit('log', face.embedding.toString())
+      } catch (e) {
+        this.frame.emit('log', 'on select exception: ' + e)
+      }
+    }
   }
 }

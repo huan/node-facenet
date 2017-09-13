@@ -123,7 +123,7 @@ process.on('warning', (warning) => {
   console.warn(warning.stack);   // Print the stack trace
 });
 
-log.level('silly')
+// log.level('silly')
 
 main(parseArguments())
 .then(process.exit)

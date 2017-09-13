@@ -1,4 +1,4 @@
-import * as path from 'path'
+// import * as path from 'path'
 import { EventEmitter }   from 'events'
 
 import {
@@ -8,7 +8,7 @@ import {
 const contrib             = require('blessed-contrib')
 
 import {
-  // FILE_FACENET_ICON_PNG,
+  FILE_FACENET_ICON_PNG,
   MODULE_ROOT,
   VERSION,
 }                         from '../../config'
@@ -96,14 +96,9 @@ export class Frame extends EventEmitter {
         callback()
       }
     }
-
     this.screen.addListener('keypress', listener)
-
-    // this.screen.key(['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10'], (/* ch: any, key: any */) => {
-    //   this.screen.destroy()
-    // })
-
   }
+
   private addBoxElement(): void {
     const right  = this.thumbWidth + this.imageWidth
     const width  = (this.screen.width as number) - right
@@ -162,11 +157,7 @@ export class Frame extends EventEmitter {
         top,
 
         right:  0,
-        // file:   FILE_FACENET_ICON_PNG,
-        file: path.join(
-          MODULE_ROOT,
-          'tests/fixtures/aligned-face.png',
-        ),
+        file:   FILE_FACENET_ICON_PNG,
         border: 'line',
         style:  {
           border: {
@@ -229,10 +220,12 @@ export class Frame extends EventEmitter {
         let distance
         try {
           distance = faceList[i + 1].distance(faceList[i])
+                                    .toFixed(2)
         } catch (e) { // no embedding
           distance = -1
         }
         distanceList[i].setContent(`{center} | distance: ${distance} | {/center}`)
+        distanceList[i].bg = distance > 0.75 ? 'red' : 'green' as any
       }
     }
   }
@@ -242,8 +235,7 @@ export class Frame extends EventEmitter {
     const width        = this.imageWidth
     const height       = this.imageHeight
 
-    // 2 is padding for border, 2 is for picture-tube `dx = png.width / opts.cols`
-    const cols = width - 2 - 2
+    const cols = height * 2
 
     const pic = contrib.picture({
       right: paddingRight,
@@ -258,10 +250,7 @@ export class Frame extends EventEmitter {
           fg: 'cyan',
         },
       },
-      file: path.join(
-        MODULE_ROOT,
-        'tests/fixtures/aligned-face.png',
-      ),
+      file:   FILE_FACENET_ICON_PNG,
       onReady: () => this.screen.render(),
     })
     console.log(MODULE_ROOT)
@@ -292,7 +281,8 @@ export class Frame extends EventEmitter {
       base64 = base64OrFace
     }
 
-    const cols = picture.width - 2 - 2  // 2 for lines and 1 for workaround of float '/'
+    // 2 is padding for border, 2 is for picture-tube `dx = png.width / opts.cols`
+    const cols = picture.width - 2 - 2
 
     return new Promise<void>(resolve => {
       picture.setImage({
