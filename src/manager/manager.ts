@@ -71,38 +71,41 @@ export class Manager {
 
     this.frame = new Frame(this.screen)
 
+    // log.enableLogging((text: string) => this.frame.emit('log', text))
+
+    const menuTextList = this.menuItemList().map(m => m.text)
     this.menu = new Menu(
       this.screen,
-      this.menuItemList().map(m => m.text),
+      menuTextList,
     )
   }
 
   private menuItemList(): MenuItem[] {
     return [
       {
-        text:     'Face Alignment & Embedding Demo',
-        callback: async () => {
+        text     : 'Face Alignment & Embedding Demo',
+        callback : async () => {
           await this.alignmentEmbedding()
           return true
         },
       },
       {
-        text: 'Validate on LFW',
-        callback: async () => {
+        text     : 'Validate on LFW',
+        callback : async () => {
           console.log('validate lfw')
           return true
         },
       },
       {
-        text: 'Sort Photos Group by Face',
-        callback: async () => {
+        text     : 'Sort Photos Group by Face',
+        callback : async () => {
           console.log('sort')
           return true
         },
       },
       {
-        text: 'Quit',
-        callback: async () => {
+        text     : 'Quit',
+        callback : async () => {
           this.quit()
           return false
         },
@@ -131,21 +134,6 @@ export class Manager {
       menuCallback = menuCallbackList[idx]
     } while (await menuCallback())
 
-    // const testFile = path.join(
-    //   MODULE_ROOT,
-    //   'tests/fixtures/rgb-bwt.png',
-    // )
-    // const testFace = new Face(
-    //   path.join(
-    //     MODULE_ROOT,
-    //     'tests/fixtures/aligned-face.png',
-    //   ),
-    // )
-
-    // this.frame.emit('image', testFile)
-    // this.frame.emit('face', testFace)
-    // this.frame.emit('face', testFace)
-
   }
 
   public async quit(): Promise<void> {
@@ -156,6 +144,8 @@ export class Manager {
   public async alignmentEmbedding(
     pathname?: string,
   ): Promise<void> {
+    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname)
+
     const ae = new AlignmentEmbedding(
       this.frame,
       this.alignmentCache,

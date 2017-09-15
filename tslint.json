@@ -90,7 +90,7 @@
     "triple-equals": [true],
     "typedef": [false],
     "typedef-whitespace": [
-      true,
+      false,
       {
         "call-signature": "nospace",
         "index-signature": "nospace",

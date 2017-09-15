@@ -9,7 +9,7 @@ const contrib             = require('blessed-contrib')
 
 import {
   FILE_FACENET_ICON_PNG,
-  MODULE_ROOT,
+  // MODULE_ROOT,
   VERSION,
 }                         from '../../config'
 
@@ -253,7 +253,7 @@ export class Frame extends EventEmitter {
       file:   FILE_FACENET_ICON_PNG,
       onReady: () => this.screen.render(),
     })
-    console.log(MODULE_ROOT)
+    // console.log(MODULE_ROOT)
     this.append(pic)
     this.on('image', async (file: string) => {
       try {

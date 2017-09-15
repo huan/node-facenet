@@ -16,6 +16,7 @@ import {
 }                 from '../../cache/'
 
 import {
+  log,
   MODULE_ROOT,
 }                 from '../../config'
 
@@ -65,6 +66,8 @@ export class AlignmentEmbedding {
   }
 
   private createExplorerData(workDir?: string) {
+    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workDir)
+    console.error(workDir)
     if (!workDir) {
       workDir = path.join(
         MODULE_ROOT,
@@ -78,52 +81,51 @@ export class AlignmentEmbedding {
       name: '/',
       extended: true,
       // Custom function used to recursively determine the node path
-      getPath: function(self: any) {
+      getPath: (current: any) => {
         // If we don't have any parent, we are at tree root, so return the base case
-        if (!self.parent) {
-          return '/' // workDir
-          // return '/home/zixia/git/node-facenet/datasets/lfw/cache.face/';
-        }
+        if (!current.parent)
+          return ''
         // Get the parent node path and add this node name
         return path.join(
-          self.parent.getPath(self.parent),
-          self.name,
+          current.parent.getPath(current.parent),
+          current.name,
         )
       },
       // Child generation function
-      children: function(self: any) {
-        // childrenContent is a property filled with self.children() result
-        // on tree generation (tree.setData() call)
-        if (self.childrenContent) {
-          return self.childrenContent;
-        }
-
-        const selfPath = self.getPath(self)
-        const result = {} as any
+      children: (current: any) => {
+        let result = {} as any
+        const selfPath = current.getPath(current)
         try {
           // List files in this directory
-          const fileList = fs.readdirSync(selfPath + '/')
+          const children = fs.readdirSync(selfPath + path.sep)
 
-          for (const file of fileList) {
-            const completePath = path.join(selfPath, file)
-            result[file] = {
-              name:     file,
-              getPath:  self.getPath,
-              extended: false,
+          // childrenContent is a property filled with self.children() result
+          // on tree generation (tree.setData() call)
+          if (!current.childrenContent) {
+            for (const child of children) {
+              const completePath = path.join(selfPath, child)
+
+              result[child] = {
+                name     : child,
+                getPath  : current.getPath,
+                extended : false,
+              }
+
+              if (fs.lstatSync(completePath).isDirectory()) {
+                // If it's a directory we generate the child with the children generation function
+                result[child]['children'] = current.children
+              }
             }
-            if (fs.lstatSync(completePath).isDirectory()) {
-              // If it's a directory we generate the child with the children generation function
-              result[file] = self.children
-            }
+          } else {
+            result = current.childrenContent;
           }
-
         } catch (e) {
+          log.error('AlignmentEmbedding', 'createExplorerData() exception: %s', e)
           // fail safe
         }
         return result
       },
     }
-
     return explorer
   }
 

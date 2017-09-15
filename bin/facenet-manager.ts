@@ -26,6 +26,9 @@ function assertNever(obj: never): never {
 }
 
 async function main(args: Args): Promise<number> {
+  console.log(args)
+  log.level(args.log as any)
+
   log.verbose('Manager', `Facenet v${VERSION}`)
 
   checkUpdate()
@@ -73,14 +76,15 @@ interface Args {
   commands: [
     Command,
     string    // path
-  ]
+  ],
+  log : string
 }
 
 function parseArguments(): Args {
   const parser = new ArgumentParser({
-    version:      VERSION,
-    addHelp:      true,
-    description:  'FaceNet Manager',
+    version     : VERSION,
+    addHelp     : true,
+    description : 'FaceNet Manager',
   })
 
   parser.addArgument(
@@ -106,13 +110,13 @@ function parseArguments(): Args {
   //   },
   // )
 
-  // parser.addArgument(
-  //   [ '-l', '--log' ],
-  //   {
-  //     help: 'Log Level: verbose, silly',
-  //     defaultValue: 'info',
-  //   },
-  // )
+  parser.addArgument(
+    [ '-l', '--log' ],
+    {
+      help: 'Log Level: silent, verbose, silly',
+      defaultValue: 'info',
+    },
+  )
 
   return parser.parseArgs()
 }
@@ -122,8 +126,6 @@ process.on('warning', (warning) => {
   console.warn(warning.message); // Print the warning message
   console.warn(warning.stack);   // Print the stack trace
 });
-
-// log.level('silly')
 
 main(parseArguments())
 .then(process.exit)
