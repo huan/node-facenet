@@ -84,7 +84,8 @@ export class AlignmentEmbedding {
       getPath: (current: any) => {
         // If we don't have any parent, we are at tree root, so return the base case
         if (!current.parent)
-          return ''
+          // return ''
+          return workDir
         // Get the parent node path and add this node name
         return path.join(
           current.parent.getPath(current.parent),

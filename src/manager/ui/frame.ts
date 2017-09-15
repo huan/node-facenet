@@ -10,6 +10,7 @@ const contrib             = require('blessed-contrib')
 import {
   FILE_FACENET_ICON_PNG,
   // MODULE_ROOT,
+  log,
   VERSION,
 }                         from '../../config'
 
@@ -197,7 +198,8 @@ export class Frame extends EventEmitter {
     thumbList:    any[],  // contrib.picture
     distanceList: widget.Box[],
   ) {
-    this.emit('log', 'addFace() thumbList length: ' + thumbList.length + ', faceList.length: ' + faceList.length)
+    log.verbose('Frame', 'addFace(%s, %d, %d, %d)',
+                          face, faceList.length, thumbList.length, distanceList.length)
 
     let i = thumbList.length
 
@@ -205,7 +207,7 @@ export class Frame extends EventEmitter {
       if (i === 0) {
         faceList[0] = face
         this.showPicture(thumbList[i], face)
-            .then(() => this.emit('log', 'addFace(' + face.md5 + ')'))
+            .then(() => log.silly('Frame', 'addFace(%s) done', face))
       } else {
         const prevFace = faceList[i - 1]
         if (prevFace) {
@@ -261,9 +263,9 @@ export class Frame extends EventEmitter {
         const data = imageToData(image)
         const buffer = toBuffer(data)
         await this.showPicture(pic, buffer.toString('base64'))
-        this.emit('log', 'showPicture: ' + file)
+        log.verbose('Frame', 'addImageElement() on(image) %s', file)
       } catch (e) {
-        this.emit('log', 'image event: not support file: ' + e.message)
+        log.error('Frame', 'addImageElement() on(image) not support file format: %s', file)
       }
     })
   }
@@ -319,13 +321,26 @@ export class Frame extends EventEmitter {
       rows: 6,
       cols: 6,
     })
-    const log = grid.set(0, 0, 6, 6, contrib.log, {
-      fg        : 'green',
-      selectedFg: 'green',
-      label     : 'Log',
+    const rollingLog = grid.set(0, 0, 6, 6, (widget as any).log, {
+      tags: true,
+      keys: true,
+      vi: true,
+      mouse: true,
+      scrollbar: {
+        ch: ' ',
+        track: {
+          bg: 'yellow',
+        },
+        style: {
+          inverse: true,
+        },
+      },
+          // fg        : 'green',
+      // selectedFg: 'green',
+      // label     : 'Log',
     })
 
-    this.on('log', text => log.log(text))
+    this.on('log', text => rollingLog.log(text))
   }
 
   private addStatusElement(): void {

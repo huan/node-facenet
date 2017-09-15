@@ -71,7 +71,7 @@ export class Manager {
 
     this.frame = new Frame(this.screen)
 
-    // log.enableLogging((text: string) => this.frame.emit('log', text))
+    log.enableLogging((text: string) => this.frame.emit('log', text))
 
     const menuTextList = this.menuItemList().map(m => m.text)
     this.menu = new Menu(
