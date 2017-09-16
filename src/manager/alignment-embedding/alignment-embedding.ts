@@ -60,7 +60,7 @@ export class AlignmentEmbedding {
       {
         style:    { text: 'red' },
         template: { lines: true },
-        label:    'Filesystem Tree',
+        label:    ' Filesystem Tree ',
       },
     )
     tree.on('click', () => tree.focus())
@@ -78,55 +78,64 @@ export class AlignmentEmbedding {
       )
     }
 
+    const imageRegex = /\.(jpg|jpeg|tiff|png)$/i
+
     // file explorer
     const explorer = {
       name     : '/',
       extended : true,
       // Custom function used to recursively determine the node path
 
-      getPath: (node: any) => {
-        log.silly('AlignmentEmbedding', 'createExplorerData() getPath(%s)', node.name)
+      getPath: (self: any) => {
+        log.silly('AlignmentEmbedding', 'createExplorerData() getPath(%s)', self.name)
         // If we don't have any parent, we are at tree root, so return the base case
-        if (!node.parent)
+        if (!self.parent)
           return '/'
           // return workDir
 
         // Get the parent node path and add this node name
         return path.join(
-          node.parent.getPath(node.parent),
-          node.name,
+          self.parent.getPath(self.parent),
+          self.name,
         )
       },
 
       // Child generation function
-      children: (node: any) => {
-        log.silly('AlignmentEmbedding', 'createExplorerData() children(%s)', node.name)
+      children: (self: any) => {
+        // console.log('children: node: ' + self.name)
+        log.silly('AlignmentEmbedding', 'createExplorerData() children(%s)', self.name)
 
         // childrenContent is a property filled with self.children() result
-        if (node.childrenContent) {
+        if (self.childrenContent) {
           // log.verbose('childrenContent HIT')
-          return node.childrenContent
+          return self.childrenContent
         }
         // log.verbose('childrenContent MISS')
 
         const result = {} as any
-        const selfPath = node.getPath(node)
+        const selfPath = self.getPath(self)
         try {
           // List files in this directory
           const children = fs.readdirSync(selfPath + path.sep)
           for (const child of children) {
             const completePath = path.join(selfPath, child)
+            // console.error('XXX:', completePath)
             log.silly('AlignmentEmbedding', 'createExplorerData() children() for(child:%s)', completePath)
 
-            result[child] = {
+            const resultChild = {
               name     : child,
-              getPath  : node.getPath,
+              getPath  : self.getPath,
               extended : false,
-            }
+            } as any
 
             if (fs.lstatSync(completePath).isDirectory()) {
               // If it's a directory we generate the child with the children generation function
-              result[child]['children'] = node.children
+              resultChild['children'] = self.children
+              result[child] = resultChild
+            } else if (imageRegex.test(child)) {
+              result[child] = resultChild
+            } else {
+              // skip non-image files
             }
           }
         } catch (e) {
