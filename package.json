@@ -14,7 +14,7 @@
     "deasync": "^0.1.10",
     "event-stream": "^3.3.4",
     "glob": "^7.1.2",
-    "leveldown": "^1.7.2",
+    "leveldown": "^1.8.0",
     "levelup": "^1.3.9",
     "mkdirp": "^0.5.1",
     "numjs": "^0.14.2",

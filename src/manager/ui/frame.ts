@@ -157,10 +157,14 @@ export class Frame extends EventEmitter {
         height,
         top,
 
-        right:  0,
-        file:   FILE_FACENET_ICON_PNG,
-        border: 'line',
-        style:  {
+        keys   : true,
+        vi     : true,
+        mouse  : true,
+
+        right  : 0,
+        file   : FILE_FACENET_ICON_PNG,
+        border : 'line',
+        style  : {
           border: {
             fg: 'cyan',
           },
@@ -181,6 +185,16 @@ export class Frame extends EventEmitter {
 
       thumbList.push(thumbElement)
       distanceList.push(distanceElement)
+
+      thumbElement.on('click', () => {
+        const idx = thumbList.indexOf(thumbElement)
+        if (idx > 0                           // skip the first thumb
+            && faceList[idx]                  // face exist in thumb
+            && faceList[idx] !== faceList[0]  // face is not exist in the first thumb
+        ) {
+          this.emit('face', faceList[idx])
+        }
+      })
 
       this.append(thumbElement)
       this.append(distanceElement)
@@ -245,15 +259,18 @@ export class Frame extends EventEmitter {
       cols,
       height,
 
-      top   : 1,
-      border: 'line',
-      style : {
+      keys    : true,
+      vi      : true,
+      mouse   : true,
+      top     : 1,
+      border  : 'line',
+      file    : FILE_FACENET_ICON_PNG,
+      onReady : () => this.screen.render(),
+      style   : {
         border: {
           fg: 'cyan',
         },
       },
-      file:   FILE_FACENET_ICON_PNG,
-      onReady: () => this.screen.render(),
     })
     // console.log(MODULE_ROOT)
     this.append(pic)
@@ -321,7 +338,7 @@ export class Frame extends EventEmitter {
       rows: 6,
       cols: 6,
     })
-    const rollingLog = grid.set(0, 0, 6, 6, (widget as any).log, {
+    const rollingLog = grid.set(0, 0, 6, 6, contrib.log, {
       tags: true,
       keys: true,
       vi: true,
@@ -335,9 +352,9 @@ export class Frame extends EventEmitter {
           inverse: true,
         },
       },
-          // fg        : 'green',
-      // selectedFg: 'green',
-      // label     : 'Log',
+      fg        : 'green',
+      selectedFg: 'green',
+      label     : 'Log',
     })
 
     this.on('log', text => rollingLog.log(text))

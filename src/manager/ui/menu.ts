@@ -22,7 +22,7 @@ export class Menu {
 
   }
 
-  public async start(): Promise<number> {
+  public async start(wait = true): Promise<number> {
     log.verbose('Menu', 'start()')
 
     this.screen.title = 'FaceNet Manager'
@@ -32,7 +32,9 @@ export class Menu {
     this.textElement()
     this.versionElement()
 
-    await this.pressElement()
+    if (wait) {
+      await this.pressElement()
+    }
 
     const menuIndex = await this.menuElement()
     return menuIndex

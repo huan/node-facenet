@@ -124,9 +124,14 @@ export class Manager {
     const menuCallbackList = this.menuItemList()
                                   .map(m => m.callback)
 
+    let firstTime = true
     do {
       clear(this.screen)
-      const idx = await this.menu.start()
+
+      const idx = await this.menu.start(firstTime)
+      if (firstTime) {
+        firstTime = false
+      }
 
       clear(this.screen)
       await this.frame.init()

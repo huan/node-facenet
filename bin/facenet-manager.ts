@@ -27,6 +27,7 @@ function assertNever(obj: never): never {
 
 async function main(args: Args): Promise<number> {
   log.level(args.log as any)
+  log.timestamp(false)
 
   log.verbose('Manager', `Facenet v${VERSION}`)
 

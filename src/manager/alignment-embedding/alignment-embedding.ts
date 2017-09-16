@@ -61,7 +61,7 @@ export class AlignmentEmbedding {
         label:    'Filesystem Tree',
       },
     )
-
+    tree.on('click', () => tree.focus())
     return tree
   }
 
@@ -144,24 +144,27 @@ export class AlignmentEmbedding {
         await this.process(nodePath)
         this.frame.screen.render()
       } catch (e) {
-        this.frame.emit('log', 'tree on select exception: ' + e)
+        log.error('AlignmentEmbedding', 'bindSelectAction() tree on select exception: %s', e)
       }
     })
   }
 
   public async process(file: string): Promise<void> {
+    log.verbose('AlignmentEmbedding', 'process(%s)', file)
+
     this.frame.emit('image', file)
+
     const faceList = await this.alignmentCache.align(file)
-    this.frame.emit('log', 'faceList.length = ' + faceList.length)
+    log.silly('AlignmentEmbedding', 'process() faceList.length:%d', faceList.length)
 
     for (const face of faceList) {
       try {
-        this.frame.emit('log', 'face ' + face.md5)
-        this.frame.emit('face', face)
         face.embedding = await this.embeddingCache.embedding(face)
-        this.frame.emit('log', face.embedding.toString())
+        this.frame.emit('face', face)
+        log.silly('AlignmentEmbedding', 'process() face:%s embedding:%s',
+                                        face, face.embedding)
       } catch (e) {
-        this.frame.emit('log', 'on select exception: ' + e)
+        log.error('AlignmentEmbedding', 'process() exception:%s', e)
       }
     }
   }
