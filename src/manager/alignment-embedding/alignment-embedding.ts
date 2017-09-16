@@ -36,11 +36,13 @@ export class AlignmentEmbedding {
   public async start(workDir?: string): Promise<void> {
     const box = this.frame.box
 
-    const tree = this.createTreeElement(box)
+    const tree     = this.createTreeElement(box)
     const explorer = this.createExplorerData(workDir)
+
     tree.setData(explorer)
-    tree.focus()
     this.bindSelectAction(tree)
+
+    tree.focus()
 
     return new Promise<void>(resolve => this.frame.bindQuitKey(resolve))
   }
@@ -66,8 +68,8 @@ export class AlignmentEmbedding {
   }
 
   private createExplorerData(workDir?: string) {
-    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workDir)
-    console.error(workDir)
+    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workDir ? workDir : '')
+
     if (!workDir) {
       workDir = path.join(
         MODULE_ROOT,
@@ -78,47 +80,54 @@ export class AlignmentEmbedding {
 
     // file explorer
     const explorer = {
-      name: '/',
-      extended: true,
+      name     : '/',
+      extended : true,
       // Custom function used to recursively determine the node path
-      getPath: (current: any) => {
+
+      getPath: (node: any) => {
+        log.silly('AlignmentEmbedding', 'createExplorerData() getPath(%s)', node.name)
         // If we don't have any parent, we are at tree root, so return the base case
-        if (!current.parent)
-          // return ''
-          return workDir
+        if (!node.parent)
+          return '/'
+          // return workDir
+
         // Get the parent node path and add this node name
         return path.join(
-          current.parent.getPath(current.parent),
-          current.name,
+          node.parent.getPath(node.parent),
+          node.name,
         )
       },
+
       // Child generation function
-      children: (current: any) => {
-        let result = {} as any
-        const selfPath = current.getPath(current)
+      children: (node: any) => {
+        log.silly('AlignmentEmbedding', 'createExplorerData() children(%s)', node.name)
+
+        // childrenContent is a property filled with self.children() result
+        if (node.childrenContent) {
+          // log.verbose('childrenContent HIT')
+          return node.childrenContent
+        }
+        // log.verbose('childrenContent MISS')
+
+        const result = {} as any
+        const selfPath = node.getPath(node)
         try {
           // List files in this directory
           const children = fs.readdirSync(selfPath + path.sep)
+          for (const child of children) {
+            const completePath = path.join(selfPath, child)
+            log.silly('AlignmentEmbedding', 'createExplorerData() children() for(child:%s)', completePath)
 
-          // childrenContent is a property filled with self.children() result
-          // on tree generation (tree.setData() call)
-          if (!current.childrenContent) {
-            for (const child of children) {
-              const completePath = path.join(selfPath, child)
-
-              result[child] = {
-                name     : child,
-                getPath  : current.getPath,
-                extended : false,
-              }
-
-              if (fs.lstatSync(completePath).isDirectory()) {
-                // If it's a directory we generate the child with the children generation function
-                result[child]['children'] = current.children
-              }
+            result[child] = {
+              name     : child,
+              getPath  : node.getPath,
+              extended : false,
             }
-          } else {
-            result = current.childrenContent;
+
+            if (fs.lstatSync(completePath).isDirectory()) {
+              // If it's a directory we generate the child with the children generation function
+              result[child]['children'] = node.children
+            }
           }
         } catch (e) {
           log.error('AlignmentEmbedding', 'createExplorerData() exception: %s', e)
@@ -139,6 +148,10 @@ export class AlignmentEmbedding {
       // The filesystem root return an empty string as a base case
       if ( nodePath === '')
         nodePath = '/'
+
+      if (node.children) {
+        return  // directorhy, not a image file
+      }
 
       try {
         await this.process(nodePath)

@@ -149,7 +149,7 @@ export class Manager {
   public async alignmentEmbedding(
     pathname?: string,
   ): Promise<void> {
-    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname)
+    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname ? pathname : '')
 
     const ae = new AlignmentEmbedding(
       this.frame,

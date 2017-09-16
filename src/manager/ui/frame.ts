@@ -338,7 +338,7 @@ export class Frame extends EventEmitter {
       rows: 6,
       cols: 6,
     })
-    const rollingLog = grid.set(0, 0, 6, 6, contrib.log, {
+    const logger = grid.set(0, 0, 6, 6, contrib.log, {
       tags: true,
       keys: true,
       vi: true,
@@ -354,10 +354,10 @@ export class Frame extends EventEmitter {
       },
       fg        : 'green',
       selectedFg: 'green',
-      label     : 'Log',
+      label     : ' Log ',
     })
 
-    this.on('log', text => rollingLog.log(text))
+    this.on('log', text => logger.log(text))
   }
 
   private addStatusElement(): void {
