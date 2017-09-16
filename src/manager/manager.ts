@@ -90,14 +90,14 @@ export class Manager {
         },
       },
       {
-        text     : 'Validate on LFW',
+        text     : 'Validate on LFW(To Be Implemented)',
         callback : async () => {
           console.log('validate lfw')
           return true
         },
       },
       {
-        text     : 'Sort Photos Group by Face',
+        text     : 'Sort Photos Group by Face(To Be Implemented)',
         callback : async () => {
           console.log('sort')
           return true

@@ -145,7 +145,7 @@ export class Menu {
       tags:   true,
       top:    31,
       left:   'center',
-      width:  40,
+      width:  50,
       height: this.menuList.length + 2,
       keys:   true,
       vi:     true,
