@@ -106,13 +106,14 @@
   },
   "homepage": "https://github.com/zixia/node-facenet#readme",
   "files": [
-    "CHANGELOG",
-    "LICENSE",
-    "README.md",
-    "package.json",
-    "requirements.txt",
     "bin/",
+    "CHANGELOG",
     "dist/",
+    "docs/images/facenet-icon.png",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "requirements.txt",
     "src/"
   ],
   "bin": {
