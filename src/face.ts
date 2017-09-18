@@ -136,7 +136,7 @@ export class Face {
     } = this
 
     return {
-      _embedding: _embedding.tolist(),
+      _embedding: _embedding && _embedding.tolist(),
       boundingBox,
       confidence,
       facialLandmark,
