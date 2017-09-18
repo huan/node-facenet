@@ -32,7 +32,7 @@ export interface FacialLandmark {
 }
 
 export interface FaceJsonObject {
-  _embedding:     FaceEmbedding,
+  _embedding:     number[],
   boundingBox?:   number[],
   confidence:     number,
   facialLandmark: FacialLandmark,
@@ -136,7 +136,7 @@ export class Face {
     } = this
 
     return {
-      _embedding,
+      _embedding: _embedding.tolist(),
       boundingBox,
       confidence,
       facialLandmark,
@@ -166,7 +166,9 @@ export class Face {
       ],
     )
 
-    face._embedding     = obj._embedding && nj.array(obj._embedding)
+    if (obj._embedding && obj._embedding.length) {
+      face._embedding   =  nj.array(obj._embedding)
+    }
     face.boundingBox    = obj.boundingBox
     face.facialLandmark = obj.facialLandmark
     face.rect           = obj.rect
@@ -221,6 +223,8 @@ export class Face {
   public set embedding(embedding: FaceEmbedding) {
     if (this._embedding) {
       throw new Error('already had embedding!')
+    } else if (!embedding.shape) {
+      throw new Error('embedding has no shape property!')
     } else if (embedding.shape[0] !== 128) {
       throw new Error('embedding dim is not 128!')
     }
