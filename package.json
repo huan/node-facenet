@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.2.49",
+  "version": "0.2.50",
   "description": "Solve face verification, recognition and clustering problems: a TensorFlow backed FaceNet implementation for Node.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -106,13 +106,14 @@
   },
   "homepage": "https://github.com/zixia/node-facenet#readme",
   "files": [
-    "CHANGELOG",
-    "LICENSE",
-    "README.md",
-    "package.json",
-    "requirements.txt",
     "bin/",
+    "CHANGELOG",
     "dist/",
+    "docs/images/facenet-icon.png",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "requirements.txt",
     "src/"
   ],
   "bin": {
