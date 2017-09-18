@@ -17,6 +17,7 @@ import {
   imageMd5,
   imageToData,
   loadImage,
+  saveImage,
   toBuffer,
   toDataURL,
 }                           from './misc'
@@ -254,12 +255,15 @@ export class Face {
     return distance(this.embedding, faceEmbeddingNdArray)[0]
   }
 
-  public toDataUrl(): string {
+  public dataUrl(): string {
     return toDataURL(this.imageData)
   }
 
-  public toBuffer(): Buffer {
+  public buffer(): Buffer {
     return toBuffer(this.imageData)
   }
 
+  public async save(filename: string): Promise<void> {
+    await saveImage(this.imageData, filename)
+  }
 }
