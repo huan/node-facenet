@@ -31,7 +31,7 @@ export interface FacialLandmark {
 }
 
 export interface FaceJsonObject {
-  _embedding:     FaceEmbedding,
+  _embedding:     number[],
   boundingBox?:   number[],
   confidence:     number,
   facialLandmark: FacialLandmark,
@@ -135,7 +135,7 @@ export class Face {
     } = this
 
     return {
-      _embedding,
+      _embedding: _embedding.tolist(),
       boundingBox,
       confidence,
       facialLandmark,
@@ -145,7 +145,9 @@ export class Face {
   }
 
   public static fromJSON(obj: FaceJsonObject | string): Face {
+    log.verbose('Face', 'fromJSON(%s)', typeof obj)
     if (typeof obj === 'string') {
+      log.silly('Face', 'fromJSON() JSON.parse(obj)')
       obj = JSON.parse(obj) as FaceJsonObject
     }
 
