@@ -75,6 +75,8 @@ t.test('constructor()', async (t: any) => {
 })
 
 t.test('JSON implementations', async (t: any) => {
+  // TODO: add _embedding json test
+
   const IMAGE_DATA  = fixtureImageData3x3()
   const BOX         = [0, 0, 2, 2]
   const CONFIDENCE  = 1

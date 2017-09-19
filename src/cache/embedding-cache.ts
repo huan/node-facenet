@@ -57,7 +57,7 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
       fs.mkdirSync(this.workDir)
     }
 
-    const dbName = 'embedding'
+    const dbName = 'embedding.db'
     this.db = new DbCache(
       path.join(this.workDir, dbName),
     )

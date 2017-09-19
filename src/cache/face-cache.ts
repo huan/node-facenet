@@ -17,8 +17,8 @@ import { DbCache }      from './db-cache'
 
 export class FaceCache {
   public db: DbCache
-  public dbName   = 'face'
-  public cacheDir = 'cache.face'
+  public dbName   = 'face.db'
+  public cacheDir = 'face.file'
 
   constructor(
     public workDir: string,
@@ -47,7 +47,7 @@ export class FaceCache {
 
   }
 
-  public async clean(): Promise<void> {
+  public async destroy(): Promise<void> {
     log.verbose('FaceCache', 'clean()')
     await this.db.clean()
     const cacheDir = path.join(this.workDir, this.cacheDir)

@@ -65,7 +65,7 @@ export class AlignmentCache extends EventEmitter implements Alignable {
     }
 
     if (!this.db) {
-      const dbName = 'alignment'
+      const dbName = 'alignment.db'
 
       this.db = new DbCache(
         path.join(this.workDir, dbName),

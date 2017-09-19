@@ -289,15 +289,15 @@ export class Frame extends EventEmitter {
 
   private async showPicture(
     picture:         any,
-    base64OrFace?: string | Face,
+    faceOrBase64?: string | Face,
   ): Promise<void> {
     let base64: string | undefined
 
-    if (base64OrFace instanceof Face) {
-      base64 = base64OrFace.toBuffer()
+    if (faceOrBase64 instanceof Face) {
+      base64 = faceOrBase64.buffer()
                             .toString('base64')
     } else {
-      base64 = base64OrFace
+      base64 = faceOrBase64
     }
 
     // 2 is padding for border, 2 is for picture-tube `dx = png.width / opts.cols`

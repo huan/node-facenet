@@ -17,6 +17,7 @@ import {
   imageMd5,
   imageToData,
   loadImage,
+  saveImage,
   toBuffer,
   toDataURL,
 }                           from './misc'
@@ -134,14 +135,20 @@ export class Face {
       rect,
     } = this
 
-    return {
-      _embedding: _embedding.tolist(),
+    const obj = {
+      _embedding: [],
       boundingBox,
       confidence,
       facialLandmark,
       imageData,
       rect,
     }
+
+    if (_embedding) {
+      obj._embedding = _embedding.tolist()
+    }
+
+    return obj
   }
 
   public static fromJSON(obj: FaceJsonObject | string): Face {
@@ -167,7 +174,9 @@ export class Face {
       ],
     )
 
-    face._embedding     = obj._embedding && nj.array(obj._embedding)
+    if (obj._embedding && obj._embedding.length) {
+      face._embedding   =  nj.array(obj._embedding)
+    }
     face.boundingBox    = obj.boundingBox
     face.facialLandmark = obj.facialLandmark
     face.rect           = obj.rect
@@ -222,6 +231,8 @@ export class Face {
   public set embedding(embedding: FaceEmbedding) {
     if (this._embedding) {
       throw new Error('already had embedding!')
+    } else if (!embedding.shape) {
+      throw new Error('embedding has no shape property!')
     } else if (embedding.shape[0] !== 128) {
       throw new Error('embedding dim is not 128!')
     }
@@ -256,12 +267,15 @@ export class Face {
     return distance(this.embedding, faceEmbeddingNdArray)[0]
   }
 
-  public toDataUrl(): string {
+  public dataUrl(): string {
     return toDataURL(this.imageData)
   }
 
-  public toBuffer(): Buffer {
+  public buffer(): Buffer {
     return toBuffer(this.imageData)
   }
 
+  public async save(filename: string): Promise<void> {
+    await saveImage(this.imageData, filename)
+  }
 }
