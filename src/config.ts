@@ -3,6 +3,9 @@ import * as path  from 'path'
 import { Brolog } from 'brolog'
 import * as nj    from 'numjs'
 
+// import * as appRoot from 'app-root-path'
+// export const MODULE_ROOT = appRoot.path
+
 export const log = new Brolog()
 
 export function parentDirectory(): string {     // export for test
