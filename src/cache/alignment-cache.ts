@@ -30,11 +30,11 @@ export type AlignmentCacheEvent = 'hit' | 'miss'
 
 export class AlignmentCache extends EventEmitter implements Alignable {
   public db:        DbCache
-  public faceCache: FaceCache
 
   constructor(
-    public facenet: Facenet,
-    public workDir: string,
+    public facenet   : Facenet,
+    public faceCache : FaceCache,
+    public workDir   : string,
   ) {
     super()
     log.verbose('AlignmentCache', 'constructor(%s)', workDir)
@@ -71,13 +71,11 @@ export class AlignmentCache extends EventEmitter implements Alignable {
         path.join(this.workDir, dbName),
       )
     }
-
-    this.faceCache = new FaceCache(this.workDir)
   }
 
-  public async clean(): Promise<void> {
+  public async destroy(): Promise<void> {
     log.verbose('AlignmentCache', 'clean()')
-    await this.db.clean()
+    await this.db.destroy()
   }
 
   public async align(image: ImageData | string ): Promise<Face[]> {

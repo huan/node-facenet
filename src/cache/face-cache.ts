@@ -48,8 +48,8 @@ export class FaceCache {
   }
 
   public async destroy(): Promise<void> {
-    log.verbose('FaceCache', 'clean()')
-    await this.db.clean()
+    log.verbose('FaceCache', 'destroy()')
+    await this.db.destroy()
     const cacheDir = path.join(this.workDir, this.cacheDir)
     rimraf.sync(cacheDir)
   }

@@ -6,6 +6,7 @@ import { ArgumentParser } from 'argparse'
 import {
   AlignmentCache,
   EmbeddingCache,
+  FaceCache,
   Facenet,
   Lfw,
   log,
@@ -15,20 +16,23 @@ import {
 async function main(args: Args): Promise<number> {
   log.level(args.log as any)
 
-  let directory: string
+  let workDir: string
   if (args.directory.startsWith(path.sep)) {
-    directory = args.directory
+    workDir = args.directory
   } else {
-    directory = path.join(process.cwd(), args.directory)
+    workDir = path.join(process.cwd(), args.directory)
   }
 
   const facenet = new Facenet()
-  const lfw = new Lfw(directory)
+  const lfw = new Lfw(workDir)
 
-  const alignmentCache = new AlignmentCache(facenet, directory)
-  const embeddingCache = new EmbeddingCache(facenet, directory)
+  const faceCache      = new FaceCache(workDir)
+  const alignmentCache = new AlignmentCache(facenet, faceCache, workDir)
+  const embeddingCache = new EmbeddingCache(facenet, workDir)
+
   await alignmentCache.init()
   await embeddingCache.init()
+  await faceCache.init()
   await facenet.init()
 
   const count = await embeddingCache.count()
@@ -50,8 +54,8 @@ async function main(args: Args): Promise<number> {
                                         count,
               )
       break
-    case 'clean':
-      await embeddingCache.clean()
+    case 'destroy':
+      await embeddingCache.destroy()
       log.info('EmbeddingCacheManager', 'cleaned %d entries', count)
       break
     default:

@@ -18,6 +18,7 @@ import {
 import {
   AlignmentCache,
   EmbeddingCache,
+  FaceCache,
 }                       from '../cache/'
 
 import {
@@ -36,9 +37,10 @@ interface MenuItem {
 }
 
 export class Manager {
-  private facenet:        Facenet
-  private alignmentCache: AlignmentCache
-  private embeddingCache: EmbeddingCache
+  private facenet        : Facenet
+  private alignmentCache : AlignmentCache
+  private embeddingCache : EmbeddingCache
+  private faceCache      : FaceCache
 
   private frame:  Frame
   private screen: widget.Screen
@@ -47,14 +49,15 @@ export class Manager {
   constructor() {
     log.verbose('Manager', 'constructor()')
 
-    const cacheDir = path.join(MODULE_ROOT, 'cache')
-    if (!fs.existsSync(cacheDir)) {
-      fs.mkdirSync(cacheDir)
+    const workDir = path.join(MODULE_ROOT, 'cache')
+    if (!fs.existsSync(workDir)) {
+      fs.mkdirSync(workDir)
     }
 
     this.facenet        = new Facenet()
-    this.alignmentCache = new AlignmentCache(this.facenet, cacheDir)
-    this.embeddingCache = new EmbeddingCache(this.facenet, cacheDir)
+    this.faceCache      = new FaceCache(workDir)
+    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, workDir)
+    this.embeddingCache = new EmbeddingCache(this.facenet, workDir)
 
     this.screen = new widget.Screen({
       smartCSR: true,
@@ -68,6 +71,7 @@ export class Manager {
 
     await this.alignmentCache.init()
     await this.embeddingCache.init()
+    await this.faceCache.init()
 
     this.frame = new Frame(this.screen)
 

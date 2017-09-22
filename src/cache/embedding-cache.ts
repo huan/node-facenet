@@ -86,7 +86,7 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     return await this.db.count()
   }
 
-  public async clean(): Promise<void> {
-    return await this.db.clean()
+  public async destroy(): Promise<void> {
+    return await this.db.destroy()
   }
 }

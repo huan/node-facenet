@@ -31,7 +31,7 @@ export class DbCache {
     return new Promise<Object | null>((resolve, reject) => {
       this.db.get(key, (err, value) => {
         if (err) {
-          if (/NotFoundError/.test(err)) {
+          if (/^NotFoundError/.test(err)) {
             return resolve(null)
           }
           reject(err)
@@ -91,8 +91,8 @@ export class DbCache {
     this.db.close()
   }
 
-  public async clean(): Promise<void> {
-    log.verbose('DbCache', 'clean()')
+  public async destroy(): Promise<void> {
+    log.verbose('DbCache', 'destroy()')
     this.db.close()
     return new Promise<void>((resolve, reject) => {
       rimraf(this.workDir, (err) => {
