@@ -312,11 +312,16 @@ This repository is heavily inspired by the following implementations:
 
 # CHANGELOG
 
-## v0.3 / Master
+## v0.4 Master
+
+1. Added `facenet-manager` command line tool for demo/validate/sort photos
+
+## v0.3 Sep 2017
 
 1. Added three cache classes: AlignmentCache & EmbeddingCache & FaceCache.
 1. Added cache manager utilities: embedding-cache-manager & alignment-cache-manager & face-cache-manager
 1. Added Dataset manager utility: lfw-manager (should be dataset-manager in future)
+1. BREAKING CHANGE: `Face` class refactoring.
 
 ## v0.2 Aug 2017 (BREAKING CHANGES)
 
