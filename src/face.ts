@@ -32,12 +32,12 @@ export interface FacialLandmark {
 }
 
 export interface FaceJsonObject {
-  _embedding:     number[],
-  boundingBox?:   number[],
-  confidence:     number,
-  facialLandmark: FacialLandmark,
-  imageData:      string,   // Base64 of Buffer
-  rect:           Rectangle,
+  embedding      : number[],
+  boundingBox?   : number[],
+  confidence     : number,
+  facialLandmark : FacialLandmark,
+  imageData      : string,           // Base64 of Buffer
+  rect           : Rectangle,
 }
 
 export class Face {
@@ -128,24 +128,22 @@ export class Face {
     const imageData = Buffer.from(this.imageData.data.buffer)
                             .toString('base64')
     const {
-      _embedding,
+      embedding,
       boundingBox,
       confidence,
       facialLandmark,
       rect,
     } = this
 
+    const embeddingArray = embedding ? embedding.tolist() : []
+
     const obj = {
-      _embedding: [],
+      embedding: embeddingArray,  // turn nj.NdArray to javascript array
       boundingBox,
       confidence,
       facialLandmark,
       imageData,
       rect,
-    }
-
-    if (_embedding) {
-      obj._embedding = _embedding.tolist()
     }
 
     return obj
@@ -174,8 +172,8 @@ export class Face {
       ],
     )
 
-    if (obj._embedding && obj._embedding.length) {
-      face._embedding   =  nj.array(obj._embedding)
+    if (obj.embedding && obj.embedding.length) {
+      face.embedding   =  nj.array(obj.embedding)
     }
     face.boundingBox    = obj.boundingBox
     face.facialLandmark = obj.facialLandmark
