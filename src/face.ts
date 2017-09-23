@@ -236,10 +236,9 @@ export class Face {
       obj = JSON.parse(obj) as FaceJsonObject
     }
 
-    const buffer  = Buffer.from(obj.imageData, 'base64')
-    const array   = new Uint8ClampedArray(buffer)
-
-    const location = obj.location
+    const buffer    = Buffer.from(obj.imageData, 'base64')
+    const array     = new Uint8ClampedArray(buffer)
+    const location  = obj.location
     const imageData = createImageData(array, location.w, location.h)
 
     const face = new Face(imageData)
@@ -252,15 +251,17 @@ export class Face {
       obj.location.x + obj.location.w,
       obj.location.y + obj.location.h,
     ]
+
     options.confidence = obj.confidence
+
     if (obj.landmark) {
       const m = obj.landmark
       options.landmarks  = [
-        [m.leftEye.x, m.leftEye.y],
-        [m.rightEye.x, m.rightEye.y],
+        [m.leftEye.x,   m.leftEye.y],
+        [m.rightEye.x,  m.rightEye.y],
         [m.nose.x, m.nose.y],
-        [m.leftMouthCorner.x, m.leftMouthCorner.y],
-        [m.rightMouthCorner.x, m.rightMouthCorner.y],
+        [m.leftMouthCorner.x,   m.leftMouthCorner.y],
+        [m.rightMouthCorner.x,  m.rightMouthCorner.y],
       ]
     }
 
@@ -269,9 +270,10 @@ export class Face {
     face.init(options)
 
     if (obj.embedding && obj.embedding.length) {
-      face.embedding   =  nj.array(obj.embedding)
+      face.embedding =  nj.array(obj.embedding)
     } else {
-      log.warn('Face', 'fromJSON() no embedding found')
+      log.warn('Face', 'fromJSON() no embedding found for face %s#%s',
+                        face.id, face.md5)
     }
 
     return face

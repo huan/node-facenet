@@ -157,6 +157,7 @@ export class Manager {
 
     const ae = new AlignmentEmbedding(
       this.frame,
+      this.faceCache,
       this.alignmentCache,
       this.embeddingCache,
     )

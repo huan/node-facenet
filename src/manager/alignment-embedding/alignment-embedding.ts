@@ -13,6 +13,7 @@ import {
 import {
   AlignmentCache,
   EmbeddingCache,
+  FaceCache,
 }                 from '../../cache/'
 
 import {
@@ -27,9 +28,10 @@ import {
 export class AlignmentEmbedding {
 
   constructor(
-    public frame:           Frame,
-    public alignmentCache:  AlignmentCache,
-    public embeddingCache:  EmbeddingCache,
+    public frame          : Frame,
+    public faceCache      : FaceCache,
+    public alignmentCache : AlignmentCache,
+    public embeddingCache : EmbeddingCache,
   ) {
   }
 
@@ -181,7 +183,10 @@ export class AlignmentEmbedding {
 
     for (const face of faceList) {
       try {
-        face.embedding = await this.embeddingCache.embedding(face)
+        if (!face.embedding) {
+          face.embedding = await this.embeddingCache.embedding(face)
+          await this.faceCache.put(face)
+        }
         this.frame.emit('face', face)
         log.silly('AlignmentEmbedding', 'process() face:%s embedding:%s',
                                         face, face.embedding)
