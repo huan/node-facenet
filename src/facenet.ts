@@ -96,8 +96,12 @@ export class Facenet implements Alignable, Embeddingable {
         continue
       }
 
-      const face = new Face(imageData, boundingBox)
-      face.init(marks, confidence)
+      const face = new Face(imageData)
+      await face.init({
+        boundingBox,
+        landmarks: marks,
+        confidence,
+      })
       // face.confidence(confidence)
       // face.landmarks(marks)
       faceList.push(face)
@@ -113,6 +117,9 @@ export class Facenet implements Alignable, Embeddingable {
     log.verbose('Facenet', 'embedding(%s)', face)
 
     let imageData = face.imageData
+    if (!imageData) {
+      throw new Error('no imageData!')
+    }
     if (imageData.width !== imageData.height) {
       log.warn('Facenet', 'embedding(%s) %dx%d not square!',
                           face, imageData.width, imageData.height)
@@ -199,8 +206,16 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   public distance(face: Face, faceList: Face[]): number[] {
+    if (!face.embedding) {
+      throw new Error('no face embedding!')
+    }
+    for (const aFace of faceList) {
+      if (!aFace.embedding) {
+        throw new Error('no aFace embedding!')
+      }
+    }
     const embeddingList     = faceList.map(f => f.embedding)
-    const embeddingNdArray  = nj.stack(embeddingList)
+    const embeddingNdArray  = nj.stack<number>(embeddingList as any)
 
     return distance(
       face.embedding,

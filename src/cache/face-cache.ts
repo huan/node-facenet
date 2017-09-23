@@ -78,6 +78,10 @@ export class FaceCache {
     }
 
     let imageData = face.imageData
+    if (!imageData) {
+      throw new Error('no imageData!')
+    }
+
     if (imageData.width !== 160) {
       imageData = await resizeImage(imageData, 160, 160)
     }

@@ -55,9 +55,9 @@ async function main(args: Args) {
 
     const newImage = gm(imageFile)
     for (const face of faceList) {
-      const mark = face.facialLandmark
+      const mark = face.landmark
       const color = randomColor()
-      const {x, y, w, h} = face.rect
+      const {x, y, w, h} = face.location || {x: 0, y: 0, w: 0, h: 0}
       const base = Math.floor(w + h) / 50 + 1
       newImage.fill('none')
               .stroke(color, base * 1)
@@ -69,15 +69,17 @@ async function main(args: Args) {
                 base * 5,
               )
 
-      Object.keys(mark).forEach((k) => {
-        const p = mark[k]
-        newImage.fill(color)
-                .stroke('none', 0)
-                .drawCircle(
-                  p.x, p.y,
-                  p.x + base, p.y + base,
-                )
-      })
+      if (mark) {
+        Object.keys(mark).forEach((k) => {
+          const p = mark[k]
+          newImage.fill(color)
+                  .stroke('none', 0)
+                  .drawCircle(
+                    p.x, p.y,
+                    p.x + base, p.y + base,
+                  )
+        })
+      }
     }
 
     newImage.noProfile().write(args.output, err => {
