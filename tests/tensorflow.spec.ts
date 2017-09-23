@@ -1,11 +1,11 @@
 #!/usr/bin/env ts-node
-const t = require('tap')  // tslint:disable:no-shadowed-variable
+import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import { pythonBridge }   from 'python-bridge'
 
 import { PythonFacenet }  from '../src/python3/python-facenet'
 
-t.test('tensorflow module import', async (t: any) => {
+test('tensorflow module import', async t => {
   const pf = new PythonFacenet()
   const python = pf.python3
 
@@ -21,7 +21,7 @@ t.test('tensorflow module import', async (t: any) => {
   }
 })
 
-t.test('tensorflow smoke testing', async (t: any) => {
+test('tensorflow smoke testing', async t => {
   const pf = new PythonFacenet()
   pf.initVenv()
 

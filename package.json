@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "app-root-path": "^2.0.1",
     "argparse": "^1.0.9",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
@@ -49,8 +48,7 @@
     "nyc": "^11.1.0",
     "shx": "^0.2.2",
     "sinon": "^3.2.1",
-    "sinon-test": "^2.1.0",
-    "tap": "^10.7.2",
+    "sinon-test": "^2.1.1",
     "tape": "^4.8.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
@@ -80,7 +78,7 @@
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run test:py && npm run test:ts",
     "test:coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:ts": "tap --timeout=600 \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
+    "test:ts": "tape -r ts-node/register \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
     "test:npm": "cross-env-shell TMPDIR=/tmp/npm-package-test.$$ 'npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/facenet-smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node facenet-smoke-testing.js'",
     "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt"

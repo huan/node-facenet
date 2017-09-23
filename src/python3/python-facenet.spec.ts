@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 import * as path          from 'path'
 
-const t             = require('tap')  // tslint:disable:no-shadowed-variable
+import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
 import * as nj            from 'numjs'
 
 import {
@@ -14,7 +14,7 @@ import {
 
 import { PythonFacenet }  from './python-facenet'
 
-t.test('PythonFacenet python venv', async (t: any) => {
+test('PythonFacenet python venv', async t => {
   const pf = new PythonFacenet()
   t.ok(pf, 'should be instanciated')
 
@@ -26,7 +26,7 @@ t.test('PythonFacenet python venv', async (t: any) => {
   pf.quit()
 })
 
-// t.test('JSON bridge', async (t: any) => {
+// test('JSON bridge', async t => {
 //   const DATA1 = [[1, 2], [3, 4], [5, 6]]
 //   const DATA2 = {
 //     a: [[1, 2], [3, 4], [5, 6]],
@@ -46,7 +46,7 @@ t.test('PythonFacenet python venv', async (t: any) => {
 //   pf.quit()
 // })
 
-t.test('Base64 bridge', async (t: any) => {
+test('Base64 bridge', async t => {
   const IMAGE_RGB_DATA = [
     [
       [254, 0, 0],
@@ -81,7 +81,7 @@ t.test('Base64 bridge', async (t: any) => {
   }
 })
 
-t.test('align()', async (t: any) => {
+test('align()', async t => {
   const pf = new PythonFacenet()
   const IMAGE_FILE = path.resolve(MODULE_ROOT, 'tests/fixtures/two-faces.jpg')
 
@@ -105,7 +105,7 @@ t.test('align()', async (t: any) => {
   }
 })
 
-t.test('embedding()', async (t: any) => {
+test('embedding()', async t => {
   const pf = new PythonFacenet()
 
   try {

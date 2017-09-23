@@ -70,7 +70,7 @@ export class Face {
               )
   }
 
-  public async init(options: FaceOptions): Promise<this> {
+  public async init(options: FaceOptions = {}): Promise<this> {
     log.verbose('Face', 'init()')
 
     if (options.confidence) {

@@ -1,10 +1,10 @@
 #!/usr/bin/env ts-node
 
-const t = require('tap') // tslint:disable:no-shadowed-variable
+import * as test        from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import { pythonBridge } from 'python-bridge'
 
-t.test('python 3 version test', async (t: any) => {
+test('python 3 version test', async t => {
   const python = pythonBridge({
     python: 'python3',
   })
@@ -22,7 +22,7 @@ t.test('python 3 version test', async (t: any) => {
   }
 })
 
-t.test('math test', async (t: any) => {
+test('math test', async t => {
   const python = pythonBridge()
 
   try {
@@ -36,7 +36,7 @@ t.test('math test', async (t: any) => {
   }
 })
 
-t.test('list test', async (t: any) => {
+test('list test', async t => {
   const python = pythonBridge()
 
   const list = [3, 4, 2, 1]

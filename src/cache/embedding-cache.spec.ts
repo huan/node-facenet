@@ -2,7 +2,7 @@
 import * as fs            from 'fs'
 import { promisify }      from 'util'
 
-const t                   = require('tap')  // tslint:disable:no-shadowed-variable
+import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import * as sinon         from 'sinon'
 const sinonTest           = require('sinon-test')(sinon)
@@ -25,7 +25,7 @@ import {
 
 const TMP_PREFIX = '/tmp/facenet-embedding-cache-test-'
 
-t.test('Create workdir by init()', async (t: any) => {
+test('Create workdir by init()', async t => {
   const facenet = new Facenet()
 
   const workDir = TMP_PREFIX + process.pid
@@ -42,7 +42,7 @@ t.test('Create workdir by init()', async (t: any) => {
   }
 })
 
-t.test('Cache', sinonTest(async function (t: any) {
+test('Cache', sinonTest(async function (t: test.Test) {
   const EXPECTED_EMBEDDING = nj.arange(128)
 
   const embeddingStub = sinon.stub(
@@ -68,8 +68,9 @@ t.test('Cache', sinonTest(async function (t: any) {
   embeddingCache.on('hit', hitSpy)
   embeddingCache.on('miss', missSpy)
 
-  t.test('miss', async (t: any) => {
+  t.test('miss', async t => {
     const face = new Face(fixtureImageData3x3())
+    await face.init()
 
     embeddingStub.resetHistory()
     hitSpy.reset()
@@ -83,8 +84,9 @@ t.test('Cache', sinonTest(async function (t: any) {
     t.deepEqual(face.embedding.tolist(), EXPECTED_EMBEDDING.tolist(), 'should be equal to embedding data')
   })
 
-  t.test('hit', async (t: any) => {
+  t.test('hit', async t => {
     const face = new Face(fixtureImageData3x3())
+    await face.init()
 
     embeddingStub.resetHistory()
     hitSpy.reset()

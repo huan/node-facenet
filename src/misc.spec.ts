@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 import * as path          from 'path'
 
-const t             = require('tap')  // tslint:disable:no-shadowed-variable
+import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import * as ndarray from 'ndarray'
 import * as nj      from 'numjs'
@@ -25,7 +25,7 @@ import {
   fixtureImageData3x3,
 }                         from '../tests/fixtures/'
 
-t.test('bufResizeUint8ClampedRGBA()', async (t: any) => {
+test('bufResizeUint8ClampedRGBA()', async t => {
   const UINT8_CLAMPED_ARRAY = new Uint8ClampedArray([
     1, 1, 1, 255,
     2, 2, 2, 255,
@@ -40,7 +40,7 @@ t.test('bufResizeUint8ClampedRGBA()', async (t: any) => {
   t.equal(resizedArray.data.length, EXPECTED_LENGTH, 'should get small buffer')
 })
 
-t.test('resizeImage()', async (t: any) => {
+test('resizeImage()', async t => {
   const UINT8_CLAMPED_ARRAY = new Uint8ClampedArray([
     0, 0, 0, 255,
     0, 0, 0, 255,
@@ -56,7 +56,7 @@ t.test('resizeImage()', async (t: any) => {
   t.deepEqual(resizedData.data, EXPECTED_DATA, 'should get resized data')
 })
 
-t.test('imageMd5()', async (t: any) => {
+test('imageMd5()', async t => {
   const IMAGE_FILE = path.join(
     __dirname,
     '..',
@@ -73,7 +73,7 @@ t.test('imageMd5()', async (t: any) => {
   t.equal(md5Text, EXPECTED_MD5, 'should calc md5 right')
 })
 
-t.test('cropImage()', async (t: any) => {
+test('cropImage()', async t => {
   const imageData = fixtureImageData3x3()
   /**
    * 1 2 3
@@ -97,28 +97,28 @@ t.test('cropImage()', async (t: any) => {
     6, 6, 6, 255,
   ]
 
-  t.test('should get right for rect[0, 0, 1, 1]', async (t: any) => {
+  t.test('should get right for rect[0, 0, 1, 1]', async t => {
     const croppedImage = cropImage(imageData, 0, 0, 1, 1)
     t.deepEqual(croppedImage.data, EXPECTED_DATA_CROP_0_0_1_1, 'should get cropped image data right for [0 0 1 1]')
   })
 
-  t.test('should get right for rect[1, 1, 1, 1]', async (t: any) => {
+  t.test('should get right for rect[1, 1, 1, 1]', async t => {
     const croppedImage = cropImage(imageData, 1, 1, 1, 1)
     t.deepEqual(croppedImage.data, EXPECTED_DATA_CROP_1_1_1_1, 'should get cropped image data right for [1 1 1 1]')
   })
 
-  t.test('should get right for rect[0, 0, 3, 2]', async (t: any) => {
+  t.test('should get right for rect[0, 0, 3, 2]', async t => {
     const croppedImage = cropImage(imageData, 0, 0, 3, 2)
     t.deepEqual(croppedImage.data, EXPECTED_DATA_CROP_0_0_3_2, 'should get cropped image data right for [0 0 3 2]')
   })
 })
 
-t.test('Image/Data convert', async (t: any) => {
+test('Image/Data convert', async t => {
   const IMAGE_DATA = fixtureImageData3x3()
   // tslint:disable-next-line:max-line-length
   const IMAGE = await loadImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAABmJLR0QA/wD/AP+gvaeTAAAAHElEQVQImWNkZGT8z8jIyMDIyMjAwszMzICVAwAmtQEw+Y/4igAAAABJRU5ErkJggg==')
 
-  t.test('dataToImage()', async (t: any) => {
+  t.test('dataToImage()', async t => {
     const canvas = createCanvas(3, 3)
     const ctx = canvas.getContext('2d')
     const image = await dataToImage(IMAGE_DATA)
@@ -130,21 +130,21 @@ t.test('Image/Data convert', async (t: any) => {
     t.deepEqual(data, IMAGE_DATA, 'should conver data to image right')
   })
 
-  t.test('imageToData', async (t: any) => {
+  t.test('imageToData', async t => {
     const data = imageToData(IMAGE)
     t.deepEqual(data, IMAGE_DATA, 'should conver image to data right')
   })
 })
 
-t.test('distance()', async (t: any) => {
-  t.test('embedding list contains 1 row', async (t: any) => {
+test('distance()', async t => {
+  t.test('embedding list contains 1 row', async t => {
     const a = nj.array([0, 3])
     const b = nj.array([4, 0]).reshape(1, 2) as nj.NdArray
     const c = distance(a, b)
     t.equal(c[0], 5, 'should get 5 for triangle 3&4&5')
   })
 
-  t.test('embedding list contains 3 row', async (t: any) => {
+  t.test('embedding list contains 3 row', async t => {
     const a = nj.array([0, 3])
     const b = nj.array([
       4, 0,
@@ -157,7 +157,7 @@ t.test('distance()', async (t: any) => {
 
 })
 
-t.test('Data Convertions', async (t: any) => {
+test('Data Convertions', async t => {
   const IMAGE_DATA = fixtureImageData3x3()
   const EXPECTED_DATA_URL = 'data:image/png;base64,'
     + 'iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAABmJLR0QA/wD/AP+gvaeTAA'
@@ -165,12 +165,12 @@ t.test('Data Convertions', async (t: any) => {
 
   const EXPECTED_BUFFER = Buffer.from(EXPECTED_DATA_URL.split(',')[1], 'base64')
 
-  t.test('toDataURL()', async (t: any) => {
+  t.test('toDataURL()', async t => {
     const dataURL = await toDataURL(IMAGE_DATA)
     t.equal(dataURL, EXPECTED_DATA_URL, 'should convert image data to data url right')
   })
 
-  t.test('toBuffer()', async (t: any) => {
+  t.test('toBuffer()', async t => {
     const buffer = toBuffer(IMAGE_DATA)
     t.ok(buffer.equals(EXPECTED_BUFFER), 'should convert image data to buffer right')
   })
