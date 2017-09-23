@@ -222,9 +222,9 @@ export class Face {
   }
 
   public get embedding(): FaceEmbedding {
-    if (!this._embedding) {
-      throw new Error('no embedding yet!')
-    }
+    // if (!this._embedding) {
+    //   throw new Error('no embedding yet!')
+    // }
     return this._embedding
   }
 
@@ -234,7 +234,7 @@ export class Face {
     } else if (!embedding.shape) {
       throw new Error('embedding has no shape property!')
     } else if (embedding.shape[0] !== 128) {
-      throw new Error('embedding dim is not 128!')
+      throw new Error('embedding dim is not 128! got: ' + embedding.shape[0])
     }
     this._embedding = embedding
   }
