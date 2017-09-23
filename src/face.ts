@@ -43,8 +43,8 @@ export interface FaceOptions {
   confidence?  : number,
   file?        : string,
   landmarks?   : number[][],   // Facial Landmark
-
 }
+
 export class Face {
   public static id = 0
   public id: number
@@ -78,7 +78,7 @@ export class Face {
     }
 
     if (options.landmarks) {
-      this.landmark = await this.initLandmarks(options.landmarks)
+      this.landmark = this.initLandmarks(options.landmarks)
     }
 
     if (options.file) {
@@ -89,10 +89,10 @@ export class Face {
     }
 
     if (options.boundingBox) {
-      this.location = await this.initBoundingBox(options.boundingBox)
-      this.imageData = await this.updateImageData(this.imageData)
+      this.location  = this.initBoundingBox(options.boundingBox)
+      this.imageData = this.updateImageData(this.imageData)
     } else {
-      this.location = await this.initBoundingBox([0, 0, this.imageData.width, this.imageData.height])
+      this.location = this.initBoundingBox([0, 0, this.imageData.width, this.imageData.height])
     }
 
     // update md5
@@ -101,7 +101,7 @@ export class Face {
     return this
   }
 
-  private async initLandmarks(marks: number[][]): Promise<FacialLandmark> {
+  private initLandmarks(marks: number[][]): FacialLandmark {
     log.verbose('Face', 'initLandmarks([%s]) #%d',
                         marks, this.id,
                 )
@@ -146,7 +146,7 @@ export class Face {
     return imageData
   }
 
-  private async initBoundingBox(boundingBox: number[]): Promise<Rectangle> {
+  private initBoundingBox(boundingBox: number[]): Rectangle {
     log.verbose('Face', 'initBoundingBox([%s]) #%d',
                       boundingBox, this.id,
               )
@@ -163,7 +163,7 @@ export class Face {
     }
   }
 
-  private async updateImageData(imageData: ImageData): Promise<ImageData> {
+  private updateImageData(imageData: ImageData): ImageData {
     if (!this.location) {
       throw new Error('no location!')
     }
@@ -244,9 +244,29 @@ export class Face {
 
     const face = new Face(imageData)
 
-    face.landmark   = obj.landmark
-    face.location   = obj.location
-    face.confidence = obj.confidence
+    const options = {} as FaceOptions
+
+    options.boundingBox = [
+      obj.location.x,
+      obj.location.y,
+      obj.location.x + obj.location.w,
+      obj.location.y + obj.location.h,
+    ]
+    options.confidence = obj.confidence
+    if (obj.landmark) {
+      const m = obj.landmark
+      options.landmarks  = [
+        [m.leftEye.x, m.leftEye.y],
+        [m.rightEye.x, m.rightEye.y],
+        [m.nose.x, m.nose.y],
+        [m.leftMouthCorner.x, m.leftMouthCorner.y],
+        [m.rightMouthCorner.x, m.rightMouthCorner.y],
+      ]
+    }
+
+    // Face.init is a async function. However, the async is only need to load file.
+    // Here's we are not using any file, so there's no async(for this case only)
+    face.init(options)
 
     if (obj.embedding && obj.embedding.length) {
       face.embedding   =  nj.array(obj.embedding)
