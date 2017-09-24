@@ -8,7 +8,7 @@
     "@types/ndarray": "^1.0.5",
     "argparse": "^1.0.9",
     "blessed": "^0.1.81",
-    "blessed-contrib": "git://github.com:zixia/blessed-contrib.git#patch-1",
+    "blessed-contrib": "github:zixia/blessed-contrib#patch-1",
     "brolog": "^1.2.4",
     "canvas": "^2.0.0-alpha.5",
     "chinese-whispers": "^0.1.3",
