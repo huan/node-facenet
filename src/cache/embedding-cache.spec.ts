@@ -1,6 +1,5 @@
 #!/usr/bin/env ts-node
 import * as fs            from 'fs'
-import { promisify }      from 'util'
 
 // tslint:disable:no-shadowed-variable
 import * as test          from 'blue-tape'
@@ -59,7 +58,7 @@ test('Cache', sinonTest(async function (t: test.Test) {
   const hitSpy = sinon.spy()
   const missSpy = sinon.spy()
 
-  const workDir        = await promisify(fs.mkdtemp)(TMP_PREFIX)
+  const workDir        = fs.mkdtempSync(TMP_PREFIX)
 
   const facenet        = new Facenet()
   const embeddingCache = new EmbeddingCache(facenet, workDir)
