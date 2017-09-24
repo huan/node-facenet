@@ -214,7 +214,7 @@ export class Face {
     } = this
 
     const embeddingArray  = embedding ? embedding.tolist() : []
-    const imageDataBase64 = Buffer.from(imageData.data.buffer)
+    const imageDataBase64 = Buffer.from(imageData.data.buffer as ArrayBuffer)
                                   .toString('base64')
 
     const obj = {

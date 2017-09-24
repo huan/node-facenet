@@ -3,6 +3,7 @@ import * as fs          from 'fs'
 import * as path        from 'path'
 
 import * as nj          from 'numjs'
+import FlashStore       from 'flash-store'
 
 import {
   FaceEmbedding,
@@ -14,8 +15,6 @@ import {
 }                       from '../facenet'
 import { Face }         from '../face'
 
-import { DbCache }      from './db-cache'
-
 export interface EmbeddingCacheData {
   [key: string]: FaceEmbedding,
 }
@@ -23,7 +22,7 @@ export interface EmbeddingCacheData {
 export type EmbeddingCacheEvent = 'hit' | 'miss'
 
 export class EmbeddingCache extends EventEmitter implements Embeddingable {
-  public  db: DbCache
+  public store: FlashStore<string, object>
 
   constructor(
     public facenet: Facenet,
@@ -57,10 +56,12 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
       fs.mkdirSync(this.workDir)
     }
 
-    const dbName = 'embedding.db'
-    this.db = new DbCache(
-      path.join(this.workDir, dbName),
-    )
+    if (!this.store) {
+      const storeName = 'embedding.store'
+      this.store = new FlashStore(
+        path.join(this.workDir, storeName),
+      )
+    }
   }
 
   public async embedding(face: Face): Promise<FaceEmbedding> {
@@ -68,7 +69,7 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
 
     const faceMd5 = face.md5
 
-    const array = await this.db.get(faceMd5)
+    const array = await this.store.get(faceMd5)
     if (array) {
       log.silly('EmbeddingCache', 'embedding() cache HIT')
       this.emit('hit', face)
@@ -78,15 +79,15 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     log.silly('EmbeddingCache', 'embedding() cache MISS')
     this.emit('miss', face)
     const embedding = await this.facenet.embedding(face)
-    await this.db.put(faceMd5, embedding.tolist())
+    await this.store.put(faceMd5, embedding.tolist())
     return embedding
   }
 
   public async count(): Promise<number> {
-    return await this.db.count()
+    return await this.store.count()
   }
 
   public async destroy(): Promise<void> {
-    return await this.db.destroy()
+    return await this.store.destroy()
   }
 }

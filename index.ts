@@ -12,7 +12,6 @@ export *                    from './src/misc'
 
 export {
   AlignmentCache,
-  DbCache,
   EmbeddingCache,
   FaceCache,
 }                           from './src/cache/'

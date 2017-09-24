@@ -2,6 +2,7 @@ import * as fs          from 'fs'
 import * as path        from 'path'
 
 import * as rimraf      from 'rimraf'
+import FlashStore       from 'flash-store'
 
 import { log }          from '../config'
 import {
@@ -13,12 +14,9 @@ import {
   saveImage,
 }                       from '../misc'
 
-import { DbCache }      from './db-cache'
-
 export class FaceCache {
-  public db: DbCache
-  public dbName   = 'face.db'
-  public cacheDir = 'face.file'
+  public store: FlashStore<string, object>
+  public cacheDir = 'face.files'
 
   constructor(
     public workDir: string,
@@ -34,9 +32,10 @@ export class FaceCache {
       throw new Error(`directory not exist: ${this.workDir}`)
     }
 
-    if (!this.db) {
-      this.db = new DbCache(
-        path.join(this.workDir, this.dbName),
+    if (!this.store) {
+      const storeName   = 'face.db'
+      this.store = new FlashStore<string, object>(
+        path.join(this.workDir, storeName),
       )
     }
 
@@ -49,7 +48,7 @@ export class FaceCache {
 
   public async destroy(): Promise<void> {
     log.verbose('FaceCache', 'destroy()')
-    await this.db.destroy()
+    await this.store.destroy()
     const cacheDir = path.join(this.workDir, this.cacheDir)
     rimraf.sync(cacheDir)
   }
@@ -57,7 +56,7 @@ export class FaceCache {
   public async get(
     md5: string,
   ): Promise<Face | null> {
-    const obj = await this.db.get(md5) as FaceJsonObject
+    const obj = await this.store.get(md5) as FaceJsonObject
 
     if (obj) {
       const face = Face.fromJSON(obj)
@@ -69,7 +68,7 @@ export class FaceCache {
   public async put(
     face: Face,
   ): Promise<void> {
-    await this.db.put(face.md5, face)  // Face.toJSON()
+    await this.store.put(face.md5, face)  // Face.toJSON()
 
     const faceFile = this.file(face.md5)
 
