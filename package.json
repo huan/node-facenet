@@ -108,14 +108,14 @@
   "homepage": "https://github.com/zixia/node-facenet#readme",
   "files": [
     "bin/",
-    "CHANGELOG",
     "dist/",
+    "src/",
+    "CHANGELOG",
     "docs/images/facenet-icon.png",
     "LICENSE",
     "package.json",
     "README.md",
-    "requirements.txt",
-    "src/"
+    "requirements.txt"
   ],
   "bin": {
     "facenet-manager": "dist/bin/facenet-manager.js"

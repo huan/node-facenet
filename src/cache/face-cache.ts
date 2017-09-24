@@ -78,7 +78,7 @@ export class FaceCache {
 
     let imageData = face.imageData
     if (!imageData) {
-      throw new Error('no imageData!')
+      throw new Error('FaceCache.put() no imageData!')
     }
 
     if (imageData.width !== 160) {

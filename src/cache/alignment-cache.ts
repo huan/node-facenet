@@ -132,6 +132,8 @@ export class AlignmentCache extends EventEmitter implements Alignable {
     md5:      string,
     faceList: Face[],
   ): Promise<void> {
+    log.verbose('AlignmentCache', 'put(%s, faceList[%d]',
+                                  md5, faceList.length)
     await Promise.all(
       faceList.map(async face => this.faceCache.put(face)),
     )
