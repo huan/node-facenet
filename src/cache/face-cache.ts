@@ -22,7 +22,6 @@ export class FaceCache {
     public workDir: string,
   ) {
     log.verbose('FaceCache', 'constructor(%s)', workDir)
-    this.init()
   }
 
   public init(): void {
