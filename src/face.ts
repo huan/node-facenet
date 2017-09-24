@@ -36,13 +36,15 @@ export interface FaceJsonObject {
   imageData   : string,           // Base64 of Buffer
   landmark?   : FacialLandmark,
   location    : Rectangle,
+  md5         : string,
 }
 
 export interface FaceOptions {
-  boundingBox? : number[],     // [x0, y0, x1, y1]
+  boundingBox? : number[],    // [x0, y0, x1, y1]
   confidence?  : number,
   file?        : string,
-  landmarks?   : number[][],   // Facial Landmark
+  landmarks?   : number[][],  // Facial Landmark
+  md5?         : string,      // for fromJSON fast init
 }
 
 export class Face {
@@ -71,7 +73,18 @@ export class Face {
   }
 
   public async init(options: FaceOptions = {}): Promise<this> {
+    if (options.file) {
+      this.imageData = await this.initFile(options.file)
+    }
+    return this.initSync(options)
+  }
+
+  public initSync(options: FaceOptions = {}): this {
     log.verbose('Face', 'init()')
+
+    if (!this.imageData) {
+      throw new Error('initSync() must be called after imageData set')
+    }
 
     if (options.confidence) {
       this.confidence   = options.confidence
@@ -81,9 +94,6 @@ export class Face {
       this.landmark = this.initLandmarks(options.landmarks)
     }
 
-    if (options.file) {
-      this.imageData = await this.initFile(options.file)
-    }
     if (!this.imageData) {
       throw new Error('no image data!')
     }
@@ -95,8 +105,11 @@ export class Face {
       this.location = this.initBoundingBox([0, 0, this.imageData.width, this.imageData.height])
     }
 
-    // update md5
-    this.md5 = imageMd5(this.imageData)
+    if (options.md5) {
+      this.md5 = options.md5
+    } else {  // update md5
+      this.md5 = imageMd5(this.imageData)
+    }
 
     return this
   }
@@ -138,7 +151,7 @@ export class Face {
 
   private async initFile(file: string): Promise<ImageData> {
     log.verbose('Face', 'initFilename(%s) #%d',
-                      file, this.id,
+                        file, this.id,
               )
 
     const image = await loadImage(file)
@@ -193,7 +206,7 @@ export class Face {
   }
 
   public toString(): string {
-    return `Face#${this.id}(${this.md5})`
+    return `Face#${this.id}@${this.md5}`
   }
 
   public toJSON(): FaceJsonObject {
@@ -208,9 +221,10 @@ export class Face {
     }
 
     const {
-      embedding,
       confidence,
+      embedding,
       landmark,
+      md5,
     } = this
 
     const embeddingArray  = embedding ? embedding.tolist() : []
@@ -223,6 +237,7 @@ export class Face {
       imageData: imageDataBase64,
       landmark,
       location,
+      md5,
     }
 
     return obj
@@ -253,6 +268,7 @@ export class Face {
     ]
 
     options.confidence = obj.confidence
+    options.md5        = obj.md5
 
     if (obj.landmark) {
       const m = obj.landmark
@@ -265,9 +281,7 @@ export class Face {
       ]
     }
 
-    // Face.init is a async function. However, the async is only need to load file.
-    // Here's we are not using any file, so there's no async(for this case only)
-    face.init(options)
+    face.initSync(options)
 
     if (obj.embedding && obj.embedding.length) {
       face.embedding =  nj.array(obj.embedding)

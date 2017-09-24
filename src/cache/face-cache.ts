@@ -57,7 +57,6 @@ export class FaceCache {
     md5: string,
   ): Promise<Face | null> {
     const obj = await this.store.get(md5) as FaceJsonObject
-
     if (obj) {
       const face = Face.fromJSON(obj)
       return face

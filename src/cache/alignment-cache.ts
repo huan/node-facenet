@@ -101,6 +101,7 @@ export class AlignmentCache extends EventEmitter implements Alignable {
       this.emit('hit', image)
       return faceList
     }
+
     log.silly('AlignmentCache', 'align() MISS')
     this.emit('miss', image)
 
