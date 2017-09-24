@@ -2,7 +2,8 @@
 import * as fs            from 'fs'
 import { promisify }      from 'util'
 
-import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
+// tslint:disable:no-shadowed-variable
+import * as test          from 'blue-tape'
 
 import * as sinon         from 'sinon'
 const sinonTest           = require('sinon-test')(sinon)
