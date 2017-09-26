@@ -12,7 +12,7 @@
     "brolog": "^1.2.4",
     "canvas": "^2.0.0-alpha.5",
     "chinese-whispers": "^0.1.3",
-    "flash-store": "0.0.13",
+    "flash-store": "0.0.14",
     "glob": "^7.1.2",
     "mkdirp": "^0.5.1",
     "numjs": "^0.14.2",
