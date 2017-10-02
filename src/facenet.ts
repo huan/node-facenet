@@ -22,7 +22,8 @@ import {
 // minimum width/height of the face image.
 // the standard shape of face for facenet is 160x160
 // 40 is 1/4 of the low resolution
-const MIN_FACE_SIZE = 40
+const MIN_FACE_SIZE       = 40
+const MIN_FACE_CONFIDENCE = 0.95
 
 // Interface for Cache
 export interface Alignable {
@@ -109,12 +110,17 @@ export class Facenet implements Alignable, Embeddingable {
       })
       // face.confidence(confidence)
       // face.landmarks(marks)
-      if (face.width >= MIN_FACE_SIZE) {
-        faceList.push(face)
-      } else {
-        log.verbose('Facenet', 'align() face skipped because width(%d) is less than MIN_FACE_SIZE:%d',
+      if (face.width < MIN_FACE_SIZE) {
+        log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE:%s',
                                 face.width, MIN_FACE_SIZE)
+        continue
       }
+      if ((face.confidence || 0) < MIN_FACE_CONFIDENCE) {
+        log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE:%s',
+                                face.confidence, MIN_FACE_SIZE)
+        continue
+      }
+      faceList.push(face)
     }
 
     return faceList
