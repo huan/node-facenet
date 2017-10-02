@@ -353,10 +353,11 @@ export class Face {
   }
 
   public distance(face: Face): number {
-    if (!this.embedding || !face.embedding) {
-      throw new Error('Face.distance() got face without embedding. '
-                      + 'this: ' + !!this.embedding + ', '
-                      + 'face: ' + !!face.embedding)
+    if (!this.embedding) {
+      throw new Error(`sourceFace(${this.md5}).distance() source face no embedding!`)
+    }
+    if (!face.embedding) {
+      throw new Error(`Face.distance(${face.md5}) target face no embedding!`)
     }
     const faceEmbeddingNdArray = face.embedding.reshape(1, -1) as nj.NdArray
     return distance(this.embedding, faceEmbeddingNdArray)[0]
