@@ -95,8 +95,8 @@ export class FaceCache {
   }
 
   public async list(md5Partial: string, limit = 10): Promise<string[]> {
-    const prefix = md5Partial
-    const md5List = []
+    const prefix  = md5Partial
+    const md5List = [] as string[]
 
     let n = 0
     for await (const key of this.store.keys({ prefix })) {
