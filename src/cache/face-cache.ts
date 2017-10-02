@@ -1,22 +1,22 @@
-import * as fs          from 'fs'
-import * as path        from 'path'
+import * as fs      from 'fs'
+import * as path    from 'path'
 
-import * as rimraf      from 'rimraf'
-import FlashStore       from 'flash-store'
+import * as rimraf  from 'rimraf'
+import FlashStore   from 'flash-store'
 
-import { log }          from '../config'
+import { log }      from '../config'
 import {
   Face,
   FaceJsonObject,
-}                       from '../face'
+}                   from '../face'
 import {
   resizeImage,
   saveImage,
-}                       from '../misc'
+}                   from '../misc'
 
 export class FaceCache {
   public store: FlashStore<string, object>
-  public cacheDir = 'face.files'
+  public imagedir: string
 
   constructor(
     public workdir: string,
@@ -32,24 +32,25 @@ export class FaceCache {
     }
 
     if (!this.store) {
-      const storeName   = 'face.db'
+      const storeName   = 'face-cache.store'
       this.store = new FlashStore<string, object>(
         path.join(this.workdir, storeName),
       )
     }
 
-    const fullCacheDir = path.join(this.workdir, this.cacheDir)
-    if (!fs.existsSync(fullCacheDir)) {
-      fs.mkdirSync(fullCacheDir)
+    if (!this.imagedir) {
+      const dirName = 'imagedir'
+      this.imagedir = path.join(this.workdir, dirName)
+      if (!fs.existsSync(this.imagedir)) {
+        fs.mkdirSync(this.imagedir)
+      }
     }
-
   }
 
   public async destroy(): Promise<void> {
     log.verbose('FaceCache', 'destroy()')
     await this.store.destroy()
-    const cacheDir = path.join(this.workdir, this.cacheDir)
-    rimraf.sync(cacheDir)
+    rimraf.sync(this.imagedir)
   }
 
   public async get(
@@ -85,15 +86,26 @@ export class FaceCache {
     await saveImage(imageData, faceFile)
   }
 
-  public file(
-    md5: string,
-  ): string {
+  public file(md5: string): string {
     const filename = path.join(
-      this.workdir,
-      this.cacheDir,
+      this.imagedir,
       `${md5}.png`,
     )
     return filename
+  }
+
+  public async list(md5Partial: string, limit = 10): Promise<string[]> {
+    const prefix = md5Partial
+    const md5List = []
+
+    let n = 0
+    for await (const key of this.store.keys({ prefix })) {
+      if (n++ > limit) {
+        break
+      }
+      md5List.push(key)
+    }
+    return md5List
   }
 }
 
