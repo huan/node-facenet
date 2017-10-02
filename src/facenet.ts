@@ -108,18 +108,18 @@ export class Facenet implements Alignable, Embeddingable {
         landmarks: marks,
         confidence,
       })
-      // face.confidence(confidence)
-      // face.landmarks(marks)
+
       if (face.width < MIN_FACE_SIZE) {
-        log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE:%s',
+        log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE(%s)',
                                 face.width, MIN_FACE_SIZE)
         continue
       }
       if ((face.confidence || 0) < MIN_FACE_CONFIDENCE) {
-        log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE:%s',
-                                face.confidence, MIN_FACE_SIZE)
+        log.verbose('Facenet', 'align() face skipped because confidence(%s) is less than MIN_FACE_CONFIDENCE(%s)',
+                                face.confidence, MIN_FACE_CONFIDENCE)
         continue
       }
+
       faceList.push(face)
     }
 

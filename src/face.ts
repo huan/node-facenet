@@ -52,7 +52,7 @@ export class Face {
   public id: number
 
   public md5       : string
-  // public imageData : ImageData
+  public imageData : ImageData
 
   public location   : Rectangle       | undefined
   public confidence : number          | undefined
@@ -61,7 +61,7 @@ export class Face {
   private _embedding : FaceEmbedding
 
   constructor(
-    public imageData?: ImageData,
+    imageData?: ImageData,
   ) {
     this.id = Face.id++
 
@@ -70,10 +70,16 @@ export class Face {
                       imageData ? imageData.height : 0,
                       this.id,
               )
+    if (imageData) {
+      this.imageData = imageData
+    }
   }
 
   public async init(options: FaceOptions = {}): Promise<this> {
     if (options.file) {
+      if (this.imageData) {
+        throw new Error('constructor(imageData) or init({file}) can not be both specified at same time!')
+      }
       this.imageData = await this.initFile(options.file)
     }
     return this.initSync(options)
