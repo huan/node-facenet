@@ -10,12 +10,16 @@
     , "noImplicitReturns": true
     , "noFallthroughCasesInSwitch": true
     , "strictNullChecks": true
-    , "noImplicitAny": true
+    , "noImplicitAny": false
     , "noUnusedParameters": true
     , "noImplicitThis": true
 
     , "noLib": false
     , "traceResolution": false
+    , "lib": [
+        "dom"
+      , "esnext"
+    ]
   }
   , "exclude": [
       "node_modules/"

@@ -2,17 +2,17 @@ export {
   log,
   // MODULE_ROOT,
   VERSION,
+  Rectangle,
 }                           from './src/config'
 export {
   // Rectangle,
   Face,
 }                           from './src/face'
-export { Facenet }          from './src/facenet'
+import { Facenet }          from './src/facenet'
 export *                    from './src/misc'
 
 export {
   AlignmentCache,
-  DbCache,
   EmbeddingCache,
   FaceCache,
 }                           from './src/cache/'
@@ -23,3 +23,6 @@ export {
 }                           from './src/dataset/'
 
 // export { PythonFacenet }    from './src/python3/python-facenet'
+
+export { Facenet }
+export default Facenet

@@ -218,7 +218,7 @@ export class PythonFacenet {
    */
   public base64ImageData(imageData: ImageData): string {
 
-    return Buffer.from(imageData.data.buffer)
+    return Buffer.from(imageData.data.buffer as ArrayBuffer)
                 .toString('base64')
 
     // const [row, col, depth] = image.shape

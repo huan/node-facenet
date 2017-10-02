@@ -1,9 +1,9 @@
 import * as path  from 'path'
 
-import { Brolog } from 'brolog'
 import * as nj    from 'numjs'
 
-export const log = new Brolog()
+// import * as appRoot from 'app-root-path'
+// export const MODULE_ROOT = appRoot.path
 
 export function parentDirectory(): string {     // export for test
   const parentDir = __dirname.split(path.sep)   // [... 'node_modules', 'facenet', 'dist', 'src']
@@ -38,3 +38,5 @@ export const FILE_FACENET_ICON_PNG = path.join(
   'images',
   'facenet-icon.png',
 )
+
+export { log } from 'brolog'

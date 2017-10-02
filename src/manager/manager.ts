@@ -18,6 +18,7 @@ import {
 import {
   AlignmentCache,
   EmbeddingCache,
+  FaceCache,
 }                       from '../cache/'
 
 import {
@@ -36,9 +37,10 @@ interface MenuItem {
 }
 
 export class Manager {
-  private facenet:        Facenet
-  private alignmentCache: AlignmentCache
-  private embeddingCache: EmbeddingCache
+  private facenet        : Facenet
+  private alignmentCache : AlignmentCache
+  private embeddingCache : EmbeddingCache
+  private faceCache      : FaceCache
 
   private frame:  Frame
   private screen: widget.Screen
@@ -47,14 +49,15 @@ export class Manager {
   constructor() {
     log.verbose('Manager', 'constructor()')
 
-    const cacheDir = path.join(MODULE_ROOT, 'cache')
-    if (!fs.existsSync(cacheDir)) {
-      fs.mkdirSync(cacheDir)
+    const workdir = path.join(MODULE_ROOT, 'cache')
+    if (!fs.existsSync(workdir)) {
+      fs.mkdirSync(workdir)
     }
 
     this.facenet        = new Facenet()
-    this.alignmentCache = new AlignmentCache(this.facenet, cacheDir)
-    this.embeddingCache = new EmbeddingCache(this.facenet, cacheDir)
+    this.faceCache      = new FaceCache(workdir)
+    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, workdir)
+    this.embeddingCache = new EmbeddingCache(this.facenet, workdir)
 
     this.screen = new widget.Screen({
       smartCSR: true,
@@ -68,6 +71,7 @@ export class Manager {
 
     await this.alignmentCache.init()
     await this.embeddingCache.init()
+    await this.faceCache.init()
 
     this.frame = new Frame(this.screen)
 
@@ -90,14 +94,14 @@ export class Manager {
         },
       },
       {
-        text     : 'Validate on LFW',
+        text     : 'Validate on LFW(To Be Implemented)',
         callback : async () => {
           console.log('validate lfw')
           return true
         },
       },
       {
-        text     : 'Sort Photos Group by Face',
+        text     : 'Sort Photos Group by Face(To Be Implemented)',
         callback : async () => {
           console.log('sort')
           return true
@@ -124,9 +128,14 @@ export class Manager {
     const menuCallbackList = this.menuItemList()
                                   .map(m => m.callback)
 
+    let firstTime = true
     do {
       clear(this.screen)
-      const idx = await this.menu.start()
+
+      const idx = await this.menu.start(firstTime)
+      if (firstTime) {
+        firstTime = false
+      }
 
       clear(this.screen)
       await this.frame.init()
@@ -144,10 +153,11 @@ export class Manager {
   public async alignmentEmbedding(
     pathname?: string,
   ): Promise<void> {
-    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname)
+    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname ? pathname : '')
 
     const ae = new AlignmentEmbedding(
       this.frame,
+      this.faceCache,
       this.alignmentCache,
       this.embeddingCache,
     )

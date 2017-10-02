@@ -19,6 +19,12 @@ import {
   PythonFacenet,
 }                         from './python3/python-facenet'
 
+// minimum width/height of the face image.
+// the standard shape of face for facenet is 160x160
+// 40 is 1/4 of the low resolution
+const MIN_FACE_SIZE       = 80
+const MIN_FACE_CONFIDENCE = 0.95
+
 // Interface for Cache
 export interface Alignable {
   align(imageData: ImageData | string): Promise<Face[]>,
@@ -96,10 +102,24 @@ export class Facenet implements Alignable, Embeddingable {
         continue
       }
 
-      const face = new Face(imageData, boundingBox)
-      face.init(marks, confidence)
-      // face.confidence(confidence)
-      // face.landmarks(marks)
+      const face = new Face(imageData)
+      await face.init({
+        boundingBox,
+        landmarks: marks,
+        confidence,
+      })
+
+      if (face.width < MIN_FACE_SIZE) {
+        log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE(%s)',
+                                face.width, MIN_FACE_SIZE)
+        continue
+      }
+      if ((face.confidence || 0) < MIN_FACE_CONFIDENCE) {
+        log.verbose('Facenet', 'align() face skipped because confidence(%s) is less than MIN_FACE_CONFIDENCE(%s)',
+                                face.confidence, MIN_FACE_CONFIDENCE)
+        continue
+      }
+
       faceList.push(face)
     }
 
@@ -113,6 +133,9 @@ export class Facenet implements Alignable, Embeddingable {
     log.verbose('Facenet', 'embedding(%s)', face)
 
     let imageData = face.imageData
+    if (!imageData) {
+      throw new Error('no imageData!')
+    }
     if (imageData.width !== imageData.height) {
       log.warn('Facenet', 'embedding(%s) %dx%d not square!',
                           face, imageData.width, imageData.height)
@@ -199,8 +222,16 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   public distance(face: Face, faceList: Face[]): number[] {
+    if (!face.embedding) {
+      throw new Error('no face embedding!')
+    }
+    for (const aFace of faceList) {
+      if (!aFace.embedding) {
+        throw new Error('no aFace embedding!')
+      }
+    }
     const embeddingList     = faceList.map(f => f.embedding)
-    const embeddingNdArray  = nj.stack(embeddingList)
+    const embeddingNdArray  = nj.stack<number>(embeddingList as any)
 
     return distance(
       face.embedding,

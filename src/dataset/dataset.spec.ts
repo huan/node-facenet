@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-const t = require('tap')  // tslint:disable:no-shadowed-variable
+import * as test  from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import {
   // log,
@@ -18,12 +18,12 @@ class DatasetTest extends Dataset {
   }
 }
 
-t.test('Smoke testing', async (t: any) => {
+test('Smoke testing', async t => {
   const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   t.ok(d, 'should inited a Dataset instance')
 })
 
-t.test('idList()', async (t: any) => {
+test('idList()', async t => {
   const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   const idList = await d.idList()
 
@@ -32,7 +32,7 @@ t.test('idList()', async (t: any) => {
   t.true(idList.includes('id2'), 'should contains id2')
 })
 
-t.test('imageList()', async (t: any) => {
+test('imageList()', async t => {
   const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   const imageList = await d.imageList()
 
@@ -42,7 +42,7 @@ t.test('imageList()', async (t: any) => {
   t.true(imageList.includes('id2/image22.jpg'), 'should contains image22.jpg')
 })
 
-t.test('idImageList()', async (t: any) => {
+test('idImageList()', async t => {
   const d = new DatasetTest(FIXTURE_DIRECTORY, 'jpg')
   const idImageList = await d.idImageList()
 

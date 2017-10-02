@@ -13,6 +13,7 @@ import {
 import {
   AlignmentCache,
   EmbeddingCache,
+  FaceCache,
 }                 from '../../cache/'
 
 import {
@@ -27,20 +28,23 @@ import {
 export class AlignmentEmbedding {
 
   constructor(
-    public frame:           Frame,
-    public alignmentCache:  AlignmentCache,
-    public embeddingCache:  EmbeddingCache,
+    public frame          : Frame,
+    public faceCache      : FaceCache,
+    public alignmentCache : AlignmentCache,
+    public embeddingCache : EmbeddingCache,
   ) {
   }
 
-  public async start(workDir?: string): Promise<void> {
+  public async start(workdir?: string): Promise<void> {
     const box = this.frame.box
 
-    const tree = this.createTreeElement(box)
-    const explorer = this.createExplorerData(workDir)
+    const tree     = this.createTreeElement(box)
+    const explorer = this.createExplorerData(workdir)
+
     tree.setData(explorer)
-    tree.focus()
     this.bindSelectAction(tree)
+
+    tree.focus()
 
     return new Promise<void>(resolve => this.frame.bindQuitKey(resolve))
   }
@@ -58,67 +62,83 @@ export class AlignmentEmbedding {
       {
         style:    { text: 'red' },
         template: { lines: true },
-        label:    'Filesystem Tree',
+        label:    ' Filesystem Tree ',
       },
     )
-
+    tree.on('click', () => tree.focus())
     return tree
   }
 
-  private createExplorerData(workDir?: string) {
-    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workDir)
-    console.error(workDir)
-    if (!workDir) {
-      workDir = path.join(
+  private createExplorerData(workdir?: string) {
+    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workdir ? workdir : '')
+
+    if (!workdir) {
+      workdir = path.join(
         MODULE_ROOT,
         'docs',
         'images',
       )
     }
 
+    const imageRegex = /\.(jpg|jpeg|tiff|png)$/i
+
     // file explorer
     const explorer = {
-      name: '/',
-      extended: true,
+      name     : '/',
+      extended : true,
       // Custom function used to recursively determine the node path
-      getPath: (current: any) => {
+
+      getPath: (self: any) => {
+        log.silly('AlignmentEmbedding', 'createExplorerData() getPath(%s)', self.name)
         // If we don't have any parent, we are at tree root, so return the base case
-        if (!current.parent)
-          // return ''
-          return workDir
+        if (!self.parent)
+          return '/'
+          // return workdir
+
         // Get the parent node path and add this node name
         return path.join(
-          current.parent.getPath(current.parent),
-          current.name,
+          self.parent.getPath(self.parent),
+          self.name,
         )
       },
+
       // Child generation function
-      children: (current: any) => {
-        let result = {} as any
-        const selfPath = current.getPath(current)
+      children: (self: any) => {
+        // console.log('children: node: ' + self.name)
+        log.silly('AlignmentEmbedding', 'createExplorerData() children(%s)', self.name)
+
+        // childrenContent is a property filled with self.children() result
+        if (self.childrenContent) {
+          // log.verbose('childrenContent HIT')
+          return self.childrenContent
+        }
+        // log.verbose('childrenContent MISS')
+
+        const result = {} as any
+        const selfPath = self.getPath(self)
         try {
           // List files in this directory
           const children = fs.readdirSync(selfPath + path.sep)
+          for (const child of children) {
+            const completePath = path.join(selfPath, child)
+            // console.error('XXX:', completePath)
+            log.silly('AlignmentEmbedding', 'createExplorerData() children() for(child:%s)', completePath)
 
-          // childrenContent is a property filled with self.children() result
-          // on tree generation (tree.setData() call)
-          if (!current.childrenContent) {
-            for (const child of children) {
-              const completePath = path.join(selfPath, child)
+            const resultChild = {
+              name     : child,
+              getPath  : self.getPath,
+              extended : false,
+            } as any
 
-              result[child] = {
-                name     : child,
-                getPath  : current.getPath,
-                extended : false,
-              }
-
-              if (fs.lstatSync(completePath).isDirectory()) {
-                // If it's a directory we generate the child with the children generation function
-                result[child]['children'] = current.children
-              }
+            if (fs.lstatSync(completePath).isDirectory()) {
+              // If it's a directory we generate the child with the children generation function
+              resultChild['children'] = self.children
+              result[child] = resultChild
+            } else if (imageRegex.test(child)) {
+              result[child] = resultChild
+            } else {
+              // skip non-image files
             }
-          } else {
-            result = current.childrenContent;
           }
         } catch (e) {
           log.error('AlignmentEmbedding', 'createExplorerData() exception: %s', e)
@@ -140,28 +160,38 @@ export class AlignmentEmbedding {
       if ( nodePath === '')
         nodePath = '/'
 
+      if (node.children) {
+        return  // directorhy, not a image file
+      }
+
       try {
         await this.process(nodePath)
         this.frame.screen.render()
       } catch (e) {
-        this.frame.emit('log', 'tree on select exception: ' + e)
+        log.error('AlignmentEmbedding', 'bindSelectAction() tree on select exception: %s', e)
       }
     })
   }
 
   public async process(file: string): Promise<void> {
+    log.verbose('AlignmentEmbedding', 'process(%s)', file)
+
     this.frame.emit('image', file)
+
     const faceList = await this.alignmentCache.align(file)
-    this.frame.emit('log', 'faceList.length = ' + faceList.length)
+    log.silly('AlignmentEmbedding', 'process() faceList.length:%d', faceList.length)
 
     for (const face of faceList) {
       try {
-        this.frame.emit('log', 'face ' + face.md5)
+        if (!face.embedding) {
+          face.embedding = await this.embeddingCache.embedding(face)
+          await this.faceCache.put(face)
+        }
         this.frame.emit('face', face)
-        face.embedding = await this.embeddingCache.embedding(face)
-        this.frame.emit('log', face.embedding.toString())
+        log.silly('AlignmentEmbedding', 'process() face:%s embedding:%s',
+                                        face, face.embedding)
       } catch (e) {
-        this.frame.emit('log', 'on select exception: ' + e)
+        log.error('AlignmentEmbedding', 'process() exception:%s', e)
       }
     }
   }

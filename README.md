@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zixia/node-facenet.svg?branch=master)](https://travis-ci.org/zixia/node-facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
-node-facenet is a TensorFlow backed FaceNet implementation for Node.js, which can solve **face** _verification_, _recognition_ and _clustering_ problems.
+A TensorFlow backed FaceNet implementation for Node.js, which can solve **face** _verification_, _recognition_ and _clustering_ problems.
 
 ![Google Facenet](https://zixia.github.io/node-facenet/images/facenet.jpg)
 
@@ -312,11 +312,17 @@ This repository is heavily inspired by the following implementations:
 
 # CHANGELOG
 
-## v0.3 / Master
+## Master
+
+1. Added `facenet-manager` command line tool for demo/validate/sort photos
+1. Switch to `FlashStore` npm module as key-value database
+
+## v0.3 Sep 2017
 
 1. Added three cache classes: AlignmentCache & EmbeddingCache & FaceCache.
 1. Added cache manager utilities: embedding-cache-manager & alignment-cache-manager & face-cache-manager
 1. Added Dataset manager utility: lfw-manager (should be dataset-manager in future)
+1. BREAKING CHANGE: `Face` class refactoring.
 
 ## v0.2 Aug 2017 (BREAKING CHANGES)
 

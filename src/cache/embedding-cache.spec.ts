@@ -1,8 +1,8 @@
 #!/usr/bin/env ts-node
 import * as fs            from 'fs'
-import { promisify }      from 'util'
 
-const t                   = require('tap')  // tslint:disable:no-shadowed-variable
+// tslint:disable:no-shadowed-variable
+import * as test          from 'blue-tape'
 
 import * as sinon         from 'sinon'
 const sinonTest           = require('sinon-test')(sinon)
@@ -25,16 +25,16 @@ import {
 
 const TMP_PREFIX = '/tmp/facenet-embedding-cache-test-'
 
-t.test('Create workdir by init()', async (t: any) => {
+test('Create workdir by init()', async t => {
   const facenet = new Facenet()
 
-  const workDir = TMP_PREFIX + process.pid
-  // console.log(workDir)
+  const workdir = TMP_PREFIX + process.pid
+  // console.log(workdir)
   try {
-    const embeddingCache = new EmbeddingCache(facenet, workDir)
+    const embeddingCache = new EmbeddingCache(facenet, workdir)
     await embeddingCache.init()
 
-    t.ok(fs.lstatSync(workDir).isDirectory(), 'should create directory by constructor')
+    t.ok(fs.lstatSync(workdir).isDirectory(), 'should create directory by constructor')
   } catch (e) {
     t.fail(e)
   } finally {
@@ -42,7 +42,7 @@ t.test('Create workdir by init()', async (t: any) => {
   }
 })
 
-t.test('Cache', sinonTest(async function (t: any) {
+test('Cache', sinonTest(async function (t: test.Test) {
   const EXPECTED_EMBEDDING = nj.arange(128)
 
   const embeddingStub = sinon.stub(
@@ -58,18 +58,19 @@ t.test('Cache', sinonTest(async function (t: any) {
   const hitSpy = sinon.spy()
   const missSpy = sinon.spy()
 
-  const workDir        = await promisify(fs.mkdtemp)(TMP_PREFIX)
+  const workdir        = fs.mkdtempSync(TMP_PREFIX)
 
   const facenet        = new Facenet()
-  const embeddingCache = new EmbeddingCache(facenet, workDir)
+  const embeddingCache = new EmbeddingCache(facenet, workdir)
 
   await embeddingCache.init()
 
   embeddingCache.on('hit', hitSpy)
   embeddingCache.on('miss', missSpy)
 
-  t.test('miss', async (t: any) => {
+  t.test('miss', async t => {
     const face = new Face(fixtureImageData3x3())
+    await face.init()
 
     embeddingStub.resetHistory()
     hitSpy.reset()
@@ -83,8 +84,9 @@ t.test('Cache', sinonTest(async function (t: any) {
     t.deepEqual(face.embedding.tolist(), EXPECTED_EMBEDDING.tolist(), 'should be equal to embedding data')
   })
 
-  t.test('hit', async (t: any) => {
+  t.test('hit', async t => {
     const face = new Face(fixtureImageData3x3())
+    await face.init()
 
     embeddingStub.resetHistory()
     hitSpy.reset()

@@ -1,18 +1,18 @@
 #!/usr/bin/env ts-node
 
-const t = require('tap')  // tslint:disable:no-shadowed-variable
+import * as test    from 'blue-tape'  // tslint:disable:no-shadowed-variable
 import * as nj      from 'numjs'
 
 import { Facenet }  from './facenet'
 import { Face }     from './face'
 
-t.test('Facenet smoke testing', async (t: any) => {
+test('Facenet smoke testing', async t => {
   const f = new Facenet()
   t.ok(f, 'should inited a Facenet instance')
   f.quit()
 })
 
-t.test('transformLandmarks()', async (t: any) => {
+test('transformLandmarks()', async t => {
   const f = new Facenet()
 
   const LANDMARKS_1 = [
@@ -77,7 +77,7 @@ t.test('transformLandmarks()', async (t: any) => {
   f.quit()
 })
 
-t.test('distance() for multiple rows', async (t: any) => {
+test('distance() for multiple rows', async t => {
   const FACE = {
     embedding: nj.array([0, 3]),
   } as any as Face

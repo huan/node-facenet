@@ -2,6 +2,8 @@ import { EventEmitter } from 'events'
 import * as fs          from 'fs'
 import * as path        from 'path'
 
+import { FlashStore }   from 'flash-store'
+
 import {
   log,
   FaceEmbedding,
@@ -19,7 +21,6 @@ import {
   loadImage,
 }                       from '../misc'
 
-import { DbCache }      from './db-cache'
 import { FaceCache }    from './face-cache'
 
 export interface AlignmentCacheData {
@@ -29,15 +30,15 @@ export interface AlignmentCacheData {
 export type AlignmentCacheEvent = 'hit' | 'miss'
 
 export class AlignmentCache extends EventEmitter implements Alignable {
-  public db:        DbCache
-  public faceCache: FaceCache
+  public store: FlashStore<string, object>
 
   constructor(
-    public facenet: Facenet,
-    public workDir: string,
+    public facenet   : Facenet,
+    public faceCache : FaceCache,
+    public workdir   : string,
   ) {
     super()
-    log.verbose('AlignmentCache', 'constructor(%s)', workDir)
+    log.verbose('AlignmentCache', 'constructor(%s)', workdir)
   }
 
   public on(event: 'hit',  listener: (image: ImageData | string) => void): this
@@ -60,24 +61,22 @@ export class AlignmentCache extends EventEmitter implements Alignable {
   public init(): void {
     log.verbose('AlignmentCache', 'init()')
 
-    if (!fs.existsSync(this.workDir)) {
-      throw new Error(`directory not exist: ${this.workDir}`)
+    if (!fs.existsSync(this.workdir)) {
+      throw new Error(`directory not exist: ${this.workdir}`)
     }
 
-    if (!this.db) {
-      const dbName = 'alignment'
+    if (!this.store) {
+      const storeName = 'alignment.store'
 
-      this.db = new DbCache(
-        path.join(this.workDir, dbName),
+      this.store = new FlashStore(
+        path.join(this.workdir, storeName),
       )
     }
-
-    this.faceCache = new FaceCache(this.workDir)
   }
 
-  public async clean(): Promise<void> {
+  public async destroy(): Promise<void> {
     log.verbose('AlignmentCache', 'clean()')
-    await this.db.clean()
+    await this.store.destroy()
   }
 
   public async align(image: ImageData | string ): Promise<Face[]> {
@@ -102,6 +101,7 @@ export class AlignmentCache extends EventEmitter implements Alignable {
       this.emit('hit', image)
       return faceList
     }
+
     log.silly('AlignmentCache', 'align() MISS')
     this.emit('miss', image)
 
@@ -114,7 +114,7 @@ export class AlignmentCache extends EventEmitter implements Alignable {
   private async get(
     md5: string,
   ): Promise<Face[] | null> {
-    const faceMd5List = await this.db.get(md5) as string[]
+    const faceMd5List = await this.store.get(md5) as string[]
 
     if (faceMd5List && Array.isArray(faceMd5List)) {
       const faceList = await Promise.all(
@@ -133,12 +133,14 @@ export class AlignmentCache extends EventEmitter implements Alignable {
     md5:      string,
     faceList: Face[],
   ): Promise<void> {
+    log.verbose('AlignmentCache', 'put(%s, faceList[%d]',
+                                  md5, faceList.length)
     await Promise.all(
       faceList.map(async face => this.faceCache.put(face)),
     )
 
     const faceMd5List = faceList.map(face => face.md5)
-    await this.db.put(md5, faceMd5List)
+    await this.store.put(md5, faceMd5List)
   }
 
 }

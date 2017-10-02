@@ -3,6 +3,7 @@ import * as fs          from 'fs'
 import * as path        from 'path'
 
 import * as nj          from 'numjs'
+import FlashStore       from 'flash-store'
 
 import {
   FaceEmbedding,
@@ -14,8 +15,6 @@ import {
 }                       from '../facenet'
 import { Face }         from '../face'
 
-import { DbCache }      from './db-cache'
-
 export interface EmbeddingCacheData {
   [key: string]: FaceEmbedding,
 }
@@ -23,14 +22,14 @@ export interface EmbeddingCacheData {
 export type EmbeddingCacheEvent = 'hit' | 'miss'
 
 export class EmbeddingCache extends EventEmitter implements Embeddingable {
-  public  db: DbCache
+  public store: FlashStore<string, object>
 
   constructor(
     public facenet: Facenet,
-    public workDir: string,
+    public workdir: string,
   ) {
     super()
-    log.verbose('EmbeddingCache', 'constructor(%s)', workDir)
+    log.verbose('EmbeddingCache', 'constructor(%s)', workdir)
   }
 
   public on(event: 'hit', listener: (face: Face) => void):  this
@@ -53,22 +52,24 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
   public init(): void {
     log.verbose('EmbeddingCache', 'init()')
 
-    if (!fs.existsSync(this.workDir)) {
-      fs.mkdirSync(this.workDir)
+    if (!fs.existsSync(this.workdir)) {
+      fs.mkdirSync(this.workdir)
     }
 
-    const dbName = 'embedding'
-    this.db = new DbCache(
-      path.join(this.workDir, dbName),
-    )
+    if (!this.store) {
+      const storeName = 'embedding.store'
+      this.store = new FlashStore(
+        path.join(this.workdir, storeName),
+      )
+    }
   }
 
   public async embedding(face: Face): Promise<FaceEmbedding> {
     log.verbose('EmbeddingCache', 'embedding(%s)', face)
 
-    const cacheKey = face.md5
+    const faceMd5 = face.md5
 
-    const array = await this.db.get(cacheKey)
+    const array = await this.store.get(faceMd5)
     if (array) {
       log.silly('EmbeddingCache', 'embedding() cache HIT')
       this.emit('hit', face)
@@ -78,15 +79,15 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     log.silly('EmbeddingCache', 'embedding() cache MISS')
     this.emit('miss', face)
     const embedding = await this.facenet.embedding(face)
-    await this.db.put(cacheKey, embedding.tolist())
+    await this.store.put(faceMd5, embedding.tolist())
     return embedding
   }
 
   public async count(): Promise<number> {
-    return await this.db.count()
+    return await this.store.count()
   }
 
-  public async clean(): Promise<void> {
-    return await this.db.clean()
+  public async destroy(): Promise<void> {
+    return await this.store.destroy()
   }
 }

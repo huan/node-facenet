@@ -2,14 +2,14 @@
 
 import * as fs    from 'fs'
 import * as path  from 'path'
-const { test } = require('tap')
+import * as test  from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import {
   MODULE_ROOT,
   parentDirectory,
 }                   from './config'
 
-test('parentDirectory()', async (t: any) => {
+test('parentDirectory()', async t => {
   const packageFile = path.join(MODULE_ROOT, 'package.json')
   t.ok(fs.existsSync(packageFile), 'should see package.json')
 

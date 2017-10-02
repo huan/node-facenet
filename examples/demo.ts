@@ -26,13 +26,17 @@ async function main() {
       face.embedding = await facenet.embedding(face)
 
       const faceFile = `${face.md5}.png`
-      saveImage(face.imageData, faceFile)
+      if (face.imageData) {
+        saveImage(face.imageData, faceFile)
+      } else {
+        console.error('face no image data!')
+      }
 
       console.log('image file:',    imageFile)
       console.log('face file:',     faceFile)
       console.log('confidence:',    face.confidence)
-      console.log('bounding box:',  face.rect)
-      console.log('landmarks:',     face.facialLandmark)
+      console.log('bounding box:',  face.location)
+      console.log('landmarks:',     face.landmark)
       console.log('embedding:',     face.embedding)
     }
   } finally {
