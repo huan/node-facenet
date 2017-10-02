@@ -19,6 +19,11 @@ import {
   PythonFacenet,
 }                         from './python3/python-facenet'
 
+// minimum width/height of the face image.
+// the standard shape of face for facenet is 160x160
+// 40 is 1/4 of the low resolution
+const MIN_FACE_SIZE = 40
+
 // Interface for Cache
 export interface Alignable {
   align(imageData: ImageData | string): Promise<Face[]>,
@@ -104,7 +109,12 @@ export class Facenet implements Alignable, Embeddingable {
       })
       // face.confidence(confidence)
       // face.landmarks(marks)
-      faceList.push(face)
+      if (face.width >= MIN_FACE_SIZE) {
+        faceList.push(face)
+      } else {
+        log.verbose('Facenet', 'align() face skipped because width(%d) is less than MIN_FACE_SIZE:%d',
+                                face.width, MIN_FACE_SIZE)
+      }
     }
 
     return faceList
