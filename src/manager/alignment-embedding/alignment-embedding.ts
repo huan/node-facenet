@@ -35,11 +35,11 @@ export class AlignmentEmbedding {
   ) {
   }
 
-  public async start(workDir?: string): Promise<void> {
+  public async start(workdir?: string): Promise<void> {
     const box = this.frame.box
 
     const tree     = this.createTreeElement(box)
-    const explorer = this.createExplorerData(workDir)
+    const explorer = this.createExplorerData(workdir)
 
     tree.setData(explorer)
     this.bindSelectAction(tree)
@@ -69,11 +69,11 @@ export class AlignmentEmbedding {
     return tree
   }
 
-  private createExplorerData(workDir?: string) {
-    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workDir ? workDir : '')
+  private createExplorerData(workdir?: string) {
+    log.verbose('AlignmentEmbedding', 'createExplorerData(%s)', workdir ? workdir : '')
 
-    if (!workDir) {
-      workDir = path.join(
+    if (!workdir) {
+      workdir = path.join(
         MODULE_ROOT,
         'docs',
         'images',
@@ -93,7 +93,7 @@ export class AlignmentEmbedding {
         // If we don't have any parent, we are at tree root, so return the base case
         if (!self.parent)
           return '/'
-          // return workDir
+          // return workdir
 
         // Get the parent node path and add this node name
         return path.join(

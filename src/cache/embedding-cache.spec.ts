@@ -28,13 +28,13 @@ const TMP_PREFIX = '/tmp/facenet-embedding-cache-test-'
 test('Create workdir by init()', async t => {
   const facenet = new Facenet()
 
-  const workDir = TMP_PREFIX + process.pid
-  // console.log(workDir)
+  const workdir = TMP_PREFIX + process.pid
+  // console.log(workdir)
   try {
-    const embeddingCache = new EmbeddingCache(facenet, workDir)
+    const embeddingCache = new EmbeddingCache(facenet, workdir)
     await embeddingCache.init()
 
-    t.ok(fs.lstatSync(workDir).isDirectory(), 'should create directory by constructor')
+    t.ok(fs.lstatSync(workdir).isDirectory(), 'should create directory by constructor')
   } catch (e) {
     t.fail(e)
   } finally {
@@ -58,10 +58,10 @@ test('Cache', sinonTest(async function (t: test.Test) {
   const hitSpy = sinon.spy()
   const missSpy = sinon.spy()
 
-  const workDir        = fs.mkdtempSync(TMP_PREFIX)
+  const workdir        = fs.mkdtempSync(TMP_PREFIX)
 
   const facenet        = new Facenet()
-  const embeddingCache = new EmbeddingCache(facenet, workDir)
+  const embeddingCache = new EmbeddingCache(facenet, workdir)
 
   await embeddingCache.init()
 

@@ -49,15 +49,15 @@ export class Manager {
   constructor() {
     log.verbose('Manager', 'constructor()')
 
-    const workDir = path.join(MODULE_ROOT, 'cache')
-    if (!fs.existsSync(workDir)) {
-      fs.mkdirSync(workDir)
+    const workdir = path.join(MODULE_ROOT, 'cache')
+    if (!fs.existsSync(workdir)) {
+      fs.mkdirSync(workdir)
     }
 
     this.facenet        = new Facenet()
-    this.faceCache      = new FaceCache(workDir)
-    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, workDir)
-    this.embeddingCache = new EmbeddingCache(this.facenet, workDir)
+    this.faceCache      = new FaceCache(workdir)
+    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, workdir)
+    this.embeddingCache = new EmbeddingCache(this.facenet, workdir)
 
     this.screen = new widget.Screen({
       smartCSR: true,

@@ -26,10 +26,10 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
 
   constructor(
     public facenet: Facenet,
-    public workDir: string,
+    public workdir: string,
   ) {
     super()
-    log.verbose('EmbeddingCache', 'constructor(%s)', workDir)
+    log.verbose('EmbeddingCache', 'constructor(%s)', workdir)
   }
 
   public on(event: 'hit', listener: (face: Face) => void):  this
@@ -52,14 +52,14 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
   public init(): void {
     log.verbose('EmbeddingCache', 'init()')
 
-    if (!fs.existsSync(this.workDir)) {
-      fs.mkdirSync(this.workDir)
+    if (!fs.existsSync(this.workdir)) {
+      fs.mkdirSync(this.workdir)
     }
 
     if (!this.store) {
       const storeName = 'embedding.store'
       this.store = new FlashStore(
-        path.join(this.workDir, storeName),
+        path.join(this.workdir, storeName),
       )
     }
   }

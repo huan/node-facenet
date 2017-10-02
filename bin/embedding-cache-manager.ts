@@ -16,19 +16,19 @@ import {
 async function main(args: Args): Promise<number> {
   log.level(args.log as any)
 
-  let workDir: string
+  let workdir: string
   if (args.directory.startsWith(path.sep)) {
-    workDir = args.directory
+    workdir = args.directory
   } else {
-    workDir = path.join(process.cwd(), args.directory)
+    workdir = path.join(process.cwd(), args.directory)
   }
 
   const facenet = new Facenet()
-  const lfw = new Lfw(workDir)
+  const lfw = new Lfw(workdir)
 
-  const faceCache      = new FaceCache(workDir)
-  const alignmentCache = new AlignmentCache(facenet, faceCache, workDir)
-  const embeddingCache = new EmbeddingCache(facenet, workDir)
+  const faceCache      = new FaceCache(workdir)
+  const alignmentCache = new AlignmentCache(facenet, faceCache, workdir)
+  const embeddingCache = new EmbeddingCache(facenet, workdir)
 
   await alignmentCache.init()
   await embeddingCache.init()

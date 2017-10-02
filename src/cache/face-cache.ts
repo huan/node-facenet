@@ -19,26 +19,26 @@ export class FaceCache {
   public cacheDir = 'face.files'
 
   constructor(
-    public workDir: string,
+    public workdir: string,
   ) {
-    log.verbose('FaceCache', 'constructor(%s)', workDir)
+    log.verbose('FaceCache', 'constructor(%s)', workdir)
   }
 
   public init(): void {
     log.verbose('FaceCache', 'init()')
 
-    if (!fs.existsSync(this.workDir)) {
-      throw new Error(`directory not exist: ${this.workDir}`)
+    if (!fs.existsSync(this.workdir)) {
+      throw new Error(`directory not exist: ${this.workdir}`)
     }
 
     if (!this.store) {
       const storeName   = 'face.db'
       this.store = new FlashStore<string, object>(
-        path.join(this.workDir, storeName),
+        path.join(this.workdir, storeName),
       )
     }
 
-    const fullCacheDir = path.join(this.workDir, this.cacheDir)
+    const fullCacheDir = path.join(this.workdir, this.cacheDir)
     if (!fs.existsSync(fullCacheDir)) {
       fs.mkdirSync(fullCacheDir)
     }
@@ -48,7 +48,7 @@ export class FaceCache {
   public async destroy(): Promise<void> {
     log.verbose('FaceCache', 'destroy()')
     await this.store.destroy()
-    const cacheDir = path.join(this.workDir, this.cacheDir)
+    const cacheDir = path.join(this.workdir, this.cacheDir)
     rimraf.sync(cacheDir)
   }
 
@@ -89,7 +89,7 @@ export class FaceCache {
     md5: string,
   ): string {
     const filename = path.join(
-      this.workDir,
+      this.workdir,
       this.cacheDir,
       `${md5}.png`,
     )

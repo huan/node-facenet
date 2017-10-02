@@ -35,10 +35,10 @@ export class AlignmentCache extends EventEmitter implements Alignable {
   constructor(
     public facenet   : Facenet,
     public faceCache : FaceCache,
-    public workDir   : string,
+    public workdir   : string,
   ) {
     super()
-    log.verbose('AlignmentCache', 'constructor(%s)', workDir)
+    log.verbose('AlignmentCache', 'constructor(%s)', workdir)
   }
 
   public on(event: 'hit',  listener: (image: ImageData | string) => void): this
@@ -61,15 +61,15 @@ export class AlignmentCache extends EventEmitter implements Alignable {
   public init(): void {
     log.verbose('AlignmentCache', 'init()')
 
-    if (!fs.existsSync(this.workDir)) {
-      throw new Error(`directory not exist: ${this.workDir}`)
+    if (!fs.existsSync(this.workdir)) {
+      throw new Error(`directory not exist: ${this.workdir}`)
     }
 
     if (!this.store) {
       const storeName = 'alignment.store'
 
       this.store = new FlashStore(
-        path.join(this.workDir, storeName),
+        path.join(this.workdir, storeName),
       )
     }
   }
