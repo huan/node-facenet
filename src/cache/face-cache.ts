@@ -100,7 +100,7 @@ export class FaceCache {
 
     let n = 0
     for await (const key of this.store.keys({ prefix })) {
-      if (n++ > limit) {
+      if (n++ >= limit) {
         break
       }
       md5List.push(key)
