@@ -39,4 +39,5 @@ export const FILE_FACENET_ICON_PNG = path.join(
   'facenet-icon.png',
 )
 
-export { log } from 'brolog'
+import Brolog from 'brolog'
+export const log = new Brolog()
