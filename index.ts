@@ -8,7 +8,6 @@ export {
   // Rectangle,
   Face,
 }                           from './src/face'
-import { Facenet }          from './src/facenet'
 export *                    from './src/misc'
 
 export {
@@ -24,5 +23,6 @@ export {
 
 // export { PythonFacenet }    from './src/python3/python-facenet'
 
+import { Facenet } from './src/facenet'
 export { Facenet }
 export default Facenet
