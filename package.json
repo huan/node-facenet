@@ -20,7 +20,7 @@
     "python-bridge": "^1.0.3",
     "rimraf": "^2.6.1",
     "tar": "^4.0.1",
-    "update-notifier": "^2.2.0"
+    "update-notifier": "^2.3.0"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
