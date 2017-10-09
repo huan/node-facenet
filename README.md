@@ -129,6 +129,14 @@ Supported:
 1. Tensorflow >= 1.2
 1. Python3 >=3.5 (**3.6** is recommend)
 
+Make sure you run those commands under Ubuntu 17.04:
+
+```shell
+sudo apt install python3-pip
+pip3 install setuptools --upgrade
+
+```
+
 ## Ram
 
 | Neural Network Model | Task                |  Ram  |
@@ -343,6 +351,30 @@ This repository is heavily inspired by the following implementations:
 
 See: [Running Terminal Dashboards on Windows](http://webservices20.blogspot.co.uk/2015/04/running-terminal-dashboards-on-windows.html)
 
+2. Error when install: `No package 'XXX' found`
+
+It's related with the NPM module `canvas`.
+
+Error messages:
+1. `No package 'pixman-1' found`
+2. `No package 'cairo' found`
+3. `No package 'pangocairo' found`
+
+Solution for Ubuntu 17.04: 
+```shell
+sudo apt install -y libpixman-1-dev
+sudo apt-get install -y libcairo2-dev
+sudo apt-get install -y libpango1.0-dev
+```
+
+3. Error when install: `fatal error: jpeglib.h: No such file or directory`
+
+It's related with the NPM module `canvas`.
+
+Solution for Ubuntu 17.04:
+```shell
+sudo apt-get install -y libjpeg-dev
+```
 
 # AUTHOR
 
