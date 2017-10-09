@@ -367,6 +367,13 @@ sudo apt-get install -y libcairo2-dev
 sudo apt-get install -y libpango1.0-dev
 ```
 
+Solution for Mac:
+```shell
+brew install pkg-config
+brew install cairo
+brew install pango
+```
+
 3. Error when install: `fatal error: jpeglib.h: No such file or directory`
 
 It's related with the NPM module `canvas`.
