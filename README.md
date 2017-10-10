@@ -369,9 +369,12 @@ sudo apt-get install -y libpango1.0-dev
 
 Solution for Mac:
 ```shell
+brew install python3
 brew install pkg-config
 brew install cairo
 brew install pango
+brew install libpng
+brew install libjpeg
 ```
 
 3. Error when install: `fatal error: jpeglib.h: No such file or directory`
@@ -381,6 +384,15 @@ It's related with the NPM module `canvas`.
 Solution for Ubuntu 17.04:
 ```shell
 sudo apt-get install -y libjpeg-dev
+```
+
+4.Error when run: `Error: error while reading from input stream`
+
+It is related with the `libjpeg` package
+
+Solution for Mac:
+```
+brew install libjpeg
 ```
 
 # AUTHOR
