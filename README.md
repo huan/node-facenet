@@ -369,9 +369,11 @@ sudo apt-get install -y libpango1.0-dev
 
 Solution for Mac:
 ```shell
+brew install python3
 brew install pkg-config
 brew install cairo
 brew install pango
+brew install libpng
 ```
 
 3. Error when install: `fatal error: jpeglib.h: No such file or directory`
