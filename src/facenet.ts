@@ -123,8 +123,8 @@ export class Facenet implements Alignable, Embeddingable {
    * //        rightMouthCorner: [Object] },
    * //     location: { x: 141, y: 87, w: 253, h: 253 },
    * //     md5: '0451a0737dd9e4315a21594c38bce485' } ]
-   * // `leftEye: [Object]`,`rightEye: [Object]`,`nose: [Object]`,`leftMouthCorner: [Object]`,`rightMouthCorner: [Object]` Object is Point, something like `{ x: 441, y: 181 }`
-   * // `imageData: ImageData { data: [Object] }` Object is Uint8ClampedArray
+   * // leftEye: [Object],rightEye: [Object],nose: [Object],leftMouthCorner: [Object],rightMouthCorner: [Object] -- Object is Point, something like { x: 441, y: 181 }
+   * // imageData: ImageData { data: [Object] } -- Object is Uint8ClampedArray
    */
   public async align(imageData: ImageData | string): Promise<Face[]> {
     if (typeof imageData === 'string') {
