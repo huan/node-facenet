@@ -1,6 +1,3 @@
-/**
- *
- */
 import * as nj              from 'numjs'
 
 import {
