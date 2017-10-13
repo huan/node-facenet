@@ -9,13 +9,6 @@
 <dd></dd>
 </dl>
 
-## Constants
-
-<dl>
-<dt><a href="#nj">nj</a></dt>
-<dd></dd>
-</dl>
-
 ## Typedefs
 
 <dl>
@@ -298,10 +291,6 @@ console.log('distance:', distance)
 // distance: [ 0, 1.2971515811057608 ]
 // The first face comes from the imageFile, the exactly same face, so the first result is 0.
 ```
-<a name="nj"></a>
-
-## nj
-**Kind**: global constant  
 <a name="FaceJsonObject"></a>
 
 ## FaceJsonObject
