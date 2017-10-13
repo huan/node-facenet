@@ -418,6 +418,24 @@ rm -rf node node_modules/canvas
 npm install
 ```
 
+6. Error when install
+```
+> facenet@0.3.19 postinstall:models /Users/jiaruili/git/rui/node-facenet
+> set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -
+
+x 20170512-110547.pb
+x model-20170512-110547.ckpt-250000.data-00000-of-00001: (Empty error message)
+tar: Error exit delayed from previous errors.
+```
+
+It seems this because not get the full model file successfully. See [#issue63](https://github.com/zixia/node-facenet/issues/63)
+
+Solution:    
+
+download the file from https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2     
+rename the file `model.tar.bz2` and move it to the folder `models`
+try `npm install` again
+
 # AUTHOR
 
 Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
