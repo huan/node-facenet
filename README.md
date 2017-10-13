@@ -161,6 +161,10 @@ Roadmap: release facenet-manager on version 0.4
 [![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
 > The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
 
+# DOCUMENT
+
+See [auto generated docs](https://zixia.github.io/node-facenet)
+
 # INSTALL & REQUIREMENT
 
 ```shell
