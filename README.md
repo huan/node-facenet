@@ -386,13 +386,36 @@ Solution for Ubuntu 17.04:
 sudo apt-get install -y libjpeg-dev
 ```
 
-4.Error when run: `Error: error while reading from input stream`
+4. Error when run: `Error: error while reading from input stream`
 
 It is related with the `libjpeg` package
 
 Solution for Mac:
 ```
 brew install libjpeg
+```
+
+5. Error when run: 
+```
+Error: Cannot find module '../build/Release/canvas.node'
+    at Function.Module._resolveFilename (module.js:527:15)
+    at Function.Module._load (module.js:476:23)
+    at Module.require (module.js:568:17)
+    at require (internal/module.js:11:18)
+    at Object.<anonymous> (/Users/jiaruili/git/node-facenet/node_modules/canvas/lib/bindings.js:3:18)
+    at Module._compile (module.js:624:30)
+    at Object.Module._extensions..js (module.js:635:10)
+    at Module.load (module.js:545:32)
+    at tryModuleLoad (module.js:508:12)
+    at Function.Module._load (module.js:500:3)
+```
+It seems the package not installed in a right way, like `sharp`, `canvas`, remove the package and reinstall it.
+
+run 
+```
+rm -rf node node_modules/canvas
+// if sharp, then remove sharp folder
+npm install
 ```
 
 # AUTHOR
