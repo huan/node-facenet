@@ -144,6 +144,12 @@ faceList[0].embedding = await facenet.embedding(faceList[0])
 faceList[1].embedding = await facenet.embedding(faceList[1])
 console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
 console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+// Output
+// distance between the different face:  1.2971515811057608
+// distance between the same face:       0
+// faceList[0] is totally the same with faceList[0], so the number is 0
+// faceList[1] is different with faceList[1], so the number is big.
+// If the number is smaller than 0.75, maybe they are the same person.
 ```
 <a name="Face+save"></a>
 
@@ -151,15 +157,18 @@ console.log('distance between the same face:      ', faceList[0].distance(faceLi
 Save the face to the file
 
 **Kind**: instance method of [<code>Face</code>](#Face)  
-**Returns**: <code>Promise.&lt;void&gt;</code> - const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-const faceList = await facenet.align(imageFile)
-faceList[0].save('womenFace.jpg')
-// You can see it save the women face from `two-faces` pic to `womenFace.jpg`  
 
 | Param | Type |
 | --- | --- |
 | file | <code>string</code> | 
 
+**Example**  
+```js
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+const faceList = await facenet.align(imageFile)
+faceList[0].save('womenFace.jpg')
+// You can see it save the women face from `two-faces` pic to `womenFace.jpg`
+```
 <a name="Face.fromJSON"></a>
 
 ### Face.fromJSON(obj) ⇒ [<code>Face</code>](#Face)
