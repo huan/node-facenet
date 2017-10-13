@@ -36,7 +36,7 @@ export interface Embeddingable {
 }
 
 /**
- * 
+ *
  * Facenet is designed for bring the state-of-art neural network with bleeding-edge technology to full stack developers
  * Neural Network && pre-trained model && easy to use APIs
  * @class Facenet
@@ -50,9 +50,9 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   /**
-   * 
+   *
    * Init facenet
-   * @returns {Promise<void>} 
+   * @returns {Promise<void>}
    */
   public async init(): Promise<void> {
     await this.initFacenet()
@@ -80,9 +80,9 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   /**
-   * 
+   *
    * Quit facenet
-   * @returns {Promise<void>} 
+   * @returns {Promise<void>}
    */
   public async quit(): Promise<void> {
     log.verbose('Facenet', 'quit()')
@@ -90,9 +90,9 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   /**
-   * 
+   *
    * Do face alignment for the image, return a list of faces.
-   * @param {(ImageData | string)} imageData 
+   * @param {(ImageData | string)} imageData
    * @returns {Promise<Face[]>} - a list of faces
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
@@ -182,10 +182,10 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   /**
-   * 
+   *
    * Calculate Face Embedding, get the 128 dims embeding from image(s)
-   *  
-   * @param {Face} face 
+   *
+   * @param {Face} face
    * @returns {Promise<FaceEmbedding>} - return feature vector
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
@@ -297,10 +297,10 @@ export class Facenet implements Alignable, Embeddingable {
 
   /**
    * Get distance between a face an each face in the faceList.
-   * 
-   * @param {Face} face 
-   * @param {Face[]} faceList 
-   * @returns {number[]} 
+   *
+   * @param {Face} face
+   * @param {Face[]} faceList
+   * @returns {number[]}
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
@@ -310,7 +310,7 @@ export class Facenet implements Alignable, Embeddingable {
    * const faceInFaceList = faceList[0]
    * const distance = facenet.distance(faceInFaceList, faceList)
    * console.log('distance:', distance)
-   * // Output: 
+   * // Output:
    * // distance: [ 0, 1.2971515811057608 ]
    * // The first face comes from the imageFile, the exactly same face, so the first result is 0.
    */
