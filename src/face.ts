@@ -51,15 +51,101 @@ export class Face {
   public static id = 0
   public id: number
 
-  public md5       : string
-  public imageData : ImageData
 
+  /**
+   * 
+   * Get Face md5
+   * @type {string}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face md5: ', faceList[0].md5)
+   * // Output md5: 003c926dd9d2368a86e41a2938aacc98
+   */
+  public md5       : string
+
+
+  /**
+   * 
+   * Get Face imageData
+   * @type {ImageData}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face imageData: ', faceList[0].imageData)
+   * // Output, Base64 of Buffer
+   * // imageData:  ImageData {
+   * //   data:
+   * //    Uint8ClampedArray [
+   * //      81,
+   * //      ... 211500 more items ] }
+   */
+  public imageData : ImageData
+  
+  /**
+   * 
+   * Get Face location
+   * @type {(Rectangle       | undefined)}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face location : ', faceList[0].location)
+   * // Output location:  { x: 360, y: 94, w: 230, h: 230 }
+   */
   public location   : Rectangle       | undefined
+  
+  /**
+   * 
+   * Get Face confidence
+   * @type {(number          | undefined)}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face confidence : ', faceList[0].confidence)
+   * // Output confidence:  0.9999634027481079
+   */
   public confidence : number          | undefined
+  
+  /**
+   * @desc       Point Type
+   * @typedef    Point
+   * @property   { number }  x  
+   * @property   { number }  y 
+   */
+
+  /**
+   * @desc       FacialLandmark Type
+   * @typedef    FacialLandmark
+   * @property   { Point }  leftEye  
+   * @property   { Point }  rightEye 
+   * @property   { Point }  nose 
+   * @property   { Point }  leftMouthCorner 
+   * @property   { Point }  rightMouthCorner 
+   */
+
+  /**
+   * 
+   * Get Face landmark, containing rightEye, leftEye, nose, leftMouthCorner and rightMouthCorner
+   * @type {(FacialLandmark  | undefined)}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face landmark : ', faceList[0].landmark)
+   * // Output
+   * // landmark:  { leftEye: { x: 441, y: 180 },
+   * //   rightEye: { x: 515, y: 208 },
+   * //   nose: { x: 459, y: 239 },
+   * //   leftMouthCorner: { x: 417, y: 262 },
+   * //   rightMouthCorner: { x: 482, y: 286 } }
+   */
   public landmark   : FacialLandmark  | undefined
 
   private _embedding : FaceEmbedding
 
+  /**
+   * Creates an instance of Face.
+   * @param {ImageData} [imageData] 
+   */
   constructor(
     imageData?: ImageData,
   ) {
@@ -75,6 +161,12 @@ export class Face {
     }
   }
 
+  /**
+   * 
+   * Init a face
+   * @param {FaceOptions} [options={}] 
+   * @returns {Promise<this>} 
+   */
   public async init(options: FaceOptions = {}): Promise<this> {
     if (options.file) {
       if (this.imageData) {
@@ -85,6 +177,9 @@ export class Face {
     return this.initSync(options)
   }
 
+  /**
+   * @private
+   */
   public initSync(options: FaceOptions = {}): this {
     log.verbose('Face', 'init()')
 
@@ -120,6 +215,9 @@ export class Face {
     return this
   }
 
+  /**
+   * @private
+   */
   private initLandmarks(marks: number[][]): FacialLandmark {
     log.verbose('Face', 'initLandmarks([%s]) #%d',
                         marks, this.id,
@@ -155,6 +253,9 @@ export class Face {
     }
   }
 
+  /**
+   * @private
+   */
   private async initFile(file: string): Promise<ImageData> {
     log.verbose('Face', 'initFilename(%s) #%d',
                         file, this.id,
@@ -165,6 +266,9 @@ export class Face {
     return imageData
   }
 
+  /**
+   * @private
+   */
   private initBoundingBox(boundingBox: number[]): Rectangle {
     log.verbose('Face', 'initBoundingBox([%s]) #%d',
                       boundingBox, this.id,
@@ -182,6 +286,9 @@ export class Face {
     }
   }
 
+  /**
+   * @private
+   */
   private updateImageData(imageData: ImageData): ImageData {
     if (!this.location) {
       throw new Error('no location!')
@@ -211,10 +318,29 @@ export class Face {
     return croppedImage
   }
 
+  /**
+   * @private
+   */
   public toString(): string {
     return `Face#${this.id}@${this.md5}`
   }
 
+  /**
+   * @desc       FaceJsonObject Type
+   * @typedef    FaceJsonObject
+   * @property   { number }         confidence  - The confidence to confirm is face
+   * @property   { number[] }       embedding 
+   * @property   { string }         imageData  - Base64 of Buffer
+   * @property   { FacialLandmark } landmark   - Face landmark
+   * @property   { Rectangle }      location   - Face location
+   * @property   { string }         md5        - Face md5
+   */
+
+  /**
+   * Get Face Json format data
+   * 
+   * @returns {FaceJsonObject} 
+   */
   public toJSON(): FaceJsonObject {
     const imageData = this.imageData
     const location = this.location
@@ -248,7 +374,13 @@ export class Face {
 
     return obj
   }
-
+  
+  /**
+   * 
+   * @static
+   * @param {(FaceJsonObject | string)} obj 
+   * @returns {Face} 
+   */
   public static fromJSON(obj: FaceJsonObject | string): Face {
     log.verbose('Face', 'fromJSON(%s)', typeof obj)
 
@@ -299,6 +431,12 @@ export class Face {
     return face
   }
 
+  /**
+   * 
+   * Embedding the face, FaceEmbedding is 128 dim
+   * @type {(FaceEmbedding | undefined)}
+   * @memberof Face
+   */
   public get embedding(): FaceEmbedding | undefined {
     // if (!this._embedding) {
     //   throw new Error('no embedding yet!')
@@ -306,6 +444,10 @@ export class Face {
     return this._embedding
   }
 
+  /**
+   * 
+   * Set embedding for a face
+   */
   public set embedding(embedding: FaceEmbedding | undefined) {
     if (!embedding || !(embedding instanceof (nj as any).NdArray)) {
       throw new Error('must have a embedding(with type nj.NdArray)!')
@@ -318,9 +460,16 @@ export class Face {
     }
     this._embedding = embedding
   }
-
+  
   /**
-   * Center point for the location
+   * 
+   * Get center point for the location
+   * @type {Point}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face center : ', faceList[0].center)
+   * // Output: center:  { x: 475, y: 209 }
    */
   public get center(): Point {
     if (!this.location) {
@@ -335,6 +484,16 @@ export class Face {
     return {x, y}
   }
 
+  /**
+   * 
+   * Get width for the imageData
+   * @type {number}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face width : ', faceList[0].width)
+   * // Output: width:  230
+   */
   public get width(): number {
     if (!this.imageData) {
       throw new Error('no imageData')
@@ -342,6 +501,16 @@ export class Face {
     return this.imageData.width
   }
 
+  /**
+   * 
+   * Get height for the imageData
+   * @type {number}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face height : ', faceList[0].height)
+   * // Output: height:  230
+   */
   public get height(): number {
     if (!this.imageData) {
       throw new Error('no imageData')
@@ -349,6 +518,15 @@ export class Face {
     return this.imageData.height
   }
 
+  /**
+   * 
+   * Get depth for the imageData:   length/width/height
+   * @type {number}
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log('face depth : ', faceList[0].depth)
+   * // Output: depth:  4
+   */
   public get depth(): number {
     if (!this.imageData) {
       throw new Error('no imageData')
@@ -358,6 +536,19 @@ export class Face {
             / this.imageData.height
   }
 
+  /**
+   * 
+   * Get the two face's distance, the smaller the number is, the similar of the two face
+   * @param {Face} face 
+   * @returns {number} 
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * faceList[0].embedding = await facenet.embedding(faceList[0])
+   * faceList[1].embedding = await facenet.embedding(faceList[1])
+   * console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
+   * console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+   */
   public distance(face: Face): number {
     if (!this.embedding) {
       throw new Error(`sourceFace(${this.md5}).distance() source face no embedding!`)
@@ -369,6 +560,9 @@ export class Face {
     return distance(this.embedding, faceEmbeddingNdArray)[0]
   }
 
+  /**
+   * @private
+   */
   public dataUrl(): string {
     if (!this.imageData) {
       throw new Error('no imageData')
@@ -376,6 +570,9 @@ export class Face {
     return toDataURL(this.imageData)
   }
 
+  /**
+   * @private
+   */
   public buffer(): Buffer {
     if (!this.imageData) {
       throw new Error('no imageData')
@@ -383,6 +580,16 @@ export class Face {
     return toBuffer(this.imageData)
   }
 
+  /**
+   * 
+   * Save the face to the file
+   * @param {string} file 
+   * @returns {Promise<void>} 
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * faceList[0].save('womenFace.jpg')
+   * // You can see it save the women face from `two-faces` pic to `womenFace.jpg`
+   */
   public async save(file: string): Promise<void> {
     if (!this.imageData) {
       throw new Error('no imageData')

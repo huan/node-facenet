@@ -35,6 +35,12 @@ export interface Embeddingable {
   embedding(face: Face): Promise<FaceEmbedding>,
 }
 
+/**
+ * 
+ * Facenet is designed for bring the state-of-art neural network with bleeding-edge technology to full stack developers
+ * Neural Network && pre-trained model && easy to use APIs
+ * @class Facenet
+ */
 export class Facenet implements Alignable, Embeddingable {
   private pythonFacenet: PythonFacenet
 
@@ -43,11 +49,19 @@ export class Facenet implements Alignable, Embeddingable {
     this.pythonFacenet = new PythonFacenet()
   }
 
+  /**
+   * 
+   * Init facenet
+   * @returns {Promise<void>} 
+   */
   public async init(): Promise<void> {
     await this.initFacenet()
     await this.initMtcnn()
   }
 
+  /**
+   * @private
+   */
   public async initFacenet(): Promise<void> {
     log.verbose('Facenet', 'initFacenet()')
     const start = Date.now()
@@ -55,6 +69,9 @@ export class Facenet implements Alignable, Embeddingable {
     log.verbose('Facenet', 'initFacenet() cost %d milliseconds', Date.now() - start)
   }
 
+  /**
+   * @private
+   */
   public async initMtcnn(): Promise<void> {
     log.verbose('Facenet', 'initMtcnn()')
     const start = Date.now()
@@ -62,14 +79,52 @@ export class Facenet implements Alignable, Embeddingable {
     log.verbose('Facenet', 'initMtcnn() cost %d milliseconds', Date.now() - start)
   }
 
+  /**
+   * 
+   * Quit facenet
+   * @returns {Promise<void>} 
+   */
   public async quit(): Promise<void> {
     log.verbose('Facenet', 'quit()')
     await this.pythonFacenet.quit()
   }
 
   /**
-   * Alignment the image, get faces list
-   * @param image
+   * 
+   * Do face alignment for the image, return a list of faces.
+   * @param {(ImageData | string)} imageData 
+   * @returns {Promise<Face[]>} - a list of faces
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.log(faceList)
+   * // Output
+   * // [ Face {
+   * //     id: 0,
+   * //     imageData: ImageData { data: [Object] },
+   * //     confidence: 0.9999634027481079,
+   * //     landmark:
+   * //      { leftEye: [Object],
+   * //        rightEye: [Object],
+   * //        nose: [Object],
+   * //        leftMouthCorner: [Object],
+   * //        rightMouthCorner: [Object] },
+   * //      location: { x: 360, y: 94, w: 230, h: 230 },
+   * //      md5: '003c926dd9d2368a86e41a2938aacc98' },
+   * //   Face {
+   * //     id: 1,
+   * //     imageData: ImageData { data: [Object] },
+   * //     confidence: 0.9998626708984375,
+   * //     landmark:
+   * //      { leftEye: [Object],
+   * //        rightEye: [Object],
+   * //        nose: [Object],
+   * //        leftMouthCorner: [Object],
+   * //        rightMouthCorner: [Object] },
+   * //     location: { x: 141, y: 87, w: 253, h: 253 },
+   * //     md5: '0451a0737dd9e4315a21594c38bce485' } ]
+   * // `leftEye: [Object]`,`rightEye: [Object]`,`nose: [Object]`,`leftMouthCorner: [Object]`,`rightMouthCorner: [Object]` Object is Point, something like `{ x: 441, y: 181 }`
+   * // `imageData: ImageData { data: [Object] }` Object is Uint8ClampedArray
    */
   public async align(imageData: ImageData | string): Promise<Face[]> {
     if (typeof imageData === 'string') {
@@ -127,7 +182,20 @@ export class Facenet implements Alignable, Embeddingable {
   }
 
   /**
-   * Get the 128 dims embeding from image(s)
+   * 
+   * Calculate Face Embedding, get the 128 dims embeding from image(s)
+   *  
+   * @param {Face} face 
+   * @returns {Promise<FaceEmbedding>} - return feature vector
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * for (const face of faceList) {
+   *   face.embedding = await facenet.embedding(face)
+   * }
+   * // Output, there are two faces in the picture, so return two 128 dims array
+   * // array([ 0.03132, 0.05678, 0.06192, ..., 0.08909, 0.16793,-0.05703])
+   * // array([ 0.03422,-0.08358, 0.03549, ..., 0.07108, 0.14013,-0.01417])
    */
   public async embedding(face: Face): Promise<FaceEmbedding> {
     log.verbose('Facenet', 'embedding(%s)', face)
@@ -156,6 +224,9 @@ export class Facenet implements Alignable, Embeddingable {
     return nj.array(embedding)
   }
 
+  /**
+   * @private
+   */
   public transformMtcnnLandmarks(landmarks: number[][]): number[][][] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
@@ -182,6 +253,9 @@ export class Facenet implements Alignable, Embeddingable {
     return pairedLandmarks.tolist() as any as number[][][]
   }
 
+  /**
+   * @private
+   */
   public squareBox(box: number[]): number[] {
     let x0 = box[0]
     let y0 = box[1]
@@ -221,6 +295,25 @@ export class Facenet implements Alignable, Embeddingable {
     return [x0, y0, x1, y1]
   }
 
+  /**
+   * Get distance between a face an each face in the faceList.
+   * 
+   * @param {Face} face 
+   * @param {Face[]} faceList 
+   * @returns {number[]} 
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * for (const face of faceList) {
+   * face.embedding = await facenet.embedding(face)
+   * }
+   * const faceInFaceList = faceList[0]
+   * const distance = facenet.distance(faceInFaceList, faceList)
+   * console.log('distance:', distance)
+   * // Output: 
+   * // distance: [ 0, 1.2971515811057608 ]
+   * // The first face comes from the imageFile, the exactly same face, so the first result is 0.
+   */
   public distance(face: Face, faceList: Face[]): number[] {
     if (!face.embedding) {
       throw new Error('no face embedding!')
