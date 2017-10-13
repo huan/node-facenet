@@ -104,13 +104,6 @@ export class Face {
   public confidence : number          | undefined
   
   /**
-   * @desc       Point Type
-   * @typedef    Point
-   * @property   { number }  x  
-   * @property   { number }  y 
-   */
-
-  /**
    * @desc       FacialLandmark Type
    * @typedef    FacialLandmark
    * @property   { Point }  leftEye  
@@ -457,6 +450,13 @@ export class Face {
     }
     this._embedding = embedding
   }
+
+  /**
+   * @desc       Point Type
+   * @typedef    Point
+   * @property   { number }  x  
+   * @property   { number }  y 
+   */
   
   /**
    * 

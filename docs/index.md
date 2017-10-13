@@ -15,6 +15,9 @@
 <dt><a href="#FaceJsonObject">FaceJsonObject</a></dt>
 <dd><p>FaceJsonObject Type</p>
 </dd>
+<dt><a href="#Point">Point</a></dt>
+<dd><p>Point Type</p>
+</dd>
 </dl>
 
 <a name="Face"></a>
@@ -27,7 +30,7 @@
     * _instance_
         * [.embedding](#Face+embedding) : <code>FaceEmbedding</code> \| <code>undefined</code>
         * [.embedding](#Face+embedding)
-        * [.center](#Face+center) : <code>Point</code>
+        * [.center](#Face+center) : [<code>Point</code>](#Point)
         * [.width](#Face+width) : <code>number</code>
         * [.height](#Face+height) : <code>number</code>
         * [.depth](#Face+depth) : <code>number</code>
@@ -62,7 +65,7 @@ Set embedding for a face
 **Kind**: instance property of [<code>Face</code>](#Face)  
 <a name="Face+center"></a>
 
-### face.center : <code>Point</code>
+### face.center : [<code>Point</code>](#Point)
 Get center point for the location
 
 **Kind**: instance property of [<code>Face</code>](#Face)  
@@ -307,4 +310,17 @@ FaceJsonObject Type
 | landmark | <code>FacialLandmark</code> | Face landmark |
 | location | <code>Rectangle</code> | Face location |
 | md5 | <code>string</code> | Face md5 |
+
+<a name="Point"></a>
+
+## Point
+Point Type
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| x | <code>number</code> | 
+| y | <code>number</code> | 
 
