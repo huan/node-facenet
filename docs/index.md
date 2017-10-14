@@ -3,9 +3,9 @@
 ## Classes
 
 <dl>
-<dt><a href="#Face">Face</a></dt>
-<dd></dd>
 <dt><a href="#Facenet">Facenet</a></dt>
+<dd></dd>
+<dt><a href="#Face">Face</a></dt>
 <dd></dd>
 </dl>
 
@@ -20,6 +20,131 @@
 </dd>
 </dl>
 
+<a name="Facenet"></a>
+
+## Facenet
+**Kind**: global class  
+
+* [Facenet](#Facenet)
+    * [new Facenet()](#new_Facenet_new)
+    * [.init()](#Facenet+init) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.quit()](#Facenet+quit) ⇒ <code>Promise.&lt;void&gt;</code>
+    * [.align(imageData)](#Facenet+align) ⇒ <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code>
+    * [.embedding(face)](#Facenet+embedding) ⇒ <code>Promise.&lt;FaceEmbedding&gt;</code>
+    * [.distance(face, faceList)](#Facenet+distance) ⇒ <code>Array.&lt;number&gt;</code>
+
+<a name="new_Facenet_new"></a>
+
+### new Facenet()
+Facenet is designed for bring the state-of-art neural network with bleeding-edge technology to full stack developers
+Neural Network && pre-trained model && easy to use APIs
+
+<a name="Facenet+init"></a>
+
+### facenet.init() ⇒ <code>Promise.&lt;void&gt;</code>
+Init facenet
+
+**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
+<a name="Facenet+quit"></a>
+
+### facenet.quit() ⇒ <code>Promise.&lt;void&gt;</code>
+Quit facenet
+
+**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
+<a name="Facenet+align"></a>
+
+### facenet.align(imageData) ⇒ <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code>
+Do face alignment for the image, return a list of faces.
+
+**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
+**Returns**: <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code> - - a list of faces  
+
+| Param | Type |
+| --- | --- |
+| imageData | <code>ImageData</code> \| <code>string</code> | 
+
+**Example**  
+```js
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+const faceList = await facenet.align(imageFile)
+console.log(faceList)
+// Output
+// [ Face {
+//     id: 0,
+//     imageData: ImageData { data: [Object] },
+//     confidence: 0.9999634027481079,
+//     landmark:
+//      { leftEye: [Object],
+//        rightEye: [Object],
+//        nose: [Object],
+//        leftMouthCorner: [Object],
+//        rightMouthCorner: [Object] },
+//      location: { x: 360, y: 94, w: 230, h: 230 },
+//      md5: '003c926dd9d2368a86e41a2938aacc98' },
+//   Face {
+//     id: 1,
+//     imageData: ImageData { data: [Object] },
+//     confidence: 0.9998626708984375,
+//     landmark:
+//      { leftEye: [Object],
+//        rightEye: [Object],
+//        nose: [Object],
+//        leftMouthCorner: [Object],
+//        rightMouthCorner: [Object] },
+//     location: { x: 141, y: 87, w: 253, h: 253 },
+//     md5: '0451a0737dd9e4315a21594c38bce485' } ]
+// leftEye: [Object],rightEye: [Object],nose: [Object],leftMouthCorner: [Object],rightMouthCorner: [Object] -- Object is Point, something like { x: 441, y: 181 }
+// imageData: ImageData { data: [Object] } -- Object is Uint8ClampedArray
+```
+<a name="Facenet+embedding"></a>
+
+### facenet.embedding(face) ⇒ <code>Promise.&lt;FaceEmbedding&gt;</code>
+Calculate Face Embedding, get the 128 dims embeding from image(s)
+
+**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
+**Returns**: <code>Promise.&lt;FaceEmbedding&gt;</code> - - return feature vector  
+
+| Param | Type |
+| --- | --- |
+| face | [<code>Face</code>](#Face) | 
+
+**Example**  
+```js
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+const faceList = await facenet.align(imageFile)
+for (const face of faceList) {
+  face.embedding = await facenet.embedding(face)
+}
+// Output, there are two faces in the picture, so return two 128 dims array
+// array([ 0.03132, 0.05678, 0.06192, ..., 0.08909, 0.16793,-0.05703])
+// array([ 0.03422,-0.08358, 0.03549, ..., 0.07108, 0.14013,-0.01417])
+```
+<a name="Facenet+distance"></a>
+
+### facenet.distance(face, faceList) ⇒ <code>Array.&lt;number&gt;</code>
+Get distance between a face an each face in the faceList.
+
+**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
+
+| Param | Type |
+| --- | --- |
+| face | [<code>Face</code>](#Face) | 
+| faceList | [<code>Array.&lt;Face&gt;</code>](#Face) | 
+
+**Example**  
+```js
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+const faceList = await facenet.align(imageFile)
+for (const face of faceList) {
+face.embedding = await facenet.embedding(face)
+}
+const faceInFaceList = faceList[0]
+const distance = facenet.distance(faceInFaceList, faceList)
+console.log('distance:', distance)
+// Output:
+// distance: [ 0, 1.2971515811057608 ]
+// The first face comes from the imageFile, the exactly same face, so the first result is 0.
+```
 <a name="Face"></a>
 
 ## Face
@@ -178,131 +303,6 @@ faceList[0].save('womenFace.jpg')
 | --- | --- |
 | obj | [<code>FaceJsonObject</code>](#FaceJsonObject) \| <code>string</code> | 
 
-<a name="Facenet"></a>
-
-## Facenet
-**Kind**: global class  
-
-* [Facenet](#Facenet)
-    * [new Facenet()](#new_Facenet_new)
-    * [.init()](#Facenet+init) ⇒ <code>Promise.&lt;void&gt;</code>
-    * [.quit()](#Facenet+quit) ⇒ <code>Promise.&lt;void&gt;</code>
-    * [.align(imageData)](#Facenet+align) ⇒ <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code>
-    * [.embedding(face)](#Facenet+embedding) ⇒ <code>Promise.&lt;FaceEmbedding&gt;</code>
-    * [.distance(face, faceList)](#Facenet+distance) ⇒ <code>Array.&lt;number&gt;</code>
-
-<a name="new_Facenet_new"></a>
-
-### new Facenet()
-Facenet is designed for bring the state-of-art neural network with bleeding-edge technology to full stack developers
-Neural Network && pre-trained model && easy to use APIs
-
-<a name="Facenet+init"></a>
-
-### facenet.init() ⇒ <code>Promise.&lt;void&gt;</code>
-Init facenet
-
-**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
-<a name="Facenet+quit"></a>
-
-### facenet.quit() ⇒ <code>Promise.&lt;void&gt;</code>
-Quit facenet
-
-**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
-<a name="Facenet+align"></a>
-
-### facenet.align(imageData) ⇒ <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code>
-Do face alignment for the image, return a list of faces.
-
-**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
-**Returns**: <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code> - - a list of faces  
-
-| Param | Type |
-| --- | --- |
-| imageData | <code>ImageData</code> \| <code>string</code> | 
-
-**Example**  
-```js
-const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-const faceList = await facenet.align(imageFile)
-console.log(faceList)
-// Output
-// [ Face {
-//     id: 0,
-//     imageData: ImageData { data: [Object] },
-//     confidence: 0.9999634027481079,
-//     landmark:
-//      { leftEye: [Object],
-//        rightEye: [Object],
-//        nose: [Object],
-//        leftMouthCorner: [Object],
-//        rightMouthCorner: [Object] },
-//      location: { x: 360, y: 94, w: 230, h: 230 },
-//      md5: '003c926dd9d2368a86e41a2938aacc98' },
-//   Face {
-//     id: 1,
-//     imageData: ImageData { data: [Object] },
-//     confidence: 0.9998626708984375,
-//     landmark:
-//      { leftEye: [Object],
-//        rightEye: [Object],
-//        nose: [Object],
-//        leftMouthCorner: [Object],
-//        rightMouthCorner: [Object] },
-//     location: { x: 141, y: 87, w: 253, h: 253 },
-//     md5: '0451a0737dd9e4315a21594c38bce485' } ]
-// leftEye: [Object],rightEye: [Object],nose: [Object],leftMouthCorner: [Object],rightMouthCorner: [Object] -- Object is Point, something like { x: 441, y: 181 }
-// imageData: ImageData { data: [Object] } -- Object is Uint8ClampedArray
-```
-<a name="Facenet+embedding"></a>
-
-### facenet.embedding(face) ⇒ <code>Promise.&lt;FaceEmbedding&gt;</code>
-Calculate Face Embedding, get the 128 dims embeding from image(s)
-
-**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
-**Returns**: <code>Promise.&lt;FaceEmbedding&gt;</code> - - return feature vector  
-
-| Param | Type |
-| --- | --- |
-| face | [<code>Face</code>](#Face) | 
-
-**Example**  
-```js
-const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-const faceList = await facenet.align(imageFile)
-for (const face of faceList) {
-  face.embedding = await facenet.embedding(face)
-}
-// Output, there are two faces in the picture, so return two 128 dims array
-// array([ 0.03132, 0.05678, 0.06192, ..., 0.08909, 0.16793,-0.05703])
-// array([ 0.03422,-0.08358, 0.03549, ..., 0.07108, 0.14013,-0.01417])
-```
-<a name="Facenet+distance"></a>
-
-### facenet.distance(face, faceList) ⇒ <code>Array.&lt;number&gt;</code>
-Get distance between a face an each face in the faceList.
-
-**Kind**: instance method of [<code>Facenet</code>](#Facenet)  
-
-| Param | Type |
-| --- | --- |
-| face | [<code>Face</code>](#Face) | 
-| faceList | [<code>Array.&lt;Face&gt;</code>](#Face) | 
-
-**Example**  
-```js
-const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
-const faceList = await facenet.align(imageFile)
-for (const face of faceList) {
-face.embedding = await facenet.embedding(face)
-}
-const faceInFaceList = faceList[0]
-const distance = facenet.distance(faceInFaceList, faceList)
-console.log('distance:', distance)
-// Output:
-// distance: [ 0, 1.2971515811057608 ]
-// The first face comes from the imageFile, the exactly same face, so the first result is 0.
-```
 <a name="FaceJsonObject"></a>
 
 ## FaceJsonObject

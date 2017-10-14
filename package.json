@@ -60,7 +60,7 @@
     "clean:python3": "shx rm -fr python3/*",
     "clean:models": "shx rm -fr models/*",
     "dist": "npm run clean:dist && tsc && shx cp src/python3/*.py dist/src/python3/",
-    "doc": "npm run dist && echo '# Facenet v'$(jq -r .version package.json)' Documentation\n' > docs/index.md && jsdoc2md dist/src/{face.js,facenet.js} >> docs/index.md",
+    "doc": "npm run dist && echo '# Facenet v'$(jq -r .version package.json)' Documentation\n' > docs/index.md && jsdoc2md dist/src/{facenet.js,face.js,} >> docs/index.md",
     "demo": "npm run example:demo",
     "example:demo": "ts-node examples/demo.ts",
     "example:visualize": "ts-node examples/visualize",
