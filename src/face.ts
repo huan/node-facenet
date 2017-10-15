@@ -48,9 +48,8 @@ export class Face {
   public static id = 0
   public id: number
 
-
   /**
-   * 
+   *
    * Get Face md5
    * @type {string}
    * @example
@@ -61,9 +60,8 @@ export class Face {
    */
   public md5       : string
 
-
   /**
-   * 
+   *
    * Get Face imageData
    * @type {ImageData}
    * @example
@@ -78,9 +76,9 @@ export class Face {
    * //      ... 211500 more items ] }
    */
   public imageData : ImageData
-  
+
   /**
-   * 
+   *
    * Get Face location
    * @type {(Rectangle       | undefined)}
    * @example
@@ -90,9 +88,9 @@ export class Face {
    * // Output location:  { x: 360, y: 94, w: 230, h: 230 }
    */
   public location   : Rectangle       | undefined
-  
+
   /**
-   * 
+   *
    * Get Face confidence
    * @type {(number          | undefined)}
    * @example
@@ -102,19 +100,19 @@ export class Face {
    * // Output confidence:  0.9999634027481079
    */
   public confidence : number          | undefined
-  
+
   /**
    * @desc       FacialLandmark Type
    * @typedef    FacialLandmark
-   * @property   { Point }  leftEye  
-   * @property   { Point }  rightEye 
-   * @property   { Point }  nose 
-   * @property   { Point }  leftMouthCorner 
-   * @property   { Point }  rightMouthCorner 
+   * @property   { Point }  leftEye
+   * @property   { Point }  rightEye
+   * @property   { Point }  nose
+   * @property   { Point }  leftMouthCorner
+   * @property   { Point }  rightMouthCorner
    */
 
   /**
-   * 
+   *
    * Get Face landmark, containing rightEye, leftEye, nose, leftMouthCorner and rightMouthCorner
    * @type {(FacialLandmark  | undefined)}
    * @example
@@ -134,7 +132,7 @@ export class Face {
 
   /**
    * Creates an instance of Face.
-   * @param {ImageData} [imageData] 
+   * @param {ImageData} [imageData]
    */
   constructor(
     imageData?: ImageData,
@@ -152,10 +150,10 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Init a face
-   * @param {FaceOptions} [options={}] 
-   * @returns {Promise<this>} 
+   * @param {FaceOptions} [options={}]
+   * @returns {Promise<this>}
    */
   public async init(options: FaceOptions = {}): Promise<this> {
     if (options.file) {
@@ -318,8 +316,8 @@ export class Face {
   /**
    * @desc       FaceJsonObject Type
    * @typedef    FaceJsonObject
-   * @property   { number }         confidence  - The confidence to confirm is face
-   * @property   { number[] }       embedding 
+   * @property   { number }         confidence - The confidence to confirm is face
+   * @property   { number[] }       embedding
    * @property   { string }         imageData  - Base64 of Buffer
    * @property   { FacialLandmark } landmark   - Face landmark
    * @property   { Rectangle }      location   - Face location
@@ -328,8 +326,8 @@ export class Face {
 
   /**
    * Get Face Json format data
-   * 
-   * @returns {FaceJsonObject} 
+   *
+   * @returns {FaceJsonObject}
    */
   public toJSON(): FaceJsonObject {
     const imageData = this.imageData
@@ -364,12 +362,12 @@ export class Face {
 
     return obj
   }
-  
+
   /**
-   * 
+   *
    * @static
-   * @param {(FaceJsonObject | string)} obj 
-   * @returns {Face} 
+   * @param {(FaceJsonObject | string)} obj
+   * @returns {Face}
    */
   public static fromJSON(obj: FaceJsonObject | string): Face {
     log.verbose('Face', 'fromJSON(%s)', typeof obj)
@@ -422,7 +420,7 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Embedding the face, FaceEmbedding is 128 dim
    * @type {(FaceEmbedding | undefined)}
    * @memberof Face
@@ -435,7 +433,7 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Set embedding for a face
    */
   public set embedding(embedding: FaceEmbedding | undefined) {
@@ -454,12 +452,12 @@ export class Face {
   /**
    * @desc       Point Type
    * @typedef    Point
-   * @property   { number }  x  
-   * @property   { number }  y 
+   * @property   { number }  x
+   * @property   { number }  y
    */
-  
+
   /**
-   * 
+   *
    * Get center point for the location
    * @type {Point}
    * @example
@@ -482,7 +480,7 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Get width for the imageData
    * @type {number}
    * @example
@@ -499,7 +497,7 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Get height for the imageData
    * @type {number}
    * @example
@@ -516,7 +514,7 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Get depth for the imageData:   length/width/height
    * @type {number}
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
@@ -534,10 +532,10 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Get the two face's distance, the smaller the number is, the similar of the two face
-   * @param {Face} face 
-   * @returns {number} 
+   * @param {Face} face
+   * @returns {number}
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
@@ -549,7 +547,7 @@ export class Face {
    * // distance between the different face:  1.2971515811057608
    * // distance between the same face:       0
    * // faceList[0] is totally the same with faceList[0], so the number is 0
-   * // faceList[1] is different with faceList[1], so the number is big. 
+   * // faceList[1] is different with faceList[1], so the number is big.
    * // If the number is smaller than 0.75, maybe they are the same person.
    */
   public distance(face: Face): number {
@@ -584,10 +582,10 @@ export class Face {
   }
 
   /**
-   * 
+   *
    * Save the face to the file
-   * @param {string} file 
-   * @returns {Promise<void>} 
+   * @param {string} file
+   * @returns {Promise<void>}
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
