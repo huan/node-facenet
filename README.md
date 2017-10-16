@@ -46,6 +46,10 @@ for (const face of faceList) {
   const embedding = await facenet.embedding(face)
   console.log('embedding:', embedding)
 }
+faceList[0].embedding = await facenet.embedding(faceList[0])
+faceList[1].embedding = await facenet.embedding(faceList[1])
+console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
 ```
 
 Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/demo.ts>
@@ -100,6 +104,53 @@ $ npm run example:visualize
 01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
 ```
 
+## 3. Get the diffence of two face
+
+Get the two face's distance, the smaller the number is, the similar of the two face 
+
+```ts
+import { Facenet } from 'facenet'
+
+const facenet = new Facenet()
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+
+const faceList = await facenet.align(imageFile)
+faceList[0].embedding = await facenet.embedding(faceList[0])
+faceList[1].embedding = await facenet.embedding(faceList[1])
+console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+```
+Output:  
+distance between the different face:  1.2971515811057608   
+distance between the same face:       0
+
+In the example,   
+faceList[0] is totally the same with faceList[0], so the number is 0   
+faceList[1] is different with faceList[1], so the number is big.    
+If the number is smaller than 0.75, maybe they are the same person.   
+
+Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/distance.ts>
+
+## 4. Save the face picture from a picture
+
+Recognize the face and save the face to local file.
+
+```ts
+import { Facenet } from 'facenet'
+
+const facenet = new Facenet()
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+
+const faceList = await facenet.align(imageFile)
+for (const face of faceList) {
+  await face.save(face.md5 + '.jpg')
+  console.log(`save face ${face.md5} successfuly`)
+}
+console.log(`Save ${faceList.length} faces from the imageFile`)
+```
+
+Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/get-face.ts>
+
 FACENET MANAGER
 ----------------
 
@@ -109,6 +160,10 @@ Roadmap: release facenet-manager on version 0.4
 
 [![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
 > The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
+
+# DOCUMENT
+
+See [auto generated docs](https://zixia.github.io/node-facenet)
 
 # INSTALL & REQUIREMENT
 

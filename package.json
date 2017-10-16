@@ -12,7 +12,7 @@
     "brolog": "^1.2.4",
     "canvas": "^2.0.0-alpha.5",
     "chinese-whispers": "^0.1.3",
-    "flash-store": "0.1.2",
+    "flash-store": "^0.1.2",
     "glob": "^7.1.2",
     "mkdirp": "^0.5.1",
     "numjs": "^0.14.2",
@@ -23,6 +23,7 @@
     "update-notifier": "^2.3.0"
   },
   "devDependencies": {
+    "jsdoc-to-markdown": "^3.0.0",
     "@types/app-root-path": "^1.2.4",
     "@types/argparse": "^1.0.31",
     "@types/blessed": "^0.1.6",
@@ -59,6 +60,7 @@
     "clean:python3": "shx rm -fr python3/*",
     "clean:models": "shx rm -fr models/*",
     "dist": "npm run clean:dist && tsc && shx cp src/python3/*.py dist/src/python3/",
+    "doc": "npm run dist && echo '# Facenet v'$(jq -r .version package.json)' Documentation\n' > docs/index.md && jsdoc2md dist/src/{facenet.js,face.js,} >> docs/index.md",
     "demo": "npm run example:demo",
     "example:demo": "ts-node examples/demo.ts",
     "example:visualize": "ts-node examples/visualize",
