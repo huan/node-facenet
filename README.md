@@ -400,6 +400,21 @@ This repository is heavily inspired by the following implementations:
 1. Facenet.embedding() to calculate the 128 dim feature vector of face
 1. Initial workable version
 
+TROUBLESHOOTING
+---------------
+
+### Dependencies
+
+OS    | Command
+----- | -----
+os x | `brew install pkg-config cairo pango libpng jpeg giflib`
+ubuntu | `sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++`
+fedora | `sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel`
+solaris | `pkgin install cairo pango pkg-config xproto renderproto kbproto xextproto`
+windows | [instructions on our wiki](https://github.com/automattic/node-canvas/wiki/installation---windows)
+
+more os see [node-canvas Wiki](https://github.com/Automattic/node-canvas/wiki/_pages).
+
 # FAQ
 
 1. `facenet-manager` display not right under Windows
