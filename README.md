@@ -46,6 +46,10 @@ for (const face of faceList) {
   const embedding = await facenet.embedding(face)
   console.log('embedding:', embedding)
 }
+faceList[0].embedding = await facenet.embedding(faceList[0])
+faceList[1].embedding = await facenet.embedding(faceList[1])
+console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
 ```
 
 Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/demo.ts>
@@ -100,6 +104,53 @@ $ npm run example:visualize
 01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
 ```
 
+## 3. Get the diffence of two face
+
+Get the two face's distance, the smaller the number is, the similar of the two face 
+
+```ts
+import { Facenet } from 'facenet'
+
+const facenet = new Facenet()
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+
+const faceList = await facenet.align(imageFile)
+faceList[0].embedding = await facenet.embedding(faceList[0])
+faceList[1].embedding = await facenet.embedding(faceList[1])
+console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+```
+Output:  
+distance between the different face:  1.2971515811057608   
+distance between the same face:       0
+
+In the example,   
+faceList[0] is totally the same with faceList[0], so the number is 0   
+faceList[1] is different with faceList[1], so the number is big.    
+If the number is smaller than 0.75, maybe they are the same person.   
+
+Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/distance.ts>
+
+## 4. Save the face picture from a picture
+
+Recognize the face and save the face to local file.
+
+```ts
+import { Facenet } from 'facenet'
+
+const facenet = new Facenet()
+const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+
+const faceList = await facenet.align(imageFile)
+for (const face of faceList) {
+  await face.save(face.md5 + '.jpg')
+  console.log(`save face ${face.md5} successfuly`)
+}
+console.log(`Save ${faceList.length} faces from the imageFile`)
+```
+
+Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/get-face.ts>
+
 FACENET MANAGER
 ----------------
 
@@ -109,6 +160,10 @@ Roadmap: release facenet-manager on version 0.4
 
 [![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
 > The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
+
+# DOCUMENT
+
+See [auto generated docs](https://zixia.github.io/node-facenet)
 
 # INSTALL & REQUIREMENT
 
@@ -345,6 +400,21 @@ This repository is heavily inspired by the following implementations:
 1. Facenet.embedding() to calculate the 128 dim feature vector of face
 1. Initial workable version
 
+TROUBLESHOOTING
+---------------
+
+### Dependencies
+
+OS    | Command
+----- | -----
+os x | `brew install pkg-config cairo pango libpng jpeg giflib`
+ubuntu | `sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++`
+fedora | `sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel`
+solaris | `pkgin install cairo pango pkg-config xproto renderproto kbproto xextproto`
+windows | [instructions on our wiki](https://github.com/automattic/node-canvas/wiki/installation---windows)
+
+more os see [node-canvas Wiki](https://github.com/Automattic/node-canvas/wiki/_pages).
+
 # FAQ
 
 1. `facenet-manager` display not right under Windows
@@ -369,9 +439,12 @@ sudo apt-get install -y libpango1.0-dev
 
 Solution for Mac:
 ```shell
+brew install python3
 brew install pkg-config
 brew install cairo
 brew install pango
+brew install libpng
+brew install libjpeg
 ```
 
 3. Error when install: `fatal error: jpeglib.h: No such file or directory`
@@ -382,6 +455,56 @@ Solution for Ubuntu 17.04:
 ```shell
 sudo apt-get install -y libjpeg-dev
 ```
+
+4. Error when run: `Error: error while reading from input stream`
+
+It is related with the `libjpeg` package
+
+Solution for Mac:
+```
+brew install libjpeg
+```
+
+5. Error when run: 
+```
+Error: Cannot find module '../build/Release/canvas.node'
+    at Function.Module._resolveFilename (module.js:527:15)
+    at Function.Module._load (module.js:476:23)
+    at Module.require (module.js:568:17)
+    at require (internal/module.js:11:18)
+    at Object.<anonymous> (/Users/jiaruili/git/node-facenet/node_modules/canvas/lib/bindings.js:3:18)
+    at Module._compile (module.js:624:30)
+    at Object.Module._extensions..js (module.js:635:10)
+    at Module.load (module.js:545:32)
+    at tryModuleLoad (module.js:508:12)
+    at Function.Module._load (module.js:500:3)
+```
+It seems the package not installed in a right way, like `sharp`, `canvas`, remove the package and reinstall it.
+
+run 
+```
+rm -rf node node_modules/canvas
+// if sharp, then remove sharp folder
+npm install
+```
+
+6. Error when install
+```
+> facenet@0.3.19 postinstall:models /Users/jiaruili/git/rui/node-facenet
+> set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -
+
+x 20170512-110547.pb
+x model-20170512-110547.ckpt-250000.data-00000-of-00001: (Empty error message)
+tar: Error exit delayed from previous errors.
+```
+
+It seems this because not get the full model file successfully. See [#issue63](https://github.com/zixia/node-facenet/issues/63)
+
+Solution:    
+
+download the file from https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2     
+rename the file `model.tar.bz2` and move it to the folder `models`
+try `npm install` again
 
 # AUTHOR
 
