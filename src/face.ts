@@ -292,8 +292,8 @@ export class Face {
     if (obj.embedding && obj.embedding.length) {
       face.embedding =  nj.array(obj.embedding)
     } else {
-      log.warn('Face', 'fromJSON() no embedding found for face %s#%s',
-                        face.id, face.md5)
+      log.verbose('Face', 'fromJSON() no embedding found for face %s#%s',
+                          face.id, face.md5)
     }
 
     return face
