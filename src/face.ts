@@ -437,14 +437,19 @@ export class Face {
    * Set embedding for a face
    */
   public set embedding(embedding: FaceEmbedding | undefined) {
-    if (!embedding || !(embedding instanceof (nj as any).NdArray)) {
-      throw new Error('must have a embedding(with type nj.NdArray)!')
+    if (!embedding) {
+      throw new Error(`Face<${this.md5}> embedding must defined!`)
+    } else if (!(embedding instanceof (nj as any).NdArray)
+                && embedding.constructor.name !== 'NdArray'
+              ) {
+      console.error(embedding.constructor.name, embedding)
+      throw new Error(`Face<${this.md5}> embedding is not instanceof nj.NdArray!(${typeof embedding} instead)`)
     } else if (this._embedding) {
-      throw new Error('already had embedding!')
+      throw new Error(`Face<${this.md5}> already had embedding!`)
     } else if (!embedding.shape) {
-      throw new Error('embedding has no shape property!')
+      throw new Error(`Face<${this.md5}> embedding has no shape property!`)
     } else if (embedding.shape[0] !== 128) {
-      throw new Error('embedding dim is not 128! got: ' + embedding.shape[0])
+      throw new Error(`Face<${this.md5}> embedding dim is not 128! got: ${embedding.shape[0]}`)
     }
     this._embedding = embedding
   }
