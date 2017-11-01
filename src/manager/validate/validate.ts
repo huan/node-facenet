@@ -12,9 +12,11 @@ import {
   // Face,
 }                 from '../../face'
 
+/*
 import {
   Lfw,
 }                 from '../../dataset/lfw'
+*/
 
 import {
   AlignmentCache,
@@ -37,7 +39,7 @@ interface MenuEventMap {
 
 export class Validate extends EventEmitter {
   private grid: any
-  private lfw:  Lfw
+//  private lfw:  Lfw
 
   constructor(
     public frame:           Frame,
@@ -45,7 +47,7 @@ export class Validate extends EventEmitter {
     public embeddingCache:  EmbeddingCache,
   ) {
     super()
-    this.lfw = new Lfw()
+    // this.lfw = new Lfw()
   }
 
   public async start(): Promise<void> {
