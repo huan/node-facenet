@@ -33,18 +33,12 @@ script:
   - npm run test:npm && echo 'Npm packing test is passed'
 
 notifications:
-  webhooks:
-    urls:
-      - https://registry.hub.docker.com/u/zixia/facenet/trigger/63cedfc9-c79a-435e-8d0b-ac764b022388/
-    # options: [always|never|change] default: always
-    on_success: always
-    on_failure: never
-    on_start: never
-    on_cancel: never
-    on_error: never
   email:
     on_success: change
     on_failure: change
+    on_start: never
+    on_cancel: never
+    on_error: never
 
 after_success:
   - npm run test:coverage
@@ -54,8 +48,9 @@ before_deploy:
   - npm run dist
 
 deploy:
-  provider: npm
-  email: zixia@zixia.net
-  api_key: "$NPM_TOKEN"
-  skip_cleanup: true
-
+  - provider: npm
+    email: zixia@zixia.net
+    api_key: "$NPM_TOKEN"
+    skip_cleanup: true
+  - provider: script
+    script: curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
