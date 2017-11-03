@@ -4,9 +4,9 @@ LABEL maintainer="Huan LI <zixia@zixia.net>"
 ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL          C.UTF-8
 
-RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
-  && apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \
       build-essential \
+      curl \
       g++ \
       git \
       iputils-ping \
@@ -14,29 +14,34 @@ RUN  curl -sL https://deb.nodesource.com/setup_8.x | bash - \
       libjpeg8-dev \
       libpango1.0-dev \
       libgif-dev \
-      nodejs \
       python2.7 \
       python3.6 \
+      python3-venv \
       sudo \
       vim \
   && rm -rf /var/lib/apt/lists/*
 
-# Open API Specification - https://www.openapis.org/
-RUN mkdir /facenet
-WORKDIR /facenet
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+  && apt-get update && apt-get install -y nodejs \
+  && rm -rf /var/lib/apt/lists/*
 
-COPY package.json .
-RUN npm install --python=python2.7 \
-    && ln -s /usr/lib/node_modules /node_modules \
-    && npm run dist \
-    && npm link \
-    && rm -fr /tmp/* ~/.npm
-COPY . .
+RUN mkdir /facenet /workdir
 
 # Add facenet user.
 RUN groupadd facenet && useradd -g facenet -d /facenet -m -G audio,video,sudo facenet \
-    && chown -R facenet:facenet /facenet \
-    && echo "facenet   ALL=NOPASSWD:ALL" >> /etc/sudoers
+  && chown -R facenet:facenet /facenet /workdir \
+  && echo "facenet   ALL=NOPASSWD:ALL" >> /etc/sudoers
+USER facenet
+
+WORKDIR /facenet
+COPY . .
+RUN sudo chown -R facenet /facenet \
+  && npm install \
+  && npm run dist \
+  && sudo ln -s /usr/lib/node_modules /node_modules \
+  && sudo ln -s . /node_modules/facenet \
+  && sudo ln -s ./node_modules/* /node_modules/ \
+  && rm -fr /tmp/* ~/.npm
 
 # EXPOSE 80
 
