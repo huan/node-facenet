@@ -4,7 +4,10 @@ import * as path    from 'path'
 import * as rimraf  from 'rimraf'
 import FlashStore   from 'flash-store'
 
-import { log }      from '../config'
+import {
+  EMBEDDING_FACE_SIZE,
+  log,
+}                   from '../config'
 import {
   Face,
   FaceJsonObject,
@@ -80,8 +83,12 @@ export class FaceCache {
       throw new Error('FaceCache.put() no imageData!')
     }
 
-    if (imageData.width !== 160) {
-      imageData = await resizeImage(imageData, 160, 160)
+    if (imageData.width > EMBEDDING_FACE_SIZE) {
+      imageData = await resizeImage(
+        imageData,
+        EMBEDDING_FACE_SIZE,
+        EMBEDDING_FACE_SIZE,
+      )
     }
     await saveImage(imageData, faceFile)
   }
