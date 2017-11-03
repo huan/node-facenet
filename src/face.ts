@@ -58,7 +58,7 @@ export class Face {
    * console.log('face md5: ', faceList[0].md5)
    * // Output md5: 003c926dd9d2368a86e41a2938aacc98
    */
-  public md5       : string
+  public md5: string
 
   /**
    *
@@ -75,31 +75,31 @@ export class Face {
    * //      81,
    * //      ... 211500 more items ] }
    */
-  public imageData : ImageData
+  public imageData: ImageData
 
   /**
    *
    * Get Face location
-   * @type {(Rectangle       | undefined)}
+   * @type {(Rectangle | undefined)}
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
    * console.log('face location : ', faceList[0].location)
    * // Output location:  { x: 360, y: 94, w: 230, h: 230 }
    */
-  public location   : Rectangle       | undefined
+  public location: Rectangle | undefined
 
   /**
    *
    * Get Face confidence
-   * @type {(number          | undefined)}
+   * @type {(number | undefined)}
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
    * console.log('face confidence : ', faceList[0].confidence)
    * // Output confidence:  0.9999634027481079
    */
-  public confidence : number          | undefined
+  public confidence: number | undefined
 
   /**
    * @desc       FacialLandmark Type
@@ -126,9 +126,9 @@ export class Face {
    * //   leftMouthCorner: { x: 417, y: 262 },
    * //   rightMouthCorner: { x: 482, y: 286 } }
    */
-  public landmark   : FacialLandmark  | undefined
+  public landmark: FacialLandmark  | undefined
 
-  private _embedding : FaceEmbedding
+  private _embedding: FaceEmbedding
 
   /**
    * Creates an instance of Face.
@@ -150,7 +150,6 @@ export class Face {
   }
 
   /**
-   *
    * Init a face
    * @param {FaceOptions} [options={}]
    * @returns {Promise<this>}
@@ -310,7 +309,7 @@ export class Face {
    * @private
    */
   public toString(): string {
-    return `Face#${this.id}@${this.md5}`
+    return `Face<${this.md5}>`
   }
 
   /**
