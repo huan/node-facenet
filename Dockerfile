@@ -39,8 +39,8 @@ RUN sudo chown -R facenet /facenet \
   && npm install \
   && npm run dist \
   && sudo ln -s /usr/lib/node_modules /node_modules \
-  && sudo ln -s . /node_modules/facenet \
-  && sudo ln -s ./node_modules/* /node_modules/ \
+  && sudo ln -s /facenet/node_modules/* /node_modules/ \
+  && sudo ln -s /facenet /node_modules/facenet \
   && rm -fr /tmp/* ~/.npm
 
 # EXPOSE 80
