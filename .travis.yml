@@ -52,5 +52,9 @@ deploy:
     email: zixia@zixia.net
     api_key: "$NPM_TOKEN"
     skip_cleanup: true
+    on:
+      branch: master
   - provider: script
     script: curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
+    on:
+      branch: master
