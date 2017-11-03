@@ -32,7 +32,7 @@
     "@types/gm": "^1.17.31",
     "@types/mkdirp": "^0.5.1",
     "@types/node": "^8.0.24",
-    "@types/numjs": "^0.14",
+    "@types/numjs": "^0.14.0",
     "@types/printf": "^0.2.0",
     "@types/rimraf": "^2.0.2",
     "@types/sinon": "^2.3.3",
@@ -46,12 +46,12 @@
     "gm": "^1.23.0",
     "nyc": "^11.1.0",
     "shx": "^0.2.2",
-    "sinon": "^4.0.0",
+    "sinon": "^4.1.0",
     "sinon-test": "^2.1.1",
     "tape": "^4.8.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
-    "typescript": "^2.6"
+    "typescript": "^2.6.0"
   },
   "scripts": {
     "check-version": "./bin/check-version.sh",
