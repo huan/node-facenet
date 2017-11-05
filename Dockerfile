@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
       python3.6 \
       python3-venv \
       sudo \
+      tzdata \
       vim \
   && rm -rf /var/lib/apt/lists/*
 
