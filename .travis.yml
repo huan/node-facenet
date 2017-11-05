@@ -55,6 +55,7 @@ deploy:
     on:
       branch: master
   - provider: script
-    script: curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
+    script:
+      - if [ "$TRAVIS_OS_NAME" == 'linux' ]; then curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"; fi
     on:
       branch: master
