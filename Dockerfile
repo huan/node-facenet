@@ -29,9 +29,9 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 RUN mkdir /facenet /workdir
 
 # Add facenet user.
-RUN groupadd facenet && useradd -g facenet -d /facenet -m -G audio,video,sudo facenet \
+RUN groupadd -r facenet && useradd -r -m -G audio,video,sudo -g facenet -d /facenet facenet \
   && chown -R facenet:facenet /facenet /workdir \
-  && echo "facenet   ALL=NOPASSWD:ALL" >> /etc/sudoers
+  && echo "facenet ALL=NOPASSWD:ALL" >> /etc/sudoers
 USER facenet
 
 WORKDIR /facenet
