@@ -55,7 +55,6 @@ deploy:
     on:
       branch: master
   - provider: script
-    script:
-      - if [ "$TRAVIS_OS_NAME" == 'linux' ]; then curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"; fi
+    script: ./scripts/docker.sh deploy
     on:
       branch: master

@@ -34,6 +34,10 @@ case "${1:-build}" in
     docker images | grep none | awk '{print $3}' | xargs docker rmi
     ;;
 
+  deploy)
+    if [ "$TRAVIS_OS_NAME" == 'linux' ]; then curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"; fi
+    ;;
+
   *)
     echo docker run -ti "$optRm" -v /dev/shm:/dev/shm "$imageName" "$@"
     exec docker run -ti "$optRm" -v /dev/shm:/dev/shm "$imageName" "$@"
