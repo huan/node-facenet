@@ -138,3 +138,4 @@ models/
 /package-lock.json
 /cache/
 .DS_Store
+.*.swp
