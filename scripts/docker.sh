@@ -35,9 +35,11 @@ case "${1:-build}" in
     ;;
 
   deploy)
-    if [ "$TRAVIS_OS_NAME" == 'linux' ]; then 
-      curl -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"; 
-      echo "docker.sh deploy: TRAVIS_OS_NAME is linux, triggered deploy"
+    if [ "$TRAVIS_OS_NAME" == 'linux' ]
+    then
+      echo "docker.sh deploy: TRAVIS_OS_NAME is linux, trigger deploy"
+      echo curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
+      curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
     else
       echo "docker.sh deploy: TRAVIS_OS_NAME is not linux, skipped deploy"
     fi
