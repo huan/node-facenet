@@ -50,6 +50,10 @@ export class Facenet implements Alignable, Embeddingable {
     this.pythonFacenet = new PythonFacenet()
   }
 
+  public version(): string {
+    return VERSION
+  }
+
   /**
    *
    * Init facenet
