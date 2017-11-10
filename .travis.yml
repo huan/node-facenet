@@ -21,6 +21,7 @@ notifications:
 
 stages:
   - test
+  - pack
   - name: deploy
     if: branch = /^(master|v\d+\.\d+)/
 
@@ -38,20 +39,19 @@ jobs:
         - node --version
         - npm --version
         - npm run test
-        - npm run test:npm && echo 'Npm packing test is passed'
       after_success:
         - npm run test:coverage
 
-    - stage: deploy
-      name: NPM
-      before_install: # switch to python 3.5
+    - stage: pack
+      script:
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
-        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
-        - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew update; fi
-        - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng; fi # jpeg giflib
+        - npm run test:npm && echo 'Npm packing test is passed'
+
+    - stage: deploy
       script:
         - echo "Deploying to NPM ..."
         - npm version
+        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
         - npm run dist
 
       deploy:
@@ -60,7 +60,6 @@ jobs:
         api_key: "$NPM_TOKEN"
 
     - stage: deploy
-      name: Docker Hub
       script:
         - echo 'Deploying to Docker Hub ...'
         - ./scripts/docker.sh deploy
