@@ -35,7 +35,8 @@ RUN groupadd -r facenet && useradd -r -m -G audio,video,sudo -g facenet -d /face
 USER facenet
 
 WORKDIR /facenet
-COPY . .
+COPY package.json .
+COPY ./src ./src
 RUN sudo chown -R facenet /facenet \
   && npm install \
   && npm run dist \
@@ -43,6 +44,7 @@ RUN sudo chown -R facenet /facenet \
   && sudo ln -s /facenet/node_modules/* /node_modules/ \
   && sudo ln -s /facenet /node_modules/facenet \
   && rm -fr /tmp/* ~/.npm
+COPY . .
 
 # EXPOSE 80
 
