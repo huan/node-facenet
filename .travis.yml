@@ -1,12 +1,13 @@
+language: node_js
+node_js:
+  - "7"
+
 matrix:
   include:
     - os: linux
     - os: osx
       osx_image: xcode9
 
-language: node_js
-node_js:
-  - "7"
 
 cache:
   directories:
