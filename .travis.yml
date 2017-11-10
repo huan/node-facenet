@@ -8,7 +8,9 @@ node_js:
 
 cache:
   directories:
+    - models
     - node_modules
+    - python3
 
 notifications:
   email:
