@@ -2,13 +2,6 @@ language: node_js
 node_js:
   - "7"
 
-matrix:
-  include:
-    - os: linux
-    - os: osx
-      osx_image: xcode9
-
-
 cache:
   directories:
     - node_modules
@@ -22,14 +15,16 @@ notifications:
     on_error: never
 
 stages:
-  - test
-  - pack
   - name: deploy
     if: branch = /^(master|v\d+\.\d+)/
 
 jobs:
   include:
     - stage: test
+      matrix:
+        include:
+          - os: linux
+          - os: osx
       before_install: # switch to python 3.5
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
         - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew info libjpeg; fi
@@ -51,7 +46,9 @@ jobs:
         - npm run test:npm && echo 'Npm packing test is passed'
 
     - stage: deploy
-      node_js: "8"
+      if: branch = master
+      node_js:
+        - "8"
       script:
         - echo "Deploying to NPM ..."
         - npm version
