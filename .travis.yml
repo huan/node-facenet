@@ -1,7 +1,6 @@
-matrix:
-  include:
-    - os: linux
-    - os: osx
+os:
+  - linux
+  - osx
 
 language: node_js
 node_js:
@@ -28,9 +27,6 @@ stages:
 jobs:
   include:
     - stage: test
-      os:
-        - linux
-        - osx
       before_install: # switch to python 3.5
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi

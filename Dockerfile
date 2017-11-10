@@ -43,7 +43,7 @@ RUN sudo chown -R facenet /facenet \
   && sudo ln -s /usr/lib/node_modules /node_modules \
   && sudo ln -s /facenet/node_modules/* /node_modules/ \
   && sudo ln -s /facenet /node_modules/facenet \
-  && rm -fr /tmp/* ~/.npm
+  && sudo rm -fr /tmp/* ~/.npm
 COPY . .
 
 # EXPOSE 80
