@@ -52,10 +52,11 @@ jobs:
         - npm run test:npm && echo 'Npm packing test is passed'
 
     - stage: deploy
+      before_install: # switch to python 3.5
+        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
       script:
         - echo "Deploying to NPM ..."
         - npm version
-        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
         - npm run dist
 
       deploy:
