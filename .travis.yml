@@ -27,8 +27,6 @@ script:
   - python3 --version
   - node --version
   - npm --version
-  - npm run lint
-  - npm run dist
   - npm run test
   - npm run test:npm && echo 'Npm packing test is passed'
 
@@ -43,18 +41,31 @@ notifications:
 after_success:
   - npm run test:coverage
 
-before_deploy:
-  - npm version
-  - npm run dist
+stages:
+  - test
+  - name: deploy
+    if: branch = /^v\d+\.\d+/
 
-deploy:
-  - provider: npm
-    email: zixia@zixia.net
-    api_key: "$NPM_TOKEN"
-    skip_cleanup: true
-    on:
-      branch: master
-  - provider: script
-    script: ./scripts/docker.sh deploy
-    on:
-      branch: master
+jobs:
+  include:
+    - stage: deploy
+      node_js: "8"
+      script:
+        - echo "Deploying to NPM ..."
+        - npm version
+        - npm run dist
+
+      deploy:
+        provider: npm
+        email: zixia@zixia.net
+        api_key: "$NPM_TOKEN"
+        on:
+          - master
+          - /^v\d+\.\d+/
+
+    - stage: deploy
+      script:
+        - echo 'Deploying to Docker Hub ...'
+        - ./scripts/docker.sh deploy
+      on:
+        branch: master
