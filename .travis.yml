@@ -55,6 +55,9 @@ jobs:
       before_install: # switch to python 3.5
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
       script:
+        - echo 'Deploying to Docker Hub ...'
+        - ./scripts/docker.sh deploy
+
         - echo "Deploying to NPM ..."
         - npm version
         - npm run dist
@@ -63,8 +66,3 @@ jobs:
         provider: npm
         email: zixia@zixia.net
         api_key: "$NPM_TOKEN"
-
-    - stage: deploy
-      script:
-        - echo 'Deploying to Docker Hub ...'
-        - ./scripts/docker.sh deploy
