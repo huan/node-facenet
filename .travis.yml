@@ -45,7 +45,7 @@ jobs:
         - source ~/virtualenv/python3.5/bin/activate
         - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
       script:
-        - npm run test:npm && echo 'Npm packing test is passed'
+        - npm run test:pack && echo 'Npm packing test is passed'
 
     - stage: deploy
       before_install: # switch to python 3.5
