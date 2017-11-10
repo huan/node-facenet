@@ -28,6 +28,9 @@ stages:
 jobs:
   include:
     - stage: test
+      os:
+        - linux
+        - osx
       before_install: # switch to python 3.5
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
@@ -38,7 +41,7 @@ jobs:
         - python3 --version
         - node --version
         - npm --version
-        # - npm run test
+        - npm run test
       after_success:
         - npm run test:coverage
 
