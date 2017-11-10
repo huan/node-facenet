@@ -15,6 +15,8 @@ notifications:
     on_error: never
 
 stages:
+  - test
+  - pack
   - name: deploy
     if: branch = /^(master|v\d+\.\d+)/
 
@@ -27,12 +29,9 @@ jobs:
           - os: osx
       before_install: # switch to python 3.5
         - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
-        - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew info libjpeg; fi
-      install:
+        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
         - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew update; fi
         - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng; fi # jpeg giflib
-        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
-        - npm install --unsafe-perm
       script:
         - echo $TRAVIS_OS_NAME
         - python3 --version
@@ -46,9 +45,13 @@ jobs:
         - npm run test:npm && echo 'Npm packing test is passed'
 
     - stage: deploy
-      if: branch = master
       node_js:
         - "8"
+      before_install: # switch to python 3.5
+        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
+        - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
+        - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew update; fi
+        - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng; fi # jpeg giflib
       script:
         - echo "Deploying to NPM ..."
         - npm version
