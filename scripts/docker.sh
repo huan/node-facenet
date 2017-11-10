@@ -34,17 +34,6 @@ case "${1:-build}" in
     docker images | grep none | awk '{print $3}' | xargs docker rmi
     ;;
 
-  deploy)
-    if [ "$TRAVIS_OS_NAME" == 'linux' ]
-    then
-      echo "docker.sh deploy: TRAVIS_OS_NAME is linux, trigger deploy"
-      echo curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
-      curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
-    else
-      echo "docker.sh deploy: TRAVIS_OS_NAME is not linux, skipped deploy"
-    fi
-    ;;
-
   *)
     echo docker run -ti "$optRm" -v /dev/shm:/dev/shm "$imageName" "$@"
     exec docker run -ti "$optRm" -v /dev/shm:/dev/shm "$imageName" "$@"

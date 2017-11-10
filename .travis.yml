@@ -52,7 +52,7 @@ jobs:
         - source ~/virtualenv/python3.5/bin/activate
       script:
         - echo 'Deploying to Docker Hub ...'
-        - ./scripts/docker.sh deploy
+        - curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
 
         - echo "Deploying to NPM ..."
         - npm version
