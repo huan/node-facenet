@@ -156,7 +156,7 @@ FACENET MANAGER
 
 **UNDER HEAVY DEVELOPMENT NOW**
 
-Roadmap: release facenet-manager on version 0.4
+Roadmap: release facenet-manager on version 0.8
 
 [![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
 > The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
