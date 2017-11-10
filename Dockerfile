@@ -36,6 +36,7 @@ USER facenet
 
 WORKDIR /facenet
 COPY package.json .
+COPY ./bin ./bin
 COPY ./src ./src
 RUN sudo chown -R facenet /facenet \
   && npm install \
