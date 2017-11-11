@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
       libgif-dev \
       python2.7 \
       python3.6 \
+      python3.6-dev \
       python3-venv \
       sudo \
       tzdata \
