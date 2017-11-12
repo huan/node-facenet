@@ -2,7 +2,7 @@ import * as nj            from 'numjs'
 
 import {
   FaceEmbedding,
-  EMBEDDING_FACE_SIZE,
+  INPUT_FACE_SIZE,
   log,
   VERSION,
 }                         from './config'
@@ -215,13 +215,13 @@ export class Facenet implements Alignable, Embeddingable {
       throw new Error('should be a square image because it will be resized to 160x160')
     }
 
-    if (imageData.width !== EMBEDDING_FACE_SIZE) {
+    if (imageData.width !== INPUT_FACE_SIZE) {
       log.verbose('Facenet', 'embedding(%dx%d) got a face not 160x160, resizing...',
                             imageData.width, imageData.height)
       imageData = await resizeImage(
         imageData,
-        EMBEDDING_FACE_SIZE,
-        EMBEDDING_FACE_SIZE,
+        INPUT_FACE_SIZE,
+        INPUT_FACE_SIZE,
       )
     }
 

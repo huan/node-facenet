@@ -42,4 +42,4 @@ export const FILE_FACENET_ICON_PNG = path.join(
 import Brolog from 'brolog'
 export const log = new Brolog()
 
-export const EMBEDDING_FACE_SIZE = 160
+export const INPUT_FACE_SIZE = 160

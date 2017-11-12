@@ -5,7 +5,7 @@ import * as rimraf  from 'rimraf'
 import FlashStore   from 'flash-store'
 
 import {
-  EMBEDDING_FACE_SIZE,
+  INPUT_FACE_SIZE,
   log,
 }                   from '../config'
 import {
@@ -18,7 +18,9 @@ import {
 }                   from '../misc'
 
 export class FaceCache {
-  public store: FlashStore<string, object>
+  public store          : FlashStore<string, object>
+  public embeddingStore : FlashStore<string, number[]>
+
   public imagedir: string
 
   constructor(
@@ -40,6 +42,12 @@ export class FaceCache {
         path.join(this.workdir, storeName),
       )
     }
+    if (!this.embeddingStore) {
+      const storeName   = 'face-cache-embedding.store'
+      this.embeddingStore = new FlashStore<string, number[]>(
+        path.join(this.workdir, storeName),
+      )
+    }
 
     if (!this.imagedir) {
       const dirName = 'imagedir'
@@ -53,6 +61,7 @@ export class FaceCache {
   public async destroy(): Promise<void> {
     log.verbose('FaceCache', 'destroy()')
     await this.store.destroy()
+    await this.embeddingStore.destroy()
     rimraf.sync(this.imagedir)
   }
 
@@ -71,7 +80,9 @@ export class FaceCache {
     face: Face,
   ): Promise<void> {
     await this.store.put(face.md5, face)  // Face.toJSON()
-
+    if (face.embedding) {
+      await this.embeddingStore.put(face.md5, face.embedding.tolist())
+    }
     const faceFile = this.file(face.md5)
 
     if (fs.existsSync(faceFile)) {
@@ -83,11 +94,11 @@ export class FaceCache {
       throw new Error('FaceCache.put() no imageData!')
     }
 
-    if (imageData.width > EMBEDDING_FACE_SIZE) {
+    if (imageData.width > INPUT_FACE_SIZE) {
       imageData = await resizeImage(
         imageData,
-        EMBEDDING_FACE_SIZE,
-        EMBEDDING_FACE_SIZE,
+        INPUT_FACE_SIZE,
+        INPUT_FACE_SIZE,
       )
     }
     await saveImage(imageData, faceFile)
