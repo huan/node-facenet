@@ -169,9 +169,16 @@ export function createImageData(
 }
 
 export function distance(
-  source:       nj.NdArray<number>, // shape: (n)
-  destination:  nj.NdArray<number>, // shape: (m, n) or (n)
+  source:       nj.NdArray<number> | number[], // shape: (n)
+  destination:  nj.NdArray<number> | number[], // shape: (m, n) or (n)
 ): number[] {
+  if (Array.isArray(source)) {
+    source = nj.array(source)
+  }
+  if (Array.isArray(destination)) {
+    destination = nj.array(destination)
+  }
+
   if (!source.shape || source.shape.length > 1) {
     throw new Error('array1 should be shape (n)')
   }

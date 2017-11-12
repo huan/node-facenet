@@ -142,6 +142,9 @@ test('distance()', async t => {
     const b = nj.array([4, 0]).reshape(1, 2) as nj.NdArray
     const c = distance(a, b)
     t.equal(c[0], 5, 'should get 5 for triangle 3&4&5')
+
+    const d = distance(a.tolist(), b.tolist())
+    t.equal(d[0], 5, 'should get 5 for triangle 3&4&5, with array param')
   })
 
   t.test('embedding list contains 3 row', async t => {
@@ -153,6 +156,9 @@ test('distance()', async t => {
     ]).reshape(3, 2) as nj.NdArray
     const c = distance(a, b)
     t.deepEqual(c, [5, 5, 5], 'should get 5 for all three rows')
+
+    const d = distance(a.tolist(), b.tolist())
+    t.deepEqual(d, [5, 5, 5], 'should get 5 for all three rows, with array param')
   })
 
 })
