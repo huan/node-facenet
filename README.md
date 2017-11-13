@@ -15,8 +15,12 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 # INSTALL
 
 ```shell
-$ npm install facenet
+$ npm install facenet numjs flash-store
 ```
+
+### Peer Dependencies
+1. `numjs`
+1. `flash-store`
 
 # EXAMPLE
 
