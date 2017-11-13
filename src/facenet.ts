@@ -304,6 +304,8 @@ export class Facenet implements Alignable, Embeddingable {
     return [x0, y0, x1, y1]
   }
 
+  public distance(face: Face, faceList: Face[]): number[]
+  public distance(embedding: number[], embeddingList: number[][]): number[]
   /**
    * Get distance between a face an each face in the faceList.
    *
@@ -323,21 +325,30 @@ export class Facenet implements Alignable, Embeddingable {
    * // distance: [ 0, 1.2971515811057608 ]
    * // The first face comes from the imageFile, the exactly same face, so the first result is 0.
    */
-  public distance(face: Face, faceList: Face[]): number[] {
-    if (!face.embedding) {
-      throw new Error('no face embedding!')
-    }
-    for (const aFace of faceList) {
-      if (!aFace.embedding) {
-        throw new Error('no aFace embedding!')
+  public distance(face: Face | number[], faceList: Face[] | number[][]): number[] {
+    let embedding     : number[]
+    let embeddingList : number[][]
+
+    if (Array.isArray(face)) {
+      embedding     = face
+      embeddingList = faceList as number[][]
+    } else {
+      if (!face.embedding) {
+        throw new Error('no face embedding!')
       }
+      for (const theFace of (faceList as Face[])) {
+        if (!theFace.embedding) {
+          throw new Error('no aFace embedding!')
+        }
+      }
+      embedding = face.embedding.tolist()
+      embeddingList = (faceList as Face[]).map(f => (f.embedding as any).tolist())
+      // const embeddingNdArray  = nj.stack<number>(embeddingList as any)
     }
-    const embeddingList     = faceList.map(f => f.embedding)
-    const embeddingNdArray  = nj.stack<number>(embeddingList as any)
 
     return distance(
-      face.embedding,
-      embeddingNdArray,
+      embedding,
+      embeddingList,
     )
   }
 }

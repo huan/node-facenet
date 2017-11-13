@@ -161,6 +161,12 @@ test('distance()', async t => {
     t.deepEqual(d, [5, 5, 5], 'should get 5 for all three rows, with array param')
   })
 
+  t.test('embedding list of array', async t => {
+    const a = [0, 3]
+    const b = [[4, 0]]
+    const c = distance(a, b)
+    t.deepEqual(c, [5], 'should get 5 for all three rows')
+  })
 })
 
 test('Data Convertions', async t => {

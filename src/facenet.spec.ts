@@ -78,25 +78,45 @@ test('transformLandmarks()', async t => {
 })
 
 test('distance() for multiple rows', async t => {
-  const FACE = {
-    embedding: nj.array([0, 3]),
-  } as any as Face
 
-  const FACE_LIST = [
-    {
-      embedding: nj.array([4, 0]),
-    },
-    {
-      embedding: nj.array([0, 8]),
-    },
-    {
-      embedding: nj.array([0, -2]),
-    },
-  ] as any as Face[]
-  const EXPECTED_DISTANCE_ARRAY = [5, 5, 5]
+  t.test('Face & Face[]', async t => {
+    const FACE = {
+      embedding: nj.array([0, 3]),
+    } as any as Face
 
-  const f = new Facenet()
-  const dist = f.distance(FACE, FACE_LIST)
-  t.deepEqual(dist, EXPECTED_DISTANCE_ARRAY, 'should get 5 for all three rows')
-  await f.quit()
+    const FACE_LIST = [
+      {
+        embedding: nj.array([4, 0]),
+      },
+      {
+        embedding: nj.array([0, 8]),
+      },
+      {
+        embedding: nj.array([0, -2]),
+      },
+    ] as any as Face[]
+    const EXPECTED_DISTANCE_ARRAY = [5, 5, 5]
+
+    const f = new Facenet()
+    const dist = f.distance(FACE, FACE_LIST)
+    t.deepEqual(dist, EXPECTED_DISTANCE_ARRAY, 'should get 5 for all three rows')
+    await f.quit()
+  })
+
+  t.test('Embedding & Embedding[]', async t => {
+    const EMBEDDING = [0, 3]
+
+    const EMBEDDING_LIST = [
+      [4, 0],
+      [0, 8],
+      [0, -2],
+    ]
+
+    const EXPECTED_DISTANCE_ARRAY = [5, 5, 5]
+
+    const f = new Facenet()
+    const dist = f.distance(EMBEDDING, EMBEDDING_LIST)
+    t.deepEqual(dist, EXPECTED_DISTANCE_ARRAY, 'should get 5 for all three rows')
+    await f.quit()
+  })
 })
