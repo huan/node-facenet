@@ -510,6 +510,11 @@ download the file from https://github.com/zixia/node-facenet/releases/download/v
 rename the file `model.tar.bz2` and move it to the folder `models`
 try `npm install` again
 
+SEE ALSO
+--------
+1. [Face Blinder](https://github.com/zixia/face-blinder): Assitant Bot for Whom is Suffering form Face Blindess
+1. [Wechaty Blinder](https://github.com/zixia/wechaty-blinder): Face Blinder Bot Powered by Wechaty
+
 # AUTHOR
 
 Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
