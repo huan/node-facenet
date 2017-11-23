@@ -19,7 +19,7 @@ import {
 
 export class FaceCache {
   public store          : FlashStore<string, object>
-  public embeddingStore : FlashStore<string, number[]>
+  // public embeddingStore : FlashStore<string, number[]>
 
   public imagedir: string
 
@@ -42,12 +42,12 @@ export class FaceCache {
         path.join(this.workdir, storeName),
       )
     }
-    if (!this.embeddingStore) {
-      const storeName   = 'face-cache-embedding.store'
-      this.embeddingStore = new FlashStore<string, number[]>(
-        path.join(this.workdir, storeName),
-      )
-    }
+    // if (!this.embeddingStore) {
+    //   const storeName   = 'face-cache-embedding.store'
+    //   this.embeddingStore = new FlashStore<string, number[]>(
+    //     path.join(this.workdir, storeName),
+    //   )
+    // }
 
     if (!this.imagedir) {
       const dirName = 'imagedir'
@@ -61,7 +61,7 @@ export class FaceCache {
   public async destroy(): Promise<void> {
     log.verbose('FaceCache', 'destroy()')
     await this.store.destroy()
-    await this.embeddingStore.destroy()
+    // await this.embeddingStore.destroy()
     rimraf.sync(this.imagedir)
   }
 
@@ -80,9 +80,9 @@ export class FaceCache {
     face: Face,
   ): Promise<void> {
     await this.store.put(face.md5, face)  // Face.toJSON()
-    if (face.embedding) {
-      await this.embeddingStore.put(face.md5, face.embedding.tolist())
-    }
+    // if (face.embedding) {
+    //   await this.embeddingStore.put(face.md5, face.embedding.tolist())
+    // }
     const faceFile = this.file(face.md5)
 
     if (fs.existsSync(faceFile)) {
