@@ -23,8 +23,9 @@ import {
 // minimum width/height of the face image.
 // the standard shape of face for facenet is 160x160
 // 40 is 1/16 of the low resolution
-const MIN_FACE_SIZE       = 40
-const MIN_FACE_CONFIDENCE = 0.95
+// Update 2017/11/23: loose the limitation from 40 to 10
+const MIN_FACE_SIZE       = 10
+const MIN_FACE_CONFIDENCE = 0.9
 
 // Interface for Cache
 export interface Alignable {
