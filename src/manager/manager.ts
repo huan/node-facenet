@@ -1,10 +1,7 @@
 import * as fs            from 'fs'
 import * as path          from 'path'
 
-import {
-  widget,
-  // Widgets,
-}                       from 'blessed'
+import * as blessed     from 'blessed'
 
 import {
   log,
@@ -43,7 +40,7 @@ export class Manager {
   private faceCache      : FaceCache
 
   private frame:  Frame
-  private screen: widget.Screen
+  private screen: blessed.Widgets.Screen
   private menu:   Menu
 
   constructor() {
@@ -59,7 +56,7 @@ export class Manager {
     this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, workdir)
     this.embeddingCache = new EmbeddingCache(this.facenet, workdir)
 
-    this.screen = new widget.Screen({
+    this.screen = blessed.screen({
       smartCSR: true,
       warnings: true,
       // log: '/tmp/fm.log' as any,

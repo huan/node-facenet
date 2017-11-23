@@ -1,10 +1,7 @@
 // import * as path from 'path'
 import { EventEmitter }   from 'events'
 
-import {
-  widget,
-  Widgets,
-}                         from 'blessed'
+import * as blessed       from 'blessed'
 const contrib             = require('blessed-contrib')
 
 import {
@@ -31,9 +28,9 @@ export type FrameEventName = 'face'
                             | 'title'
 
 export class Frame extends EventEmitter {
-  private elementList = [] as Widgets.Node[]
+  private elementList = [] as blessed.Widgets.Node[]
 
-  private _box: Widgets.BoxElement // for external usage, mainly to draw a contrib.grid
+  private _box: blessed.Widgets.BoxElement // for external usage, mainly to draw a contrib.grid
 
   private thumbWidth  = 44  // 2 for border line, 2 for float "/" workaround
   private imageWidth  = 2 * this.thumbWidth
@@ -42,7 +39,7 @@ export class Frame extends EventEmitter {
   private imageHeight = this.imageWidth * 3 / 4 / 2
 
   constructor(
-    public screen: Widgets.Screen,
+    public screen: blessed.Widgets.Screen,
   ) {
     super()
   }
@@ -105,7 +102,7 @@ export class Frame extends EventEmitter {
     const width  = (this.screen.width as number) - right
     const height = (this.screen.height as number) - 1
 
-    const box = new widget.Box({
+    const box = blessed.box({
       right,
       width,
       height,
@@ -118,13 +115,13 @@ export class Frame extends EventEmitter {
     this._box = box
   }
 
-  private append(element: Widgets.Node) {
+  private append(element: blessed.Widgets.Node) {
     this.elementList.push(element)
     this.screen.append(element)
   }
 
   private addHeaderElement(): void {
-    const box = new widget.Box({
+    const box = blessed.box({
       top:     0,
       left:    0,
       width:   '100%',
@@ -147,8 +144,8 @@ export class Frame extends EventEmitter {
     const height = Math.floor(width / 2)  // characters' height is about twice of width in console
 
     const faceList     = [] as Face[]
-    const thumbList    = [] as Widgets.ANSIImageElement[]
-    const distanceList = [] as Widgets.BoxElement[]
+    const thumbList    = [] as blessed.Widgets.ANSIImageElement[]
+    const distanceList = [] as blessed.Widgets.BoxElement[]
 
     do {
       const thumbElement = contrib.picture({
@@ -172,7 +169,7 @@ export class Frame extends EventEmitter {
         onReady: () => this.screen.render(),
       })
 
-      const distanceElement = new widget.Box({
+      const distanceElement = blessed.box({
         width,
         top:     top + height,
         right:   0,
@@ -210,7 +207,7 @@ export class Frame extends EventEmitter {
     face:         Face,
     faceList:     Face[],
     thumbList:    any[],  // contrib.picture
-    distanceList: widget.Box[],
+    distanceList: blessed.Widgets.BoxElement[],
   ) {
     log.verbose('Frame', 'addFace(%s, %d, %d, %d)',
                           face, faceList.length, thumbList.length, distanceList.length)
@@ -321,7 +318,7 @@ export class Frame extends EventEmitter {
     const width  = this.imageWidth
     const height = (this.screen.height as number) - top
 
-    const box = new widget.Box({
+    const box = blessed.box({
       top,
       right,
       width,
@@ -361,7 +358,7 @@ export class Frame extends EventEmitter {
   }
 
   private addStatusElement(): void {
-    const status = new widget.Box({
+    const status = blessed.box({
       bottom:  0,
       right:   0,
       height:  1,

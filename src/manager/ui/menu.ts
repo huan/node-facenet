@@ -1,7 +1,4 @@
-import {
-  widget,
-  Widgets,
-}                         from 'blessed'
+import * as blessed from 'blessed'
 
 import {
   log,
@@ -11,7 +8,7 @@ import {
 
 export class Menu {
   constructor(
-    public screen:    Widgets.Screen,
+    public screen:    blessed.Widgets.Screen,
     public menuList:  string[],
   ) {
     log.verbose('Menu', 'constructor()')
@@ -42,7 +39,7 @@ export class Menu {
 
   private backgroundElement() {
     log.verbose('Menu', 'backgroundElement()')
-    const box = new widget.Box({
+    const box = blessed.box({
       top:     0,
       left:    0,
       width:   this.screen.width,
@@ -58,20 +55,21 @@ export class Menu {
 
   private logoElement() {
     log.verbose('Menu', 'logoElement()')
-    const icon = new (widget as any).Image({
+    // FIXME: blessed typing BUG: no Image exported
+    const icon = (blessed.widget as any).image({
       file:   FILE_FACENET_ICON_PNG,
       type:   'ansi',
       left:   'center',
       top:    0,
       width:  32,
       height: 16,
-    }) as Widgets.ImageElement
+    }) as blessed.Widgets.ImageElement
     this.screen.append(icon)
   }
 
   private textElement() {
     log.verbose('Menu', 'textElement()')
-    const bigText = new widget.BigText({
+    const bigText = blessed.bigtext({
       top:     16,
       left:    'center',
       width:   60,
@@ -88,7 +86,7 @@ export class Menu {
   private versionElement() {
     log.verbose('Menu', 'versionElement()')
 
-    const version = new widget.Box({
+    const version = blessed.box({
       content: 'Manager version ' + VERSION,
       top:     29,
       left:    'center',
@@ -107,7 +105,7 @@ export class Menu {
   private pressElement(): Promise<void> {
     log.verbose('Menu', 'pressElement()')
 
-    const pressKey = new widget.Box({
+    const pressKey = blessed.box({
       top:    (this.screen.height) as number - 5,
       left:   'center',
       height: 1,
@@ -140,7 +138,7 @@ export class Menu {
   private async menuElement(): Promise<number> {
     log.verbose('Menu', 'menuElement()')
 
-    const list = new widget.List({
+    const list = blessed.list({
       label:  '{bold}{cyan-fg} Menu {/cyan-fg}{/bold}',
       tags:   true,
       top:    31,
