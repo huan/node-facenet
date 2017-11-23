@@ -22,7 +22,7 @@ export interface EmbeddingCacheData {
 export type EmbeddingCacheEvent = 'hit' | 'miss'
 
 export class EmbeddingCache extends EventEmitter implements Embeddingable {
-  public store: FlashStore<string, object>
+  public store: FlashStore<string, number[]>
 
   constructor(
     public facenet: Facenet,
@@ -73,7 +73,7 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     if (array) {
       log.silly('EmbeddingCache', 'embedding() cache HIT')
       this.emit('hit', face)
-      return nj.array(array as any)
+      return nj.array(array)
     }
 
     log.silly('EmbeddingCache', 'embedding() cache MISS')
