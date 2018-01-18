@@ -47,7 +47,7 @@
     "eslint": "^4.7.2",
     "flash-store": "^0.1.2",
     "gm": "^1.23.0",
-    "jsdoc-to-markdown": "^3.0.0",
+    "jsdoc-to-markdown": "^4.0.0",
     "numjs": "^0.15.0",
     "nyc": "^11.1.0",
     "shx": "^0.2.2",
