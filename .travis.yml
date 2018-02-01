@@ -4,7 +4,7 @@ os:
 
 language: node_js
 node_js: "9"
-python: "3.6"
+python: "3"
 
 cache:
   directories:
@@ -13,6 +13,7 @@ cache:
     - python3
 
 before_install: # switch to python 3.5
+  - python3 --version
   - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.6/bin/activate; fi
   - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
   # - if [ "$TRAVIS_OS_NAME" == 'osx' ];  then rvm get stable; fi
