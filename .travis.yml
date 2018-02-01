@@ -13,7 +13,7 @@ cache:
     - python3
 
 before_install: # switch to python 3.6
-  - python3 -c 'import sys; print(sys.version_info)'
+  - python -c 'import sys; print(sys.version_info)'
   - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.6/bin/activate; pip3 install -U pytest; fi
   - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
   # - if [ "$TRAVIS_OS_NAME" == 'osx' ];  then rvm get stable; fi
