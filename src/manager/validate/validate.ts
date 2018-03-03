@@ -2,10 +2,7 @@ import { EventEmitter }   from 'events'
 // import * as fs            from 'fs'
 // import * as path          from 'path'
 
-import {
-  // Widgets,
-  widget,
-}                 from 'blessed'
+import * as blessed from 'blessed'
 const contrib     = require('blessed-contrib')
 
 import {
@@ -84,7 +81,7 @@ export class Validate extends EventEmitter {
   ): void {
     const list = this.grid.set(
       row, col, rowSpan, colSpan,
-      widget.List,
+      blessed.Widgets.ListElement,
       {
         label:  '{bold}{cyan-fg} Menu {/cyan-fg}{/bold}',
         tags:   true,
