@@ -30,6 +30,9 @@ import {
 import {
   AlignmentEmbedding,
 }                       from './alignment-embedding/'
+import {
+  FaceGrouper,
+}                       from './face-grouper/'
 
 interface MenuItem {
   text:     string,
@@ -101,9 +104,9 @@ export class Manager {
         },
       },
       {
-        text     : 'Sort Photos Group by Face(To Be Implemented)',
+        text     : 'Group Photos by Face',
         callback : async () => {
-          console.log('sort')
+          await this.faceGrouper()
           return true
         },
       },
@@ -162,6 +165,20 @@ export class Manager {
       this.embeddingCache,
     )
     await ae.start(pathname)
+  }
+
+  private async faceGrouper(
+    pathname?: string,
+  ): Promise<void> {
+    log.verbose('Manager', 'faceGrouper(%s)', pathname ? pathname : '')
+
+    const grouper = new FaceGrouper(
+      this.frame,
+      this.faceCache,
+      this.alignmentCache,
+      this.embeddingCache,
+    )
+    await grouper.start(pathname)
   }
 
   public sort(pathname: string) {
