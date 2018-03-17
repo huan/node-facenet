@@ -31,7 +31,7 @@ RUN mkdir /facenet /workdir
 
 WORKDIR /facenet
 COPY . .
-RUN npm install \
+RUN npm install --unsafe-perm \
   && npm run dist \
   && sudo ln -s /usr/lib/node_modules /node_modules \
   && sudo ln -s /facenet/node_modules/* /node_modules/ \
