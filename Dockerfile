@@ -23,22 +23,15 @@ RUN apt-get update && apt-get install -y \
       vim \
   && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
   && apt-get update && apt-get install -y nodejs \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /facenet /workdir
 
-# Add facenet user.
-RUN groupadd -r facenet && useradd -r -m -G audio,video,sudo -g facenet -d /facenet facenet \
-  && chown -R facenet:facenet /facenet /workdir \
-  && echo "facenet ALL=NOPASSWD:ALL" >> /etc/sudoers
-USER facenet
-
 WORKDIR /facenet
 COPY . .
-RUN sudo chown -R facenet /facenet \
-  && npm install \
+RUN npm install \
   && npm run dist \
   && sudo ln -s /usr/lib/node_modules /node_modules \
   && sudo ln -s /facenet/node_modules/* /node_modules/ \
