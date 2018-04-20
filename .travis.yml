@@ -67,7 +67,7 @@ jobs:
 notifications:
   webhooks:
     urls:
-			- https://webhooks.gitter.im/e/8c6e384e12876030529f
+      - https://webhooks.gitter.im/e/8c6e384e12876030529f
     on_success: always  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
     on_start: always    # options: [always|never|change] default: always
