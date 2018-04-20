@@ -379,7 +379,9 @@ This repository is heavily inspired by the following implementations:
 
 # CHANGELOG
 
-## Master
+## v0.9 master unstable
+
+## v0.8 (Apr 2018)
 
 1. Added `facenet-manager` command line tool for demo/validate/sort photos
 1. Switch to `FlashStore` npm module as key-value database
