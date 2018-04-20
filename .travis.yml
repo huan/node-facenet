@@ -65,6 +65,13 @@ jobs:
         skip_cleanup: true
 
 notifications:
+  webhooks:
+    urls:
+			- https://webhooks.gitter.im/e/8c6e384e12876030529f
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: always    # options: [always|never|change] default: always
+
   email:
     on_success: change
     on_failure: change
