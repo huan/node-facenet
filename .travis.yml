@@ -3,7 +3,9 @@ os:
   - osx
 
 language: node_js
-node_js: "9"
+node_js:
+- "9"
+- "10"
 python: "3"
 
 cache:
