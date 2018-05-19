@@ -88,7 +88,7 @@
     "test:coverage": "nyc report --reporter=text-lcov | coveralls",
     "test:ts": "tape -r ts-node/register -r source-map-support/register \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
-    "test:pack": "cross-env-shell TMPDIR=/tmp/npm-package-test.$$ 'npm run dist && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz numjs flash-store && node smoke-testing.js'",
+    "test:pack": "bash -x scripts/npm-pack-testing.sh",
     "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt && pip3 install --upgrade numpy >/dev/stdout"
   },
   "repository": {
