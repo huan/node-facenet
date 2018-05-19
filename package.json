@@ -36,7 +36,8 @@
     "@types/numjs": "^0.14.0",
     "@types/printf": "^0.2.0",
     "@types/rimraf": "^2.0.2",
-    "@types/sinon": "^4.0.0",
+    "@types/semver": "^5.5.0",
+    "@types/sinon": "^4.3.3",
     "@types/sinon-test": "^1.0.2",
     "@types/tape": "^4.2.30",
     "@types/tar": "^4.0.0",
@@ -46,12 +47,14 @@
     "cross-env": "^5.0.5",
     "eslint": "^4.7.2",
     "flash-store": "^0.1.2",
+    "git-scripts": "^0.2.1",
     "gm": "^1.23.0",
     "jsdoc-to-markdown": "^4.0.0",
     "numjs": "^0.15.0",
     "nyc": "^11.1.0",
+    "semver": "^5.5.0",
     "shx": "^0.2.2",
-    "sinon": "^5.0.0",
+    "sinon": "^5.0.7",
     "sinon-test": "^2.1.1",
     "tape": "^4.8.0",
     "ts-node": "^6.0.0",
@@ -135,5 +138,14 @@
   },
   "engines": {
     "node": ">= 7"
+  },
+  "git": {
+    "scripts": {
+      "pre-push": "./scripts/pre-push.sh"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
   }
 }
