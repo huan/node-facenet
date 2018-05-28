@@ -14,6 +14,11 @@ async function main() {
   // Instanciate FaceNet
   const facenet = new Facenet()
 
+  // Init TensorFlow Backend:
+  //  This is very slow for the first time initialization,
+  //  which will take 15 - 100 seconds on different machines.
+  await facenet.init()
+
   try {
     // Load image from file
     const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
