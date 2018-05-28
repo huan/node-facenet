@@ -29,7 +29,7 @@ export function imageMd5(image: ImageData | HTMLImageElement): string {
     image = image as ImageData
   }
 
-  const buffer = new Buffer(image.data.buffer as ArrayBuffer)
+  const buffer = Buffer.from(image.data.buffer as ArrayBuffer)
   return crypto.createHash('md5')
               .update(buffer)
               .digest('hex')
