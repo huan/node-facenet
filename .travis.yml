@@ -3,7 +3,10 @@ os:
   - osx
 
 language: node_js
-node_js: "9"
+node_js:
+  - "9"
+  - "10"
+
 python: "3"
 
 cache:
@@ -53,9 +56,9 @@ jobs:
       script:
         - echo 'Deploying to Docker Hub ...'
         - curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
-
         - echo "Deploying to NPM ..."
         - npm version
+        - if ./scripts/development-release.ts; then ./scripts/package-publish-config-tag-next.ts; fi
         - npm run dist
 
       deploy:

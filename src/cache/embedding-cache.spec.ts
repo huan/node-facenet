@@ -73,8 +73,8 @@ test('Cache', sinonTest(async function (t: test.Test) {
     await face.init()
 
     embeddingStub.resetHistory()
-    hitSpy.reset()
-    missSpy.reset()
+    hitSpy.resetHistory()
+    missSpy.resetHistory()
 
     face.embedding = await embeddingCache.embedding(face)
 
@@ -89,8 +89,8 @@ test('Cache', sinonTest(async function (t: test.Test) {
     await face.init()
 
     embeddingStub.resetHistory()
-    hitSpy.reset()
-    missSpy.reset()
+    hitSpy.resetHistory()
+    missSpy.resetHistory()
 
     face.embedding = await embeddingCache.embedding(face)
 

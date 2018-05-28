@@ -1,7 +1,7 @@
-const {
+import {
   Facenet,
   VERSION,
-}           = require('facenet')
+}           from 'facenet'
 
 async function main() {
   const f = new Facenet()
