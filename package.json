@@ -8,7 +8,7 @@
     "@types/ndarray": "^1.0.5",
     "argparse": "^1.0.9",
     "blessed": "^0.1.81",
-    "blessed-contrib": "github:zixia/blessed-contrib#patch-1",
+    "blessed-contrib": "^4.8.5",
     "brolog": "^1.2.4",
     "canvas": "^2.0.0-alpha.11",
     "chinese-whispers": "^0.1.3",
@@ -21,8 +21,8 @@
     "update-notifier": "^2.3.0"
   },
   "peerDependencies": {
-    "flash-store": "^0.1.2",
-    "numjs": "^0.14"
+    "flash-store": "^0.2",
+    "numjs": "^0.15"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
@@ -55,7 +55,7 @@
     "semver": "^5.5.0",
     "shx": "^0.2.2",
     "sinon": "^5.0.7",
-    "sinon-test": "^2.1.1",
+    "sinon-test": "^2.2.0",
     "tape": "^4.8.0",
     "ts-node": "^6.0.0",
     "tslint": "^5.7.0",
@@ -80,13 +80,13 @@
     "manager": "npm run facenet-manager",
     "facenet-manager": "ts-node bin/facenet-manager",
     "preinstall": "npm run check-version",
-    "postinstall": "npm run venv && npm run postinstall:facenet && npm run postinstall:models",
+    "postinstall": "shx rm -fr node_modules/npm && npm run venv && npm run postinstall:facenet && npm run postinstall:models",
     "postinstall:facenet": "cd python3 && if [ -d facenet ]; then (cd facenet && git pull); else git clone https://github.com/davidsandberg/facenet.git; fi && cd -",
     "postinstall:models": "set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -e model.tar.bz2 -a ! -e model-*.meta ]; then curl --silent --location --output model.tar.bz2.tmp https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && if [ ! -f model-*.meta ]; then tar jxvf model.tar.bz2; rm -f model.tar.bz2; fi && cd -",
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run check-version && npm run lint && npm run test:py && npm run test:ts",
     "test:coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:ts": "tape -r ts-node/register -r source-map-support/register \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
+    "test:ts": "tape -r ts-node/register \"src/**/*.spec.ts\" \"tests/**/*.spec.ts\"",
     "test:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pytest src/ tests/",
     "test:pack": "bash -x scripts/npm-pack-testing.sh",
     "venv": "python3 -m venv python3 && . python3/bin/activate && pip3 install -r requirements.txt && pip3 install --upgrade numpy >/dev/stdout"

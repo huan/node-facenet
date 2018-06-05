@@ -128,6 +128,7 @@ t.*
 # C extensions
 .cache/
 .mypy_cache/
+.pytest_cache/
 
 python3/
 models/
@@ -139,3 +140,4 @@ models/
 /cache/
 .DS_Store
 .*.swp
+
