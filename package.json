@@ -1,6 +1,6 @@
 {
   "name": "facenet",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Solve face verification, recognition and clustering problems: a TensorFlow backed FaceNet implementation for Node.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
