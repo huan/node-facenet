@@ -9,7 +9,7 @@
     "argparse": "^1.0.9",
     "blessed": "^0.1.81",
     "blessed-contrib": "github:zixia/blessed-contrib#patch-1",
-    "brolog": "^1.2.4",
+    "brolog": "^1.6.4",
     "canvas": "^2.0.0-alpha.11",
     "chinese-whispers": "^0.1.3",
     "glob": "^7.1.2",
