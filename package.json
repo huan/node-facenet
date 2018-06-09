@@ -46,7 +46,7 @@
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.5",
     "eslint": "^4.7.2",
-    "flash-store": "^0.2.1",
+    "flash-store": "^0.4.1",
     "git-scripts": "^0.2.1",
     "gm": "^1.23.0",
     "jsdoc-to-markdown": "^4.0.0",
