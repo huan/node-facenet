@@ -57,7 +57,7 @@
     "sinon": "^5.0.7",
     "sinon-test": "^2.2.0",
     "tape": "^4.8.0",
-    "ts-node": "^6.0.0",
+    "ts-node": "6.1.0",
     "tslint": "^5.7.0",
     "typescript": "^2.6.1"
   },
