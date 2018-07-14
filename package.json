@@ -28,7 +28,7 @@
     "@types/app-root-path": "^1.2.4",
     "@types/argparse": "^1.0.31",
     "@types/blessed": "^0.1.6",
-    "@types/blue-tape": "^0.1.31",
+    "@types/blue-tape": "^0.1.32",
     "@types/glob": "^5.0.32",
     "@types/gm": "^1.17.31",
     "@types/mkdirp": "^0.5.1",
