@@ -39,7 +39,6 @@ export const FILE_FACENET_ICON_PNG = path.join(
   'facenet-icon.png',
 )
 
-import Brolog from 'brolog'
-export const log = new Brolog()
+export { log } from 'brolog'
 
 export const INPUT_FACE_SIZE = 160

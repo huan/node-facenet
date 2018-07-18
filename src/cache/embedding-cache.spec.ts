@@ -5,7 +5,7 @@ import * as fs            from 'fs'
 import * as test          from 'blue-tape'
 
 import * as sinon         from 'sinon'
-const sinonTest           = require('sinon-test')(sinon)
+// const sinonTest           = require('sinon-test')(sinon)
 
 import * as nj            from 'numjs'
 
@@ -42,10 +42,13 @@ test('Create workdir by init()', async t => {
   }
 })
 
-test('Cache', sinonTest(async function (t: test.Test) {
+// test.only('Cache', sinonTest(async function (t: test.Test) {
+test.only('Cache', async t => {
   const EXPECTED_EMBEDDING = nj.arange(128)
 
-  const embeddingStub = sinon.stub(
+  const sandbox = sinon.createSandbox()
+
+  const embeddingStub = sandbox.stub(
     Facenet.prototype,
     'embedding',
   )
@@ -55,8 +58,8 @@ test('Cache', sinonTest(async function (t: test.Test) {
     return Promise.resolve(EXPECTED_EMBEDDING)
   })
 
-  const hitSpy = sinon.spy()
-  const missSpy = sinon.spy()
+  const hitSpy  = sandbox.spy()
+  const missSpy = sandbox.spy()
 
   const workdir        = fs.mkdtempSync(TMP_PREFIX)
 
@@ -101,5 +104,5 @@ test('Cache', sinonTest(async function (t: test.Test) {
   })
 
   await facenet.quit()
-
-}))
+  sandbox.restore()
+})
