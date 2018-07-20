@@ -79,7 +79,7 @@
     "facenet-manager": "ts-node bin/facenet-manager",
     "preinstall": "npm run check-version",
     "postinstall": "shx rm -fr node_modules/npm && npm run venv && npm run postinstall:facenet && npm run postinstall:models",
-    "postinstall:facenet": "cd python3 && if [ -d facenet ]; then (cd facenet && git pull); else git clone https://github.com/davidsandberg/facenet.git; fi && cd -",
+    "postinstall:facenet": "cd python3 && if [ -d facenet ]; then (cd facenet && git pull); else git clone https://github.com/zixia/python-facenet.git facenet; fi && cd -",
     "postinstall:models": "set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -e model.tar.bz2 -a ! -e model-*.meta ]; then curl --silent --location --output model.tar.bz2.tmp https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && if [ ! -f model-*.meta ]; then tar jxvf model.tar.bz2; rm -f model.tar.bz2; fi && cd -",
     "start": "echo `npm run demo` to show a demo.",
     "test": "npm run check-version && npm run lint && npm run test:py && npm run test:ts",
