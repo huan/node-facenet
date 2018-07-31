@@ -447,8 +447,8 @@ export class Face {
       throw new Error(`Face<${this.md5}> already had embedding!`)
     } else if (!embedding.shape) {
       throw new Error(`Face<${this.md5}> embedding has no shape property!`)
-    } else if (embedding.shape[0] !== 128) {
-      throw new Error(`Face<${this.md5}> embedding dim is not 128! got: ${embedding.shape[0]}`)
+    } else if (embedding.shape.length !== 1) {
+      throw new Error(`Face<${this.md5}> embedding has wrong shape. Got: [${embedding.shape}] but it should be something [x] instead.`)
     }
     this._embedding = embedding
   }
