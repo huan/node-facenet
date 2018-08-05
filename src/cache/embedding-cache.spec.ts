@@ -43,7 +43,7 @@ test('Create workdir by init()', async t => {
 })
 
 // test.only('Cache', sinonTest(async function (t: test.Test) {
-test.only('Cache', async t => {
+test('Cache', async t => {
   const EXPECTED_EMBEDDING = nj.arange(128)
 
   const sandbox = sinon.createSandbox()

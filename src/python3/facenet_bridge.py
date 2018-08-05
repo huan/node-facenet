@@ -44,7 +44,7 @@ def base64_to_image(
     return image
 
 
-class FacenetBridge(object):
+class FacenetBridge():
     """
     Bridge of Facenet
     """
