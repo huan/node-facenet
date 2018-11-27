@@ -1,10 +1,10 @@
 # FACENET
 
-[![Build Status](https://travis-ci.com/zixia/node-facenet.svg?branch=master)](https://travis-ci.com/zixia/node-facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
+[![Build Status](https://travis-ci.com/huan/node-facenet.svg?branch=master)](https://travis-ci.com/huan/node-facenet) [![NPM Version](https://badge.fury.io/js/facenet.svg)](https://badge.fury.io/js/facenet) [![Downloads](http://img.shields.io/npm/dm/facenet.svg?style=flat-square)](https://npmjs.org/package/facenet) [![Join the chat at https://gitter.im/node-facenet/Lobby](https://badges.gitter.im/node-facenet/Lobby.svg)](https://gitter.im/node-facenet/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue.svg)](https://www.typescriptlang.org/)
 
 A TensorFlow backed FaceNet implementation for Node.js, which can solve **face** _verification_, _recognition_ and _clustering_ problems.
 
-![Google Facenet](https://zixia.github.io/node-facenet/images/facenet.jpg)
+![Google Facenet](https://huan.github.io/node-facenet/images/facenet.jpg)
 
 FaceNet is a deep convolutional network designed by Google, trained to solve face verification, recognition and clustering problem with efficiently at scale.
 
@@ -56,7 +56,7 @@ console.log('distance between the different face: ', faceList[0].distance(faceLi
 console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
 ```
 
-Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/demo.ts>
+Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/demo.ts>
 
 The output should be something like:
 
@@ -93,7 +93,7 @@ embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
 
 ## 2. Visualize for Intuition
 
-![FaceNet Visualization](https://zixia.github.io/node-facenet/images/landing-twins-ricky-martin-visualized.jpg)
+![FaceNet Visualization](https://huan.github.io/node-facenet/images/landing-twins-ricky-martin-visualized.jpg)
 
 1. Face is in the green rectangle.
 1. Similarity(distance) between faces showed as a number in the middle of the line.
@@ -133,7 +133,7 @@ faceList[0] is totally the same with faceList[0], so the number is 0
 faceList[1] is different with faceList[1], so the number is big.    
 If the number is smaller than 0.75, maybe they are the same person.   
 
-Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/distance.ts>
+Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/distance.ts>
 
 ## 4. Save the face picture from a picture
 
@@ -153,7 +153,7 @@ for (const face of faceList) {
 console.log(`Save ${faceList.length} faces from the imageFile`)
 ```
 
-Full source code can be found at here: <https://github.com/zixia/node-facenet/blob/master/examples/get-face.ts>
+Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/get-face.ts>
 
 FACENET MANAGER
 ----------------
@@ -167,7 +167,7 @@ Roadmap: release facenet-manager on version 0.8
 
 # DOCUMENT
 
-See [auto generated docs](https://zixia.github.io/node-facenet)
+See [auto generated docs](https://huan.github.io/node-facenet)
 
 # INSTALL & REQUIREMENT
 
@@ -271,7 +271,7 @@ model-20170512-110547.meta
 
 # DEVELOP
 
-[![Issue Stats](http://issuestats.com/github/zixia/node-facenet/badge/pr)](http://issuestats.com/github/zixia/node-facenet) [![Issue Stats](http://issuestats.com/github/zixia/node-facenet/badge/issue)](http://issuestats.com/github/zixia/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/zixia/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/zixia/node-facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/node-facenet.svg)](https://greenkeeper.io/)
+[![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/pr)](http://issuestats.com/github/huan/node-facenet) [![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/issue)](http://issuestats.com/github/huan/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/huan/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/huan/node-facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/huan/node-facenet.svg)](https://greenkeeper.io/)
 
 ```shell
 $ git clone git@github.com:zixia/node-facenet.git
@@ -350,7 +350,7 @@ $ ./node_modules/.bin/ts-node bin/embedding.ts face_image
     - [ ] Batch Support
 - [ ] ~~Python3 `async` & `await`~~
 - [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn)
-- [x] K(?)NN Alghorithm [Chinese Whispers](https://github.com/zixia/chinese-whispers)
+- [x] K(?)NN Alghorithm [Chinese Whispers](https://github.com/huan/chinese-whispers)
 - [ ] TensorFlow Sereving
 - [ ] OpenAPI Specification(Swagger)
 
@@ -371,10 +371,10 @@ This repository is heavily inspired by the following implementations:
 
 ## FaceNet Badge
 
-[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet)
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/huan/node-facenet)
 
 ```markdown
-[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet)
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/huan/node-facenet)
 ```
 
 # CHANGELOG
@@ -497,25 +497,25 @@ npm install
 6. Error when install
 ```
 > facenet@0.3.19 postinstall:models /Users/jiaruili/git/rui/node-facenet
-> set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -
+> set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/huan/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -
 
 x 20170512-110547.pb
 x model-20170512-110547.ckpt-250000.data-00000-of-00001: (Empty error message)
 tar: Error exit delayed from previous errors.
 ```
 
-It seems this because not get the full model file successfully. See [#issue63](https://github.com/zixia/node-facenet/issues/63)
+It seems this because not get the full model file successfully. See [#issue63](https://github.com/huan/node-facenet/issues/63)
 
 Solution:    
 
-download the file from https://github.com/zixia/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2     
+download the file from https://github.com/huan/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2     
 rename the file `model.tar.bz2` and move it to the folder `models`
 try `npm install` again
 
 SEE ALSO
 --------
-1. [Face Blinder](https://github.com/zixia/face-blinder): Assitant Bot for Whom is Suffering form Face Blindess
-1. [Wechaty Blinder](https://github.com/zixia/wechaty-blinder): Face Blinder Bot Powered by Wechaty
+1. [Face Blinder](https://github.com/huan/face-blinder): Assitant Bot for Whom is Suffering form Face Blindess
+1. [Wechaty Blinder](https://github.com/huan/wechaty-blinder): Face Blinder Bot Powered by Wechaty
 
 # AUTHOR
 
