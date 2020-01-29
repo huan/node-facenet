@@ -1,36 +1,24 @@
 {
+  "extends": "@chatie/tsconfig",
   "compilerOptions": {
-    "target": "es2016"
-    , "module": "commonjs"
-    , "outDir": "dist"
-    , "declaration": true
-    , "sourceMap": true
-    , "noEmitOnError": true
-    , "noUnusedLocals": true
-    , "noImplicitReturns": true
-    , "noFallthroughCasesInSwitch": true
-    , "strictNullChecks": true
-    , "noImplicitAny": false
-    , "noUnusedParameters": true
-    , "noImplicitThis": true
-
-    , "noLib": false
-    , "traceResolution": false
-    , "lib": [
-        "dom"
-      , "esnext"
+    "outDir": "dist",
+    "lib": [
+      "dom",
+      "esnext"
     ]
-  }
-  , "exclude": [
-      "node_modules/"
-    , "dist/"
-    , "tests/fixtures/"
-  ]
-  , "include": [
-       "index.ts"
-     , "bin/*.ts"
-     , "examples/**/*.ts"
-     , "src/**/*.ts"
-     , "tests/**/*.ts"
-  ]
+  },
+  "exclude": [
+    "node_modules/",
+    "dist/",
+    "tests/fixtures/",
+  ],
+  "include": [
+    "app/**/*.ts",
+    "bin/*.ts",
+    "bot/**/*.ts",
+    "examples/**/*.ts",
+    "scripts/**/*.ts",
+    "src/**/*.ts",
+    "tests/**/*.spec.ts",
+  ],
 }

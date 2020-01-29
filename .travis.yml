@@ -46,6 +46,7 @@ jobs:
         - source ~/virtualenv/python3.6/bin/activate
         - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
       script:
+        - ./scripts/generate-version.sh
         - npm run test:pack && echo 'Npm packing test is passed'
 
     - stage: deploy
@@ -57,7 +58,8 @@ jobs:
         - curl --silent -X POST -d '{"from":"travis"}' "$DOCKER_REBUILD_URL"
         - echo "Deploying to NPM ..."
         - npm version
-        - if ./scripts/development-release.ts; then ./scripts/package-publish-config-tag-next.ts; fi
+        - ./scripts/generate-version.sh
+        - ./scripts/package-publish-config-tag.sh
         - npm run dist
 
       deploy:

@@ -25,39 +25,33 @@
     "numjs": "^0.15"
   },
   "devDependencies": {
+    "@chatie/eslint-config": "^0.8.1",
+    "@chatie/git-scripts": "^0.2.5",
+    "@chatie/semver": "^0.4.7",
+    "@chatie/tsconfig": "^0.6.1",
     "@types/app-root-path": "^1.2.4",
     "@types/argparse": "^1.0.31",
     "@types/blessed": "^0.1.6",
-    "@types/blue-tape": "^0.1.31",
     "@types/glob": "^5.0.32",
     "@types/gm": "^1.17.31",
     "@types/mkdirp": "^0.5.1",
-    "@types/node": "^10.1.2",
     "@types/numjs": "^0.14.0",
     "@types/printf": "^0.2.0",
     "@types/rimraf": "^2.0.2",
-    "@types/semver": "^5.5.0",
-    "@types/sinon": "^5.0.0",
     "@types/tape": "^4.2.30",
     "@types/tar": "^4.0.0",
     "@types/update-notifier": "^2.0.0",
-    "blue-tape": "^1.0.0",
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.5",
-    "eslint": "^4.7.2",
     "flash-store": "^0.11.5",
-    "git-scripts": "^0.2.1",
     "gm": "^1.23.0",
     "jsdoc-to-markdown": "^4.0.0",
     "numjs": "^0.15.0",
     "nyc": "^12.0.1",
-    "semver": "^5.5.0",
+    "pkg-jq": "^0.2.4",
     "shx": "^0.2.2",
-    "sinon": "^5.0.7",
     "tape": "^4.8.0",
-    "ts-node": "^6.0.0",
-    "tslint": "^5.7.0",
-    "typescript": "^2.6.1"
+    "tstest": "^0.4.9"
   },
   "scripts": {
     "check-version": "./bin/check-version.sh",
@@ -70,8 +64,9 @@
     "demo": "npm run example:demo",
     "example:demo": "ts-node examples/demo.ts",
     "example:visualize": "ts-node examples/visualize",
-    "lint": "npm run lint:ts && npm run lint:py",
-    "lint:ts": "tslint --project tsconfig.json && npm run clean:dist && tsc --noEmit",
+    "lint": "npm run lint:es && npm run lint:ts && npm run lint:py",
+    "lint:ts": "tsc --noEmit",
+    "lint:es": "eslint --ignore-pattern tests/fixtures/ '{bin,examples,scripts,src,tests}/**/*.ts'",
     "lint:py": ". python3/bin/activate && PYTHONPATH='src/:python3/facenet/src/' pylint --contextmanager-decorators=contextlib.contextmanager,tf_contextlib.contextmanager src/python3/*.py && npm run lint:flake8 && npm run lint:mypy",
     "lint:flake8": "flake8 src/python3/*.py",
     "lint:mypy": "mypy --disallow-untyped-defs src/python3/*.py",
@@ -137,13 +132,13 @@
   "engines": {
     "node": ">= 7"
   },
-  "git": {
-    "scripts": {
-      "pre-push": "./scripts/pre-push.sh"
-    }
-  },
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "next"
+  },
+  "git": {
+    "scripts": {
+      "pre-push": "npx git-scripts-pre-push"
+    }
   }
 }

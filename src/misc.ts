@@ -1,9 +1,9 @@
-import * as crypto  from 'crypto'
-import * as fs      from 'fs'
-import * as path    from 'path'
+import crypto  from 'crypto'
+import fs      from 'fs'
+import path    from 'path'
 
-import * as nj      from 'numjs'
-import * as ndarray from 'ndarray'
+import nj      from 'numjs'
+import ndarray from 'ndarray'
 
 const _createCanvas     = require('canvas').createCanvas
 const _createImageData  = require('canvas').createImageData
