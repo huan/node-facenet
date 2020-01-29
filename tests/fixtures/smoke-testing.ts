@@ -7,7 +7,7 @@ async function main() {
   const f = new Facenet()
   try {
     await f.init()
-    console.log(`Facenet v${VERSION}/${f.version()} smoking test passed.`)
+    console.info(`Facenet v${VERSION}/${f.version()} smoking test passed.`)
   } catch (e) {
     console.error(e)
     // Error!

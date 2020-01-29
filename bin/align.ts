@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { ArgumentParser } from 'argparse'
-import * as gm            from 'gm'
+import gm            from 'gm'
 
 import {
   Facenet,
@@ -51,7 +51,7 @@ async function main(args: Args) {
     const faceList = await f.align(imageData)
     log.info('CLI', 'Aligned after %f seconds', (Date.now() - start) / 1000)
     log.info('CLI', 'Found %d faces', faceList.length)
-    // console.log(faceList)
+    // console.info(faceList)
 
     const newImage = gm(imageFile)
     for (const face of faceList) {

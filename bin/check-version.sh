@@ -14,7 +14,7 @@ python::version() {
 node::version() {
   echo "Node version:"
   node --version
-  ret=$(node -e 'console.log(process.versions.node.split(".")[0] >= 7 ? 0 : 1)')
+  ret=$(node -e 'console.info(process.versions.node.split(".")[0] >= 7 ? 0 : 1)')
   if [ $ret != 0 ]; then
     echo "Node.js version checking failed: minimum requirement is v7 (8 or above is recommended)"
     exit 1

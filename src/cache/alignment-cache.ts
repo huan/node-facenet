@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
-import * as fs          from 'fs'
-import * as path        from 'path'
+import fs          from 'fs'
+import path        from 'path'
 
 import { FlashStore }   from 'flash-store'
 
@@ -30,7 +30,7 @@ export interface AlignmentCacheData {
 export type AlignmentCacheEvent = 'hit' | 'miss'
 
 export class AlignmentCache extends EventEmitter implements Alignable {
-  public store: FlashStore<string, object>
+  public store!: FlashStore<string, object>
 
   constructor(
     public facenet   : Facenet,

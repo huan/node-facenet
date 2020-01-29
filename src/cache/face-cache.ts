@@ -1,7 +1,7 @@
-import * as fs      from 'fs'
-import * as path    from 'path'
+import fs      from 'fs'
+import path    from 'path'
 
-import * as rimraf  from 'rimraf'
+import rimraf  from 'rimraf'
 import FlashStore   from 'flash-store'
 
 import {
@@ -18,10 +18,10 @@ import {
 }                   from '../misc'
 
 export class FaceCache {
-  public store          : FlashStore<string, object>
-  public embeddingStore : FlashStore<string, number[]>
+  public store!: FlashStore<string, object>
+  public embeddingStore!: FlashStore<string, number[]>
 
-  public imagedir: string
+  public imagedir!: string
 
   constructor(
     public workdir: string,

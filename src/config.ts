@@ -1,8 +1,8 @@
-import * as path  from 'path'
+import path  from 'path'
 
-import * as nj    from 'numjs'
+import nj    from 'numjs'
 
-// import * as appRoot from 'app-root-path'
+// import appRoot from 'app-root-path'
 // export const MODULE_ROOT = appRoot.path
 
 export function parentDirectory(): string {     // export for test

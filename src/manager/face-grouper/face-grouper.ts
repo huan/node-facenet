@@ -1,5 +1,5 @@
-import * as fs    from 'fs'
-import * as path  from 'path'
+import fs    from 'fs'
+import path  from 'path'
 
 import {
   Widgets,
@@ -104,7 +104,7 @@ export class FaceGrouper {
 
       // Child generation function
       children: (self: any) => {
-        // console.log('children: node: ' + self.name)
+        // console.info('children: node: ' + self.name)
         log.silly('FaceGrouper', 'createExplorerData() children(%s)', self.name)
 
         // childrenContent is a property filled with self.children() result

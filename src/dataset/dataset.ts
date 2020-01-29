@@ -1,6 +1,6 @@
-import * as path  from 'path'
+import path  from 'path'
 
-import * as glob  from 'glob'
+import glob  from 'glob'
 
 import {
   log,
@@ -12,8 +12,9 @@ export interface IdImageList {
 
 export abstract class Dataset {
   // all is relative path
-  private imageListCache:   string[]
-  private idImageListCache: IdImageList
+  // all is relative path
+  private imageListCache!: string[]
+  private idImageListCache!: IdImageList
 
   constructor(
     public directory: string,

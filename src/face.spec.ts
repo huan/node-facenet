@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 
-import * as test        from 'blue-tape'  // tslint:disable:no-shadowed-variable
-import * as nj          from 'numjs'
+import test        from 'blue-tape'  // tslint:disable:no-shadowed-variable
+import nj          from 'numjs'
 
 import {
   fixtureImageData3x3,

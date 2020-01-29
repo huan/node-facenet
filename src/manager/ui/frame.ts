@@ -1,7 +1,7 @@
-// import * as path from 'path'
+// import path from 'path'
 import { EventEmitter }   from 'events'
 
-import * as blessed       from 'blessed'
+import blessed       from 'blessed'
 const contrib             = require('blessed-contrib')
 
 import {
@@ -30,7 +30,8 @@ export type FrameEventName = 'face'
 export class Frame extends EventEmitter {
   private elementList = [] as blessed.Widgets.Node[]
 
-  private _box: blessed.Widgets.BoxElement // for external usage, mainly to draw a contrib.grid
+  private _box!: blessed.Widgets.BoxElement; // for external usage, mainly to draw a contrib.grid
+ // for external usage, mainly to draw a contrib.grid
 
   private thumbWidth  = 44  // 2 for border line, 2 for float "/" workaround
   private imageWidth  = 2 * this.thumbWidth
@@ -269,7 +270,7 @@ export class Frame extends EventEmitter {
         },
       },
     })
-    // console.log(MODULE_ROOT)
+    // console.info(MODULE_ROOT)
     this.append(pic)
     this.on('image', async (file: string) => {
       try {
@@ -380,7 +381,7 @@ export class Frame extends EventEmitter {
 //   screen.on('resize', function() {
 //     mainBox.height  = (screen.height as number) - 1
 //     mainBox.width   = (screen.width as number) - 40
-//     console.log(contrib)
+//     console.info(contrib)
 //     // FIXME: emit typing
 //     bigImage.emit('attach')
 //     tree.emit('attach')

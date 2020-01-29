@@ -1,4 +1,4 @@
-import * as blessed from 'blessed'
+import blessed from 'blessed'
 
 import {
   log,

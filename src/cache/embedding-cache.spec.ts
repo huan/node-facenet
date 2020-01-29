@@ -1,13 +1,13 @@
 #!/usr/bin/env ts-node
-import * as fs            from 'fs'
+import fs            from 'fs'
 
 // tslint:disable:no-shadowed-variable
-import * as test          from 'blue-tape'
+import test          from 'blue-tape'
 
-import * as sinon         from 'sinon'
+import sinon         from 'sinon'
 // const sinonTest           = require('sinon-test')(sinon)
 
-import * as nj            from 'numjs'
+import nj            from 'numjs'
 
 import {
   fixtureImageData3x3,
@@ -29,7 +29,7 @@ test('Create workdir by init()', async t => {
   const facenet = new Facenet()
 
   const workdir = TMP_PREFIX + process.pid
-  // console.log(workdir)
+  // console.info(workdir)
   try {
     const embeddingCache = new EmbeddingCache(facenet, workdir)
     await embeddingCache.init()
@@ -54,7 +54,7 @@ test('Cache', async t => {
   )
   // embeddingStub.returns(Promise.resolve(EXPECTED_EMBEDDING))
   embeddingStub.callsFake(() => {
-    // console.log('fake')
+    // console.info('fake')
     return Promise.resolve(EXPECTED_EMBEDDING)
   })
 

@@ -1,7 +1,7 @@
-import * as fs            from 'fs'
-import * as path          from 'path'
+import fs            from 'fs'
+import path          from 'path'
 
-import * as blessed     from 'blessed'
+import blessed     from 'blessed'
 
 import {
   log,
@@ -42,9 +42,9 @@ export class Manager {
   private embeddingCache : EmbeddingCache
   private faceCache      : FaceCache
 
-  private frame:  Frame
+  private frame!: Frame
   private screen: blessed.Widgets.Screen
-  private menu:   Menu
+  private menu!: Menu
 
   constructor() {
     log.verbose('Manager', 'constructor()')
@@ -96,7 +96,7 @@ export class Manager {
       {
         text     : 'Validate on LFW(To Be Implemented)',
         callback : async () => {
-          console.log('validate lfw')
+          console.info('validate lfw')
           return true
         },
       },
@@ -179,12 +179,12 @@ export class Manager {
   }
 
   public sort(pathname: string) {
-    console.log(pathname)
+    console.info(pathname)
     //
   }
 
   public validate() {
-    console.log('validate')
+    console.info('validate')
     //
   }
 }

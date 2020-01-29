@@ -43,17 +43,17 @@ const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
 
 for (const face of faceList) {
-  console.log('bounding box:',  face.boundingBox)
-  console.log('landmarks:',     face.facialLandmark)
+  console.info('bounding box:',  face.boundingBox)
+  console.info('landmarks:',     face.facialLandmark)
 
   // Calculate Face Embedding, return feature vector
   const embedding = await facenet.embedding(face)
-  console.log('embedding:', embedding)
+  console.info('embedding:', embedding)
 }
 faceList[0].embedding = await facenet.embedding(faceList[0])
 faceList[1].embedding = await facenet.embedding(faceList[1])
-console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
-console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
 ```
 
 Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/demo.ts>
@@ -121,8 +121,8 @@ const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
 faceList[0].embedding = await facenet.embedding(faceList[0])
 faceList[1].embedding = await facenet.embedding(faceList[1])
-console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
-console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
 ```
 Output:  
 distance between the different face:  1.2971515811057608   
@@ -148,9 +148,9 @@ const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
 for (const face of faceList) {
   await face.save(face.md5 + '.jpg')
-  console.log(`save face ${face.md5} successfuly`)
+  console.info(`save face ${face.md5} successfuly`)
 }
-console.log(`Save ${faceList.length} faces from the imageFile`)
+console.info(`Save ${faceList.length} faces from the imageFile`)
 ```
 
 Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/get-face.ts>
@@ -241,9 +241,9 @@ Get the 128 dim embedding vector for this face.(After alignment)
 ```ts
 import { Face } from 'facenet'
 
-console.log('bounding box:',  face.boundingBox)
-console.log('landmarks:',     face.facialLandmark)
-console.log('embedding:',     face.embedding)
+console.info('bounding box:',  face.boundingBox)
+console.info('landmarks:',     face.facialLandmark)
+console.info('embedding:',     face.embedding)
 ```
 
 # ENVIRONMENT VARIABLES

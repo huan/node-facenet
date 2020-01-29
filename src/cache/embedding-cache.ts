@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events'
-import * as fs          from 'fs'
-import * as path        from 'path'
+import fs          from 'fs'
+import path        from 'path'
 
-import * as nj          from 'numjs'
+import nj          from 'numjs'
 import FlashStore       from 'flash-store'
 
 import {
@@ -22,7 +22,7 @@ export interface EmbeddingCacheData {
 export type EmbeddingCacheEvent = 'hit' | 'miss'
 
 export class EmbeddingCache extends EventEmitter implements Embeddingable {
-  public store: FlashStore<string, number[]>
+  public store!: FlashStore<string, number[]>
 
   constructor(
     public facenet: Facenet,

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import * as path            from 'path'
+import path            from 'path'
 import { ArgumentParser }   from 'argparse'
-import * as updateNotifier  from 'update-notifier'
+import updateNotifier  from 'update-notifier'
 
 import {
   log,

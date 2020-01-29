@@ -1,8 +1,8 @@
 import { EventEmitter }   from 'events'
-// import * as fs            from 'fs'
-// import * as path          from 'path'
+// import fs            from 'fs'
+// import path          from 'path'
 
-import * as blessed from 'blessed'
+import blessed from 'blessed'
 const contrib     = require('blessed-contrib')
 
 import {

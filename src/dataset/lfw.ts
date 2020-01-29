@@ -1,7 +1,7 @@
-import * as fs          from 'fs'
-import * as http        from 'http'
-import * as path        from 'path'
-import * as readline    from 'readline'
+import fs          from 'fs'
+import http        from 'http'
+import path        from 'path'
+import readline    from 'readline'
 
 import mkdirp         = require('mkdirp')
 import printf         = require('printf')
@@ -22,7 +22,7 @@ export type LfwPair = [string, string, boolean] // image1, image2, isSame
 export class Lfw extends Dataset {
   private downloadUrl = 'http://vis-www.cs.umass.edu/lfw/lfw.tgz'
   private downloadFile:   string
-  private pairListCache:  LfwPair[]
+  private pairListCache!: LfwPair[]
 
   constructor(
     public workdir = path.join(MODULE_ROOT, 'datasets', 'lfw'),

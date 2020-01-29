@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
-import * as path      from 'path'
+import path      from 'path'
 
-import * as gm        from 'gm'
+import gm        from 'gm'
 const printf          = require('printf')
 
 import {
@@ -63,7 +63,7 @@ async function main() {
 
         const r = region(faceR, faceC)
 
-        // console.log(r)
+        // console.info(r)
 
         // newImage.fill('none')
         //         .stroke('green', 1)

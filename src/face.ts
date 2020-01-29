@@ -1,4 +1,4 @@
-import * as nj              from 'numjs'
+import nj              from 'numjs'
 
 import {
   FaceEmbedding,
@@ -55,10 +55,20 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face md5: ', faceList[0].md5)
+   * console.info('face md5: ', faceList[0].md5)
    * // Output md5: 003c926dd9d2368a86e41a2938aacc98
    */
-  public md5: string
+  /**
+   *
+   * Get Face md5
+   * @type {string}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.info('face md5: ', faceList[0].md5)
+   * // Output md5: 003c926dd9d2368a86e41a2938aacc98
+   */
+  public md5!: string
 
   /**
    *
@@ -67,7 +77,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face imageData: ', faceList[0].imageData)
+   * console.info('face imageData: ', faceList[0].imageData)
    * // Output, Base64 of Buffer
    * // imageData:  ImageData {
    * //   data:
@@ -75,7 +85,22 @@ export class Face {
    * //      81,
    * //      ... 211500 more items ] }
    */
-  public imageData: ImageData
+  /**
+   *
+   * Get Face imageData
+   * @type {ImageData}
+   * @example
+   * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
+   * const faceList = await facenet.align(imageFile)
+   * console.info('face imageData: ', faceList[0].imageData)
+   * // Output, Base64 of Buffer
+   * // imageData:  ImageData {
+   * //   data:
+   * //    Uint8ClampedArray [
+   * //      81,
+   * //      ... 211500 more items ] }
+   */
+  public imageData!: ImageData
 
   /**
    *
@@ -84,7 +109,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face location : ', faceList[0].location)
+   * console.info('face location : ', faceList[0].location)
    * // Output location:  { x: 360, y: 94, w: 230, h: 230 }
    */
   public location: Rectangle | undefined
@@ -96,7 +121,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face confidence : ', faceList[0].confidence)
+   * console.info('face confidence : ', faceList[0].confidence)
    * // Output confidence:  0.9999634027481079
    */
   public confidence: number | undefined
@@ -118,7 +143,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face landmark : ', faceList[0].landmark)
+   * console.info('face landmark : ', faceList[0].landmark)
    * // Output
    * // landmark:  { leftEye: { x: 441, y: 180 },
    * //   rightEye: { x: 515, y: 208 },
@@ -128,7 +153,7 @@ export class Face {
    */
   public landmark: FacialLandmark  | undefined
 
-  private _embedding: FaceEmbedding
+  private _embedding!: FaceEmbedding
 
   /**
    * Creates an instance of Face.
@@ -467,7 +492,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face center : ', faceList[0].center)
+   * console.info('face center : ', faceList[0].center)
    * // Output: center:  { x: 475, y: 209 }
    */
   public get center(): Point {
@@ -490,7 +515,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face width : ', faceList[0].width)
+   * console.info('face width : ', faceList[0].width)
    * // Output: width:  230
    */
   public get width(): number {
@@ -507,7 +532,7 @@ export class Face {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face height : ', faceList[0].height)
+   * console.info('face height : ', faceList[0].height)
    * // Output: height:  230
    */
   public get height(): number {
@@ -523,7 +548,7 @@ export class Face {
    * @type {number}
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log('face depth : ', faceList[0].depth)
+   * console.info('face depth : ', faceList[0].depth)
    * // Output: depth:  4
    */
   public get depth(): number {
@@ -545,8 +570,8 @@ export class Face {
    * const faceList = await facenet.align(imageFile)
    * faceList[0].embedding = await facenet.embedding(faceList[0])
    * faceList[1].embedding = await facenet.embedding(faceList[1])
-   * console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
-   * console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+   * console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
+   * console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
    * // Output
    * // distance between the different face:  1.2971515811057608
    * // distance between the same face:       0

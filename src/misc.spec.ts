@@ -1,10 +1,10 @@
 #!/usr/bin/env ts-node
-import * as path          from 'path'
+import path          from 'path'
 
-import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
+import test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
-import * as ndarray from 'ndarray'
-import * as nj      from 'numjs'
+import ndarray from 'ndarray'
+import nj      from 'numjs'
 
 import {
   bufResizeUint8ClampedRGBA,
@@ -69,7 +69,7 @@ test('imageMd5()', async t => {
 
   const image = await loadImage(IMAGE_FILE)
   const md5Text = imageMd5(image)
-  // console.log(md5Text)
+  // console.info(md5Text)
   t.equal(md5Text, EXPECTED_MD5, 'should calc md5 right')
 })
 

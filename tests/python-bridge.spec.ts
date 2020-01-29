@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import * as test        from 'blue-tape'  // tslint:disable:no-shadowed-variable
+import test        from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import { pythonBridge } from 'python-bridge'
 
@@ -13,7 +13,7 @@ test('python 3 version test', async t => {
     await python.ex`import sys`
     const [major, minor] = await python`sys.version_info`
     t.ok(major >= 3, 'should be at least v3')
-    console.log('minor version = ' + minor)
+    console.info('minor version = ' + minor)
     t.ok(minor >= 5, 'should get minor version >= 5')
   } catch (e) {
     t.fail(e.message)

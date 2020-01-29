@@ -67,7 +67,7 @@ Do face alignment for the image, return a list of faces.
 ```js
 const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
-console.log(faceList)
+console.info(faceList)
 // Output
 // [ Face {
 //     id: 0,
@@ -140,7 +140,7 @@ face.embedding = await facenet.embedding(face)
 }
 const faceInFaceList = faceList[0]
 const distance = facenet.distance(faceInFaceList, faceList)
-console.log('distance:', distance)
+console.info('distance:', distance)
 // Output:
 // distance: [ 0, 1.2971515811057608 ]
 // The first face comes from the imageFile, the exactly same face, so the first result is 0.
@@ -198,7 +198,7 @@ Get center point for the location
 ```js
 const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
-console.log('face center : ', faceList[0].center)
+console.info('face center : ', faceList[0].center)
 // Output: center:  { x: 475, y: 209 }
 ```
 <a name="Face+width"></a>
@@ -211,7 +211,7 @@ Get width for the imageData
 ```js
 const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
-console.log('face width : ', faceList[0].width)
+console.info('face width : ', faceList[0].width)
 // Output: width:  230
 ```
 <a name="Face+height"></a>
@@ -224,7 +224,7 @@ Get height for the imageData
 ```js
 const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
-console.log('face height : ', faceList[0].height)
+console.info('face height : ', faceList[0].height)
 // Output: height:  230
 ```
 <a name="Face+depth"></a>
@@ -267,8 +267,8 @@ const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
 const faceList = await facenet.align(imageFile)
 faceList[0].embedding = await facenet.embedding(faceList[0])
 faceList[1].embedding = await facenet.embedding(faceList[1])
-console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
-console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
+console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
 // Output
 // distance between the different face:  1.2971515811057608
 // distance between the same face:       0

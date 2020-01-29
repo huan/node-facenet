@@ -14,8 +14,8 @@ async function main() {
     const faceList = await facenet.align(imageFile)
     faceList[0].embedding = await facenet.embedding(faceList[0])
     faceList[1].embedding = await facenet.embedding(faceList[1])
-    console.log('distance between the different face: ', faceList[0].distance(faceList[1]))
-    console.log('distance between the same face:      ', faceList[0].distance(faceList[0]))
+    console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
+    console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
   } finally {
     facenet.quit()
   }

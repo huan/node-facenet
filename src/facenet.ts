@@ -1,4 +1,4 @@
-import * as nj            from 'numjs'
+import nj            from 'numjs'
 
 import {
   FaceEmbedding,
@@ -103,7 +103,7 @@ export class Facenet implements Alignable, Embeddingable {
    * @example
    * const imageFile = `${__dirname}/../tests/fixtures/two-faces.jpg`
    * const faceList = await facenet.align(imageFile)
-   * console.log(faceList)
+   * console.info(faceList)
    * // Output
    * // [ Face {
    * //     id: 0,
@@ -321,7 +321,7 @@ export class Facenet implements Alignable, Embeddingable {
    * }
    * const faceInFaceList = faceList[0]
    * const distance = facenet.distance(faceInFaceList, faceList)
-   * console.log('distance:', distance)
+   * console.info('distance:', distance)
    * // Output:
    * // distance: [ 0, 1.2971515811057608 ]
    * // The first face comes from the imageFile, the exactly same face, so the first result is 0.

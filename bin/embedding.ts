@@ -42,7 +42,7 @@ async function main(args: Args) {
       log.info('CLI', 'Facenet Embeding(%fs)',
                           (Date.now() - start) / 1000,
               )
-      console.log(JSON.stringify(embedding.tolist()))
+      console.info(JSON.stringify(embedding.tolist()))
     }
   } catch (e) {
     log.error('CLI', e)

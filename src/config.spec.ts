@@ -1,8 +1,8 @@
 #!/usr/bin/env ts-node
 
-import * as fs    from 'fs'
-import * as path  from 'path'
-import * as test  from 'blue-tape'  // tslint:disable:no-shadowed-variable
+import fs    from 'fs'
+import path  from 'path'
+import test  from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import {
   MODULE_ROOT,

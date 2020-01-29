@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
-import * as test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
+import test          from 'blue-tape'  // tslint:disable:no-shadowed-variable
 
 import { pythonBridge }   from 'python-bridge'
 

@@ -37,12 +37,12 @@ async function main() {
         console.error('face no image data!')
       }
 
-      console.log('image file:',    imageFile)
-      console.log('face file:',     faceFile)
-      console.log('confidence:',    face.confidence)
-      console.log('bounding box:',  face.location)
-      console.log('landmarks:',     face.landmark)
-      console.log('embedding:',     face.embedding)
+      console.info('image file:',    imageFile)
+      console.info('face file:',     faceFile)
+      console.info('confidence:',    face.confidence)
+      console.info('bounding box:',  face.location)
+      console.info('landmarks:',     face.landmark)
+      console.info('embedding:',     face.embedding)
     }
   } finally {
     facenet.quit()
