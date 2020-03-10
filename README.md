@@ -271,7 +271,7 @@ model-20170512-110547.meta
 
 # DEVELOP
 
-[![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/pr)](http://issuestats.com/github/huan/node-facenet) [![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/issue)](http://issuestats.com/github/huan/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/huan/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/huan/node-facenet?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/huan/node-facenet.svg)](https://greenkeeper.io/)
+[![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/pr)](http://issuestats.com/github/huan/node-facenet) [![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/issue)](http://issuestats.com/github/huan/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/huan/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/huan/node-facenet?branch=master) 
 
 ```shell
 $ git clone git@github.com:zixia/node-facenet.git
