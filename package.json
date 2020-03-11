@@ -10,7 +10,7 @@
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
     "brolog": "^1.2.4",
-    "canvas": "2.0.0-alpha.11",
+    "canvas": "2.6.1",
     "chinese-whispers": "^0.1.3",
     "glob": "^7.1.2",
     "mkdirp": "^0.5.1",
