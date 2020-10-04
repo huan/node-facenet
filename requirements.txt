@@ -1,4 +1,5 @@
 flake8
+imageio
 mypy
 pillow
 pylint
