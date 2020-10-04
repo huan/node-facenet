@@ -13,7 +13,7 @@ import {
   loadImage,
 }                         from '../src/misc'
 
-async function main(args: Args) {
+async function main (args: Args) {
   log.info('CLI', `Facenet v${VERSION}`)
 
   const f = new Facenet()
@@ -32,30 +32,31 @@ async function main(args: Args) {
     start = Date.now()
     const faceList = await f.align(imageData)
     log.info('CLI', 'Facenet Align(%fs): found %d faces',
-                        (Date.now() - start) / 1000,
-                        faceList.length,
-            )
+      (Date.now() - start) / 1000,
+      faceList.length,
+    )
 
     for (const face of faceList) {
       start = Date.now()
       const embedding = await f.embedding(face)
       log.info('CLI', 'Facenet Embeding(%fs)',
-                          (Date.now() - start) / 1000,
-              )
+        (Date.now() - start) / 1000,
+      )
       console.info(JSON.stringify(embedding.tolist()))
     }
   } catch (e) {
     log.error('CLI', e)
   } finally {
-    f.quit()
+    await f.quit()
   }
 }
 
 interface Args {
+  // eslint-disable-next-line camelcase
   image_file: string,
 }
 
-function parseArguments(): Args {
+function parseArguments (): Args {
   const parser = new ArgumentParser({
     version:      VERSION,
     addHelp:      true,
@@ -80,3 +81,4 @@ function parseArguments(): Args {
 }
 
 main(parseArguments())
+  .catch(console.error)

@@ -4,10 +4,9 @@ import path  from 'path'
 import {
   Widgets,
 }                 from 'blessed'
-const contrib     = require('blessed-contrib')
 
 import {
-  // Face,
+// Face,
 }                 from '../../face'
 
 import {
@@ -24,10 +23,11 @@ import {
 import {
   Frame,
 }                 from '../ui/'
+const contrib     = require('blessed-contrib')
 
 export class FaceGrouper {
 
-  constructor(
+  constructor (
     public frame          : Frame,
     public faceCache      : FaceCache,
     public alignmentCache : AlignmentCache,
@@ -35,7 +35,7 @@ export class FaceGrouper {
   ) {
   }
 
-  public async start(workdir?: string): Promise<void> {
+  public async start (workdir?: string): Promise<void> {
     const box = this.frame.box
 
     const tree     = this.createTreeElement(box)
@@ -49,7 +49,8 @@ export class FaceGrouper {
     return new Promise<void>(resolve => this.frame.bindQuitKey(resolve))
   }
 
-  private createTreeElement(box: Widgets.BoxElement) {
+  private createTreeElement (box: Widgets.BoxElement) {
+    // eslint-disable-next-line new-cap
     const grid = new contrib.grid({
       screen: box,
       rows:   12,
@@ -69,8 +70,8 @@ export class FaceGrouper {
     return tree
   }
 
-  private createExplorerData(workdir?: string) {
-    log.verbose('FaceGrouper', 'createExplorerData(%s)', workdir ? workdir : '')
+  private createExplorerData (workdir?: string) {
+    log.verbose('FaceGrouper', 'createExplorerData(%s)', workdir || '')
 
     if (!workdir) {
       workdir = path.join(
@@ -91,9 +92,8 @@ export class FaceGrouper {
       getPath: (self: any) => {
         log.silly('FaceGrouper', 'createExplorerData() getPath(%s)', self.name)
         // If we don't have any parent, we are at tree root, so return the base case
-        if (!self.parent)
-          return '/'
-          // return workdir
+        if (!self.parent) { return '/' }
+        // return workdir
 
         // Get the parent node path and add this node name
         return path.join(
@@ -150,15 +150,14 @@ export class FaceGrouper {
     return explorer
   }
 
-  private bindSelectAction(tree: any) {
+  private bindSelectAction (tree: any) {
     // Handling select event. Every custom property that was added to node is
     // available like the 'node.getPath' defined above
     tree.on('select', async (node: any) => {
       let nodePath = node.getPath(node)
 
       // The filesystem root return an empty string as a base case
-      if ( nodePath === '')
-        nodePath = '/'
+      if (nodePath === '') { nodePath = '/' }
 
       if (node.children) {
         return  // directorhy, not a image file
@@ -173,7 +172,7 @@ export class FaceGrouper {
     })
   }
 
-  public async process(file: string): Promise<void> {
+  public async process (file: string): Promise<void> {
     log.verbose('FaceGrouper', 'process(%s)', file)
 
     this.frame.emit('image', file)
@@ -189,10 +188,11 @@ export class FaceGrouper {
         }
         this.frame.emit('face', face)
         log.silly('FaceGrouper', 'process() face:%s embedding:%s',
-                                        face, face.embedding)
+          face, face.embedding)
       } catch (e) {
         log.error('FaceGrouper', 'process() exception:%s', e)
       }
     }
   }
+
 }

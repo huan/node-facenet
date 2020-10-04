@@ -45,6 +45,7 @@ export interface FaceOptions {
 }
 
 export class Face {
+
   public static id = 0
   public id: number
 
@@ -159,16 +160,16 @@ export class Face {
    * Creates an instance of Face.
    * @param {ImageData} [imageData]
    */
-  constructor(
+  constructor (
     imageData?: ImageData,
   ) {
     this.id = Face.id++
 
     log.verbose('Face', 'constructor(%dx%d) #%d',
-                      imageData ? imageData.width  : 0,
-                      imageData ? imageData.height : 0,
-                      this.id,
-              )
+      imageData ? imageData.width  : 0,
+      imageData ? imageData.height : 0,
+      this.id,
+    )
     if (imageData) {
       this.imageData = imageData
     }
@@ -179,7 +180,7 @@ export class Face {
    * @param {FaceOptions} [options={}]
    * @returns {Promise<this>}
    */
-  public async init(options: FaceOptions = {}): Promise<this> {
+  public async init (options: FaceOptions = {}): Promise<this> {
     if (options.file) {
       if (this.imageData) {
         throw new Error('constructor(imageData) or init({file}) can not be both specified at same time!')
@@ -192,7 +193,7 @@ export class Face {
   /**
    * @private
    */
-  public initSync(options: FaceOptions = {}): this {
+  public initSync (options: FaceOptions = {}): this {
     log.verbose('Face', 'init()')
 
     if (!this.imageData) {
@@ -230,10 +231,10 @@ export class Face {
   /**
    * @private
    */
-  private initLandmarks(marks: number[][]): FacialLandmark {
+  private initLandmarks (marks: number[][]): FacialLandmark {
     log.verbose('Face', 'initLandmarks([%s]) #%d',
-                        marks, this.id,
-                )
+      marks, this.id,
+    )
 
     const leftEye: Point = {
       x: Math.round(marks[0][0]),
@@ -268,10 +269,10 @@ export class Face {
   /**
    * @private
    */
-  private async initFile(file: string): Promise<ImageData> {
+  private async initFile (file: string): Promise<ImageData> {
     log.verbose('Face', 'initFilename(%s) #%d',
-                        file, this.id,
-              )
+      file, this.id,
+    )
 
     const image = await loadImage(file)
     const imageData = imageToData(image)
@@ -281,10 +282,10 @@ export class Face {
   /**
    * @private
    */
-  private initBoundingBox(boundingBox: number[]): Rectangle {
+  private initBoundingBox (boundingBox: number[]): Rectangle {
     log.verbose('Face', 'initBoundingBox([%s]) #%d',
-                      boundingBox, this.id,
-              )
+      boundingBox, this.id,
+    )
 
     if (!this.imageData) {
       throw new Error('no imageData!')
@@ -301,12 +302,12 @@ export class Face {
   /**
    * @private
    */
-  private updateImageData(imageData: ImageData): ImageData {
+  private updateImageData (imageData: ImageData): ImageData {
     if (!this.location) {
       throw new Error('no location!')
     }
 
-    if (   this.location.w === imageData.width
+    if (this.location.w === imageData.width
         && this.location.h === imageData.height
     ) {
       return imageData
@@ -314,11 +315,11 @@ export class Face {
 
     // need to corp and reset this.data
     log.verbose('Face', 'initBoundingBox() box.w=%d, box.h=%d; image.w=%d, image.h=%d',
-                      this.location.w,
-                      this.location.h,
-                      imageData.width,
-                      imageData.height,
-              )
+      this.location.w,
+      this.location.h,
+      imageData.width,
+      imageData.height,
+    )
     const croppedImage = cropImage(
       imageData,
       this.location.x,
@@ -333,7 +334,7 @@ export class Face {
   /**
    * @private
    */
-  public toString(): string {
+  public toString (): string {
     return `Face<${this.md5}>`
   }
 
@@ -353,7 +354,7 @@ export class Face {
    *
    * @returns {FaceJsonObject}
    */
-  public toJSON(): FaceJsonObject {
+  public toJSON (): FaceJsonObject {
     const imageData = this.imageData
     const location = this.location
 
@@ -373,7 +374,7 @@ export class Face {
 
     const embeddingArray  = embedding ? embedding.tolist() : []
     const imageDataBase64 = Buffer.from(imageData.data.buffer as ArrayBuffer)
-                                  .toString('base64')
+      .toString('base64')
 
     const obj = {
       confidence,
@@ -393,7 +394,7 @@ export class Face {
    * @param {(FaceJsonObject | string)} obj
    * @returns {Face}
    */
-  public static fromJSON(obj: FaceJsonObject | string): Face {
+  public static fromJSON (obj: FaceJsonObject | string): Face {
     log.verbose('Face', 'fromJSON(%s)', typeof obj)
 
     if (typeof obj === 'string') {
@@ -437,7 +438,7 @@ export class Face {
       face.embedding =  nj.array(obj.embedding)
     } else {
       log.verbose('Face', 'fromJSON() no embedding found for face %s#%s',
-                          face.id, face.md5)
+        face.id, face.md5)
     }
 
     return face
@@ -449,7 +450,7 @@ export class Face {
    * @type {(FaceEmbedding | undefined)}
    * @memberof Face
    */
-  public get embedding(): FaceEmbedding | undefined {
+  public get embedding (): FaceEmbedding | undefined {
     // if (!this._embedding) {
     //   throw new Error('no embedding yet!')
     // }
@@ -460,12 +461,12 @@ export class Face {
    *
    * Set embedding for a face
    */
-  public set embedding(embedding: FaceEmbedding | undefined) {
+  public set embedding (embedding: FaceEmbedding | undefined) {
     if (!embedding) {
       throw new Error(`Face<${this.md5}> embedding must defined!`)
     } else if (!(embedding instanceof (nj as any).NdArray)
                 && embedding.constructor.name !== 'NdArray'
-              ) {
+    ) {
       console.error(embedding.constructor.name, embedding)
       throw new Error(`Face<${this.md5}> embedding is not instanceof nj.NdArray!(${typeof embedding} instead)`)
     } else if (this._embedding) {
@@ -495,7 +496,7 @@ export class Face {
    * console.info('face center : ', faceList[0].center)
    * // Output: center:  { x: 475, y: 209 }
    */
-  public get center(): Point {
+  public get center (): Point {
     if (!this.location) {
       throw new Error('no location')
     }
@@ -505,7 +506,7 @@ export class Face {
 
     const x = Math.round(this.location.x + this.imageData.width  / 2)
     const y = Math.round(this.location.y + this.imageData.height / 2)
-    return {x, y}
+    return { x, y }
   }
 
   /**
@@ -518,7 +519,7 @@ export class Face {
    * console.info('face width : ', faceList[0].width)
    * // Output: width:  230
    */
-  public get width(): number {
+  public get width (): number {
     if (!this.imageData) {
       throw new Error('no imageData')
     }
@@ -535,7 +536,7 @@ export class Face {
    * console.info('face height : ', faceList[0].height)
    * // Output: height:  230
    */
-  public get height(): number {
+  public get height (): number {
     if (!this.imageData) {
       throw new Error('no imageData')
     }
@@ -551,7 +552,7 @@ export class Face {
    * console.info('face depth : ', faceList[0].depth)
    * // Output: depth:  4
    */
-  public get depth(): number {
+  public get depth (): number {
     if (!this.imageData) {
       throw new Error('no imageData')
     }
@@ -579,7 +580,7 @@ export class Face {
    * // faceList[1] is different with faceList[1], so the number is big.
    * // If the number is smaller than 0.75, maybe they are the same person.
    */
-  public distance(face: Face): number {
+  public distance (face: Face): number {
     if (!this.embedding) {
       throw new Error(`sourceFace(${this.md5}).distance() source face no embedding!`)
     }
@@ -593,7 +594,7 @@ export class Face {
   /**
    * @private
    */
-  public dataUrl(): string {
+  public dataUrl (): string {
     if (!this.imageData) {
       throw new Error('no imageData')
     }
@@ -603,7 +604,7 @@ export class Face {
   /**
    * @private
    */
-  public buffer(): Buffer {
+  public buffer (): Buffer {
     if (!this.imageData) {
       throw new Error('no imageData')
     }
@@ -621,10 +622,11 @@ export class Face {
    * faceList[0].save('womenFace.jpg')
    * // You can see it save the women face from `two-faces` pic to `womenFace.jpg`
    */
-  public async save(file: string): Promise<void> {
+  public async save (file: string): Promise<void> {
     if (!this.imageData) {
       throw new Error('no imageData')
     }
     await saveImage(this.imageData, file)
   }
+
 }

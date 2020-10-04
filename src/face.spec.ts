@@ -21,12 +21,16 @@ test('constructor()', async t => {
 
   const BOX_0_0_3_3 = [0, 0, 3, 3]
   const EXPECTED_RECT_0_0_3_3: Rectangle = {
-    x: 0, y: 0,
-    w: 3, h: 3,
+    x: 0,
+    y: 0,
+    w: 3,
+    h: 3,
   }
   const EXPECTED_RECT_0_0_2_2: Rectangle = {
-    x: 0, y: 0,
-    w: 2, h: 2,
+    x: 0,
+    y: 0,
+    w: 2,
+    h: 2,
   }
   const EXPECTED_CROPPED_0_0_2_2 = new Uint8ClampedArray([
     1, 1, 1, 255,

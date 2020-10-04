@@ -18,18 +18,19 @@ import {
 }                   from '../misc'
 
 export class FaceCache {
+
   public store!: FlashStore<string, object>
   public embeddingStore!: FlashStore<string, number[]>
 
   public imagedir!: string
 
-  constructor(
+  constructor (
     public workdir: string,
   ) {
     log.verbose('FaceCache', 'constructor(%s)', workdir)
   }
 
-  public init(): void {
+  public init (): void {
     log.verbose('FaceCache', 'init()')
 
     if (!fs.existsSync(this.workdir)) {
@@ -58,14 +59,14 @@ export class FaceCache {
     }
   }
 
-  public async destroy(): Promise<void> {
+  public async destroy (): Promise<void> {
     log.verbose('FaceCache', 'destroy()')
     await this.store.destroy()
     await this.embeddingStore.destroy()
     rimraf.sync(this.imagedir)
   }
 
-  public async get(
+  public async get (
     md5: string,
   ): Promise<Face | null> {
     const obj = await this.store.get(md5) as FaceJsonObject
@@ -76,7 +77,7 @@ export class FaceCache {
     return null
   }
 
-  public async put(
+  public async put (
     face: Face,
   ): Promise<void> {
     await this.store.put(face.md5, face)  // Face.toJSON()
@@ -104,7 +105,7 @@ export class FaceCache {
     await saveImage(imageData, faceFile)
   }
 
-  public file(md5: string): string {
+  public file (md5: string): string {
     const filename = path.join(
       this.imagedir,
       `${md5}.png`,
@@ -112,7 +113,7 @@ export class FaceCache {
     return filename
   }
 
-  public async list(md5Partial: string, limit = 10): Promise<string[]> {
+  public async list (md5Partial: string, limit = 10): Promise<string[]> {
     const prefix  = md5Partial
     const md5List = [] as string[]
 
@@ -125,6 +126,7 @@ export class FaceCache {
     }
     return md5List
   }
+
 }
 
 export default FaceCache

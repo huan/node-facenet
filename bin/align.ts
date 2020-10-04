@@ -15,11 +15,11 @@ import {
   imageToData,
 }                         from '../src/misc'
 
-function randomColor(): string {
+function randomColor (): string {
   const hexStr = ['r', 'g', 'b'].map(_ => {
     return Math.floor(Math.random() * 256)
-              .toString(16)
-              .toUpperCase()
+      .toString(16)
+      .toUpperCase()
   }).reduce((prev, curr) => {
     if (curr.length > 1) {
       return prev + curr
@@ -30,7 +30,7 @@ function randomColor(): string {
   return `#${hexStr}`
 }
 
-async function main(args: Args) {
+async function main (args: Args) {
   log.info('CLI', `Facenet v${VERSION}`)
   // console.dir(args)
   const f = new Facenet()
@@ -57,31 +57,31 @@ async function main(args: Args) {
     for (const face of faceList) {
       const mark = face.landmark
       const color = randomColor()
-      const {x, y, w, h} = face.location || {x: 0, y: 0, w: 0, h: 0}
+      const { x, y, w, h } = face.location || { x: 0, y: 0, w: 0, h: 0 }
       const base = Math.floor(w + h) / 50 + 1
       newImage.fill('none')
-              .stroke(color, base * 1)
-              .drawRectangle(
-                x,
-                y,
-                x + w,
-                y + h,
-                base * 5,
-              )
+        .stroke(color, base * 1)
+        .drawRectangle(
+          x,
+          y,
+          x + w,
+          y + h,
+          base * 5,
+        )
 
       if (mark) {
         Object.keys(mark).forEach((k) => {
           const p = mark[k]
           newImage.fill(color)
-                  .stroke('none', 0)
-                  .drawCircle(
-                    p.x, p.y,
-                    p.x + base, p.y + base,
-                  )
+            .stroke('none', 0)
+            .drawCircle(
+              p.x, p.y,
+              p.x + base, p.y + base,
+            )
         })
       }
     }
-
+    // I
     newImage.noProfile().write(args.output, err => {
       if (err) {
         throw err
@@ -92,7 +92,7 @@ async function main(args: Args) {
   } catch (e) {
     console.error(e)
   } finally {
-    f.quit()
+    await f.quit()
   }
 }
 
@@ -101,7 +101,7 @@ interface Args {
   output: string,
 }
 
-function parseArguments(): Args {
+function parseArguments (): Args {
   const parser = new ArgumentParser({
     version:      VERSION,
     addHelp:      true,
@@ -126,3 +126,4 @@ function parseArguments(): Args {
 
 log.level('silly')
 main(parseArguments())
+  .catch(console.error)

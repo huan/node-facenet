@@ -15,7 +15,7 @@ import {
   MODULE_ROOT,
 }                         from '../src/config'
 
-async function main(args: Args): Promise<number> {
+async function main (args: Args): Promise<number> {
   log.level(args.log as any)
 
   let dataset
@@ -41,10 +41,10 @@ async function main(args: Args): Promise<number> {
       const keys = Object.keys(idImageList)
       for (let i = 0; i < 3; i++) {
         log.info('LfwManager', 'dataset: %s has %d images: %s',
-                                keys[i],
-                                idImageList[keys[i]].length,
-                                idImageList[keys[i]].join(','),
-                )
+          keys[i],
+          idImageList[keys[i]].length,
+          idImageList[keys[i]].join(','),
+        )
       }
       break
 
@@ -52,10 +52,10 @@ async function main(args: Args): Promise<number> {
       const pairList = await dataset.pairList()
       const sameNum = pairList.filter(p => p[2]).length
       log.info('LfwManager', 'pairList: total %d, same %d, not-same %d',
-                              pairList.length,
-                              sameNum,
-                              pairList.length - sameNum,
-              )
+        pairList.length,
+        sameNum,
+        pairList.length - sameNum,
+      )
       break
 
     default:
@@ -73,7 +73,7 @@ interface Args {
   log:        string,
 }
 
-function parseArguments(): Args {
+function parseArguments (): Args {
   const parser = new ArgumentParser({
     version:      VERSION,
     addHelp:      true,

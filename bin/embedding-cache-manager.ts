@@ -13,7 +13,7 @@ import {
   VERSION,
 }                         from '../'
 
-async function main(args: Args): Promise<number> {
+async function main (args: Args): Promise<number> {
   log.level(args.log as any)
 
   let workdir: string
@@ -50,9 +50,9 @@ async function main(args: Args): Promise<number> {
         )
       }
       log.info('EmbeddingCacheManager', 'cache: %s has inited %d entries',
-                                        args.directory,
-                                        count,
-              )
+        args.directory,
+        count,
+      )
       break
     case 'destroy':
       await embeddingCache.destroy()
@@ -73,7 +73,7 @@ interface Args {
   log:        string,
 }
 
-function parseArguments(): Args {
+function parseArguments (): Args {
   const parser = new ArgumentParser({
     version:      VERSION,
     addHelp:      true,

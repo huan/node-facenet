@@ -2,7 +2,6 @@
 import path      from 'path'
 
 import gm        from 'gm'
-const printf          = require('printf')
 
 import {
   Face,
@@ -17,8 +16,9 @@ import {
   imageToData,
   loadImage,
 }                   from '../src/misc'
+const printf          = require('printf')
 
-async function main() {
+async function main () {
   const facenet = new Facenet()
   await facenet.init()
 
@@ -37,17 +37,17 @@ async function main() {
       face.embedding = await facenet.embedding(face)
 
       const color = 'green'
-      const {x, y, w, h} = face.location || { x: 0, y: 0, w: 0, h: 0}
+      const { x, y, w, h } = face.location || { x: 0, y: 0, w: 0, h: 0 }
       const base = Math.floor((w + h) / 50) + 1
       outputImage.fill('none')
-                .stroke(color, base * 1)
-                .drawRectangle(
-                  x,
-                  y,
-                  x + w,
-                  y + h,
-                  base * 5,
-                )
+        .stroke(color, base * 1)
+        .drawRectangle(
+          x,
+          y,
+          x + w,
+          y + h,
+          base * 5,
+        )
     }
 
     for (let row = 0; row < faceList.length; row++) {
@@ -73,16 +73,16 @@ async function main() {
         const c2 = faceC.center
 
         outputImage.region(image.width, image.height, 0, 0)
-                .stroke('none', 0)
-                .fill('grey')
-                .drawLine(c1.x, c1.y, c2.x, c2.y)
+          .stroke('none', 0)
+          .fill('grey')
+          .drawLine(c1.x, c1.y, c2.x, c2.y)
 
         outputImage.region(r.w, r.h, r.x, r.y)
-                .gravity('Center')
-                .stroke('none', 0)
-                .fill('green')
-                .fontSize(20)
-                .drawText(0, 0, printf('%.2f ', dist))
+          .gravity('Center')
+          .stroke('none', 0)
+          .fill('green')
+          .fontSize(20)
+          .drawText(0, 0, printf('%.2f ', dist))
       }
     }
 
@@ -96,11 +96,11 @@ async function main() {
       log.info('CLI', 'Open those files and see the result. Have a nice day!')
     })
   } finally {
-    facenet.quit()
+    await facenet.quit()
   }
 }
 
-function region(f1: Face, f2: Face): Rectangle {
+function region (f1: Face, f2: Face): Rectangle {
 
   const c1 = f1.center
   const c2 = f2.center
@@ -141,4 +141,4 @@ function region(f1: Face, f2: Face): Rectangle {
 log.level('silly')
 
 main()
-.catch(console.error)
+  .catch(console.error)

@@ -2,7 +2,7 @@
 
 import { Facenet } from '../'  // from 'facenet'
 
-async function main() {
+async function main () {
   // Instanciate FaceNet
   const facenet = new Facenet()
 
@@ -17,9 +17,9 @@ async function main() {
     console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
     console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
   } finally {
-    facenet.quit()
+    await facenet.quit()
   }
 }
 
 main()
-.catch(console.error)
+  .catch(console.error)

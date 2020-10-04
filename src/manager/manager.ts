@@ -37,6 +37,7 @@ interface MenuItem {
 }
 
 export class Manager {
+
   private facenet        : Facenet
   private alignmentCache : AlignmentCache
   private embeddingCache : EmbeddingCache
@@ -46,7 +47,7 @@ export class Manager {
   private screen: blessed.Widgets.Screen
   private menu!: Menu
 
-  constructor() {
+  constructor () {
     log.verbose('Manager', 'constructor()')
 
     const workdir = path.join(MODULE_ROOT, 'cache')
@@ -66,7 +67,7 @@ export class Manager {
     })
   }
 
-  public async init(): Promise<void> {
+  public async init (): Promise<void> {
     log.verbose('Manager', 'init()')
 
     await this.alignmentCache.init()
@@ -84,7 +85,7 @@ export class Manager {
     )
   }
 
-  private menuItemList(): MenuItem[] {
+  private menuItemList (): MenuItem[] {
     return [
       {
         text     : 'Face Alignment & Embedding Demo',
@@ -110,14 +111,14 @@ export class Manager {
       {
         text     : 'Quit',
         callback : async () => {
-          this.quit()
+          await this.quit()
           return false
         },
       },
     ]
   }
 
-  public async start(): Promise<void> {
+  public async start (): Promise<void> {
     log.verbose('Manager', 'start()')
 
     let menuCallback = async () => {
@@ -126,7 +127,7 @@ export class Manager {
     }
 
     const menuCallbackList = this.menuItemList()
-                                  .map(m => m.callback)
+      .map(m => m.callback)
 
     let firstTime = true
     do {
@@ -145,15 +146,15 @@ export class Manager {
 
   }
 
-  public async quit(): Promise<void> {
+  public async quit (): Promise<void> {
     await this.facenet.quit()
     this.screen.destroy()
   }
 
-  public async alignmentEmbedding(
+  public async alignmentEmbedding (
     pathname?: string,
   ): Promise<void> {
-    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname ? pathname : '')
+    log.verbose('Manager', 'alignmentEmbedding(%s)', pathname || '')
 
     const ae = new AlignmentEmbedding(
       this.frame,
@@ -164,10 +165,10 @@ export class Manager {
     await ae.start(pathname)
   }
 
-  private async faceGrouper(
+  private async faceGrouper (
     pathname?: string,
   ): Promise<void> {
-    log.verbose('Manager', 'faceGrouper(%s)', pathname ? pathname : '')
+    log.verbose('Manager', 'faceGrouper(%s)', pathname || '')
 
     const grouper = new FaceGrouper(
       this.frame,
@@ -178,15 +179,16 @@ export class Manager {
     await grouper.start(pathname)
   }
 
-  public sort(pathname: string) {
+  public sort (pathname: string) {
     console.info(pathname)
     //
   }
 
-  public validate() {
+  public validate () {
     console.info('validate')
     //
   }
+
 }
 
 export default Manager

@@ -17,6 +17,7 @@ export type BoundingFiveNumber = [
 export type LandmarkRowList = number[][] // A 10 rows vector, each col is for a face.
 
 export class PythonFacenet {
+
   public python3: PythonBridge
 
   private facenetInited = false
@@ -26,14 +27,14 @@ export class PythonFacenet {
   // python -m venv $VENV: the directory of vent
   private VENV = path.join(MODULE_ROOT, 'python3')
 
-  constructor() {
+  constructor () {
     log.verbose('PythonFacenet', 'constructor() SRC=%s', this.SRC_DIRNAME)
 
     this.initVenv()
     this.python3 = this.initBridge()
   }
 
-  public initVenv(): void {
+  public initVenv (): void {
     log.verbose('PythonFacenet', `initVenv() to ${this.VENV}`)
 
     const PATH = `${this.VENV}/bin:` + process.env['PATH']
@@ -46,7 +47,7 @@ export class PythonFacenet {
     delete process.env['PYTHONHOME']
   }
 
-  public initBridge(): PythonBridge {
+  public initBridge (): PythonBridge {
     log.verbose('PythonFacenet', 'initBridge()')
 
     const TF_CPP_MIN_LOG_LEVEL  = '2'  // suppress tensorflow warnings
@@ -61,8 +62,8 @@ export class PythonFacenet {
     }
 
     Object.assign(process.env, {
-        PYTHONPATH,
-        TF_CPP_MIN_LOG_LEVEL,
+      PYTHONPATH,
+      TF_CPP_MIN_LOG_LEVEL,
     })
 
     const bridge = pythonBridge({
@@ -72,7 +73,7 @@ export class PythonFacenet {
     return bridge
   }
 
-  public async initFacenet(): Promise<void> {
+  public async initFacenet (): Promise<void> {
     log.silly('PythonFacenet', 'initFacenet()')
 
     if (this.facenetInited) {
@@ -86,13 +87,13 @@ export class PythonFacenet {
       facenet_bridge.init()
     `
     log.silly('PythonFacenet', 'initFacenet() facenet_bridge.init() cost %d milliseconds',
-                                Date.now() - start,
-            )
+      Date.now() - start,
+    )
 
     this.facenetInited = true
   }
 
-  public async initMtcnn(): Promise<void> {
+  public async initMtcnn (): Promise<void> {
     log.silly('PythonFacenet', 'initMtcnn()')
 
     if (this.mtcnnInited) {
@@ -107,13 +108,13 @@ export class PythonFacenet {
       mtcnn_bridge.init()
     `
     log.silly('PythonFacenet', 'initMtcnn() mtcnn_bridge.init() cost milliseconds.',
-                                Date.now() - start,
-            )
+      Date.now() - start,
+    )
 
     this.mtcnnInited = true
   }
 
-  public async quit(): Promise<void> {
+  public async quit (): Promise<void> {
     log.verbose('PythonFacenet', 'quit()')
     if (!this.python3) {
       throw new Error('no phthon3 bridge inited yet!')
@@ -127,7 +128,7 @@ export class PythonFacenet {
    *
    * @param imageData
    */
-  public async align(
+  public async align (
     imageData: ImageData,
   ): Promise<[BoundingFiveNumber[], LandmarkRowList]> {
     log.verbose('PythonFacenet', 'align(%dx%d)', imageData.width, imageData.height)
@@ -143,12 +144,11 @@ export class PythonFacenet {
     let landmarks: LandmarkRowList
 
     const start = Date.now();
-    [boundingBoxes, landmarks] = await this.python3
-      `mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
+    [boundingBoxes, landmarks] = await this.python3`mtcnn_bridge.align(${base64Text}, ${row}, ${col}, ${depth})`
 
     log.silly('PythonFacenet', 'align() mtcnn_bridge.align() cost %d milliseconds',
-                                Date.now() - start,
-            )
+      Date.now() - start,
+    )
 
     return [boundingBoxes, landmarks]
   }
@@ -157,11 +157,11 @@ export class PythonFacenet {
    *
    * @param image
    */
-  public async embedding(imageData: ImageData): Promise<number[]> {
+  public async embedding (imageData: ImageData): Promise<number[]> {
     log.verbose('PythonFacenet', 'embedding(%dx%d)',
-                                  imageData.width,
-                                  imageData.height,
-                )
+      imageData.width,
+      imageData.height,
+    )
 
     if (!this.facenetInited) {
       await this.initFacenet()
@@ -173,14 +173,13 @@ export class PythonFacenet {
 
     const base64Text = this.base64ImageData(imageData)
 
-    const start = Date.now();
+    const start = Date.now()
 
-    const embedding: number[] = await this.python3
-      `facenet_bridge.embedding(${base64Text}, ${row}, ${col}, ${depth})`
+    const embedding: number[] = await this.python3`facenet_bridge.embedding(${base64Text}, ${row}, ${col}, ${depth})`
 
     log.silly('PythonFacenet', 'embedding() facenet_bridge.embedding() cost %d milliseconds',
-                          Date.now() - start,
-            )
+      Date.now() - start,
+    )
 
     return embedding
   }
@@ -191,18 +190,17 @@ export class PythonFacenet {
   //   return await this.python`json_parse(${text})`
   // }
 
-  public async base64_to_image(
+  // eslint-disable-next-line camelcase
+  public async base64_to_image (
     text:   string,
     row:    number,
     col:    number,
     depth:  number,
   ): Promise<number[][][]> {
     // await this.initPythonBridge()
-    await this.python3.ex
-      `from facenet_bridge import base64_to_image`
+    await this.python3.ex`from facenet_bridge import base64_to_image`
 
-    return await this.python3
-      `base64_to_image(${text}, ${row}, ${col}, ${depth}).tolist()`
+    return this.python3`base64_to_image(${text}, ${row}, ${col}, ${depth}).tolist()`
   }
 
   /**
@@ -216,10 +214,10 @@ export class PythonFacenet {
    *
    * @param image
    */
-  public base64ImageData(imageData: ImageData): string {
+  public base64ImageData (imageData: ImageData): string {
 
     return Buffer.from(imageData.data.buffer as ArrayBuffer)
-                .toString('base64')
+      .toString('base64')
 
     // const [row, col, depth] = image.shape
 
@@ -238,4 +236,5 @@ export class PythonFacenet {
     //                         .toString('base64')
     // return base64Text
   }
+
 }

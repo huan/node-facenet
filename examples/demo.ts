@@ -10,7 +10,7 @@ import {
 // import { log }      from '../'
 // log.level('silly')
 
-async function main() {
+async function main () {
   // Instanciate FaceNet
   const facenet = new Facenet()
 
@@ -32,7 +32,7 @@ async function main() {
 
       const faceFile = `${face.md5}.png`
       if (face.imageData) {
-        saveImage(face.imageData, faceFile)
+        await saveImage(face.imageData, faceFile)
       } else {
         console.error('face no image data!')
       }
@@ -45,9 +45,9 @@ async function main() {
       console.info('embedding:',     face.embedding)
     }
   } finally {
-    facenet.quit()
+    await facenet.quit()
   }
 }
 
 main()
-.catch(console.error)
+  .catch(console.error)

@@ -2,7 +2,6 @@
 import { EventEmitter }   from 'events'
 
 import blessed       from 'blessed'
-const contrib             = require('blessed-contrib')
 
 import {
   FILE_FACENET_ICON_PNG,
@@ -20,6 +19,7 @@ import {
   loadImage,
   toBuffer,
 }                         from '../../misc'
+const contrib             = require('blessed-contrib')
 
 export type FrameEventName = 'face'
                             | 'image'
@@ -28,10 +28,11 @@ export type FrameEventName = 'face'
                             | 'title'
 
 export class Frame extends EventEmitter {
+
   private elementList = [] as blessed.Widgets.Node[]
 
   private _box!: blessed.Widgets.BoxElement; // for external usage, mainly to draw a contrib.grid
- // for external usage, mainly to draw a contrib.grid
+  // for external usage, mainly to draw a contrib.grid
 
   private thumbWidth  = 44  // 2 for border line, 2 for float "/" workaround
   private imageWidth  = 2 * this.thumbWidth
@@ -39,13 +40,13 @@ export class Frame extends EventEmitter {
   // (/2) // characters' height is about twice times of width in console
   private imageHeight = this.imageWidth * 3 / 4 / 2
 
-  constructor(
+  constructor (
     public screen: blessed.Widgets.Screen,
   ) {
     super()
   }
 
-  public init() {
+  public init () {
     this.addHeaderElement()
     this.addThumbElementList()
     this.addImageElement()
@@ -63,11 +64,11 @@ export class Frame extends EventEmitter {
   public emit(event: 'face',    face:     Face):   boolean
 
   public emit(event: never,     data: any): boolean
-  public emit(event: FrameEventName, data: any) {
+  public emit (event: FrameEventName, data: any) {
     return super.emit(event, data)
   }
 
-  public clean() {
+  public clean () {
     let i = this.screen.children.length
     while (i--) {
       const child = this.screen.children[i]
@@ -77,7 +78,7 @@ export class Frame extends EventEmitter {
     }
   }
 
-  get box() {
+  get box () {
     if (this._box) {
       this._box.detach()
     }
@@ -85,7 +86,7 @@ export class Frame extends EventEmitter {
     return this._box
   }
 
-  public bindQuitKey(callback: Function) {
+  public bindQuitKey (callback: Function) {
     const quitKeyList = ['escape', 'q', 'x', 'C-q', 'C-x', 'f4', 'f10']
     const quitRegexp = new RegExp('^[' + quitKeyList.join('|') + ']$', 'i')
 
@@ -98,7 +99,7 @@ export class Frame extends EventEmitter {
     this.screen.addListener('keypress', listener)
   }
 
-  private addBoxElement(): void {
+  private addBoxElement (): void {
     const right  = this.thumbWidth + this.imageWidth
     const width  = (this.screen.width as number) - right
     const height = (this.screen.height as number) - 1
@@ -116,12 +117,12 @@ export class Frame extends EventEmitter {
     this._box = box
   }
 
-  private append(element: blessed.Widgets.Node) {
+  private append (element: blessed.Widgets.Node) {
     this.elementList.push(element)
     this.screen.append(element)
   }
 
-  private addHeaderElement(): void {
+  private addHeaderElement (): void {
     const box = blessed.box({
       top:     0,
       left:    0,
@@ -137,7 +138,7 @@ export class Frame extends EventEmitter {
     this.on('title', title => box.setContent(title))
   }
 
-  private addThumbElementList(): void {
+  private addThumbElementList (): void {
     const width = this.thumbWidth
 
     const cols   = width - 2 - 2          // 2 is padding for border, 2 is for in picture-tube `dx = png.width / opts.cols`
@@ -204,14 +205,14 @@ export class Frame extends EventEmitter {
     this.on('face', (face: Face) => this.addFace(face, faceList, thumbList, distanceList))
   }
 
-  private addFace(
+  private addFace (
     face:         Face,
     faceList:     Face[],
     thumbList:    any[],  // contrib.picture
     distanceList: blessed.Widgets.BoxElement[],
   ) {
     log.verbose('Frame', 'addFace(%s, %d, %d, %d)',
-                          face, faceList.length, thumbList.length, distanceList.length)
+      face, faceList.length, thumbList.length, distanceList.length)
 
     let i = thumbList.length
 
@@ -219,12 +220,15 @@ export class Frame extends EventEmitter {
       if (i === 0) {
         faceList[0] = face
         this.showPicture(thumbList[i], face)
-            .then(() => log.silly('Frame', 'addFace(%s) done', face))
+          .then(() => log.silly('Frame', 'addFace(%s) done', face))
+          .catch(e => log.error('Frame', 'this.showPicture() rejection: %s', e))
       } else {
         const prevFace = faceList[i - 1]
         if (prevFace) {
           faceList[i] = prevFace
           this.showPicture(thumbList[i], prevFace)
+            .catch(e => log.error('Frame', 'this.showPicture() rejection: %s', e))
+
         }
       }
     }
@@ -234,7 +238,7 @@ export class Frame extends EventEmitter {
         let distance
         try {
           distance = faceList[i + 1].distance(faceList[i])
-                                    .toFixed(2)
+            .toFixed(2)
         } catch (e) { // no embedding
           distance = -1
         }
@@ -244,7 +248,7 @@ export class Frame extends EventEmitter {
     }
   }
 
-  private addImageElement(): void {
+  private addImageElement (): void {
     const paddingRight = this.thumbWidth
     const width        = this.imageWidth
     const height       = this.imageHeight
@@ -285,7 +289,7 @@ export class Frame extends EventEmitter {
     })
   }
 
-  private async showPicture(
+  private async showPicture (
     picture:         any,
     faceOrBase64?: string | Face,
   ): Promise<void> {
@@ -293,7 +297,7 @@ export class Frame extends EventEmitter {
 
     if (faceOrBase64 instanceof Face) {
       base64 = faceOrBase64.buffer()
-                            .toString('base64')
+        .toString('base64')
     } else {
       base64 = faceOrBase64
     }
@@ -313,7 +317,7 @@ export class Frame extends EventEmitter {
     })
   }
 
-  private addMeterElement(): void {
+  private addMeterElement (): void {
     const top    = 1 + this.imageHeight
     const right  = this.thumbWidth
     const width  = this.imageWidth
@@ -331,6 +335,7 @@ export class Frame extends EventEmitter {
 
     this.append(box)
 
+    // eslint-disable-next-line new-cap
     const grid = new contrib.grid({
       screen: box,
       rows: 6,
@@ -358,7 +363,7 @@ export class Frame extends EventEmitter {
     this.on('log', text => logger.log(text))
   }
 
-  private addStatusElement(): void {
+  private addStatusElement (): void {
     const status = blessed.box({
       bottom:  0,
       right:   0,

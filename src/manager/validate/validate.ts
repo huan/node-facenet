@@ -3,10 +3,9 @@ import { EventEmitter }   from 'events'
 // import path          from 'path'
 
 import blessed from 'blessed'
-const contrib     = require('blessed-contrib')
 
 import {
-  // Face,
+// Face,
 }                 from '../../face'
 
 /*
@@ -21,12 +20,13 @@ import {
 }                 from '../../cache/'
 
 import {
-  // MODULE_ROOT,
+// MODULE_ROOT,
 }                 from '../../config'
 
 import {
   Frame,
 }                 from '../ui/'
+const contrib     = require('blessed-contrib')
 
 type ValidateEventName = 'start' | 'stop' | 'quit'
 
@@ -35,10 +35,11 @@ interface MenuEventMap {
 }
 
 export class Validate extends EventEmitter {
-  private grid: any
-//  private lfw:  Lfw
 
-  constructor(
+  private grid: any
+  //  private lfw:  Lfw
+
+  constructor (
     public frame:           Frame,
     public alignmentCache:  AlignmentCache,
     public embeddingCache:  EmbeddingCache,
@@ -47,8 +48,9 @@ export class Validate extends EventEmitter {
     // this.lfw = new Lfw()
   }
 
-  public async start(): Promise<void> {
+  public async start (): Promise<void> {
     const box = this.frame.box
+    // eslint-disable-next-line new-cap
     this.grid = new contrib.grid({
       screen: box,
       rows:   12,
@@ -73,7 +75,7 @@ export class Validate extends EventEmitter {
     })
   }
 
-  private createMenuElement(
+  private createMenuElement (
     row:     number,
     col:     number,
     rowSpan: number,
@@ -121,7 +123,7 @@ export class Validate extends EventEmitter {
     })
   }
 
-  private createDonutElement(
+  private createDonutElement (
     row:     number,
     col:     number,
     rowSpan: number,
@@ -143,12 +145,12 @@ export class Validate extends EventEmitter {
     )
 
     donut.setData([
-      {percent: 87, label: 'rcp', 'color': 'green'},
-      {percent: 43, label: 'rcp', 'color': 'cyan'},
+      { percent: 87, label: 'rcp', 'color': 'green' },
+      { percent: 43, label: 'rcp', 'color': 'cyan' },
     ])
   }
 
-  private createProgressElement(
+  private createProgressElement (
     row:     number,
     col:     number,
     rowSpan: number,
@@ -163,13 +165,13 @@ export class Validate extends EventEmitter {
     )
 
     gauge.setStack([
-      {percent: 30, stroke: 'green'},
-      {percent: 30, stroke: 'magenta'},
-      {percent: 40, stroke: 'cyan'},
+      { percent: 30, stroke: 'green' },
+      { percent: 30, stroke: 'magenta' },
+      { percent: 40, stroke: 'cyan' },
     ])
   }
 
-  private createOutputElement(
+  private createOutputElement (
     row:     number,
     col:     number,
     rowSpan: number,
@@ -186,4 +188,5 @@ export class Validate extends EventEmitter {
     )
     output.log('new output line')
   }
+
 }

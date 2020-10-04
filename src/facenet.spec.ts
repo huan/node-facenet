@@ -9,7 +9,7 @@ import { Face }     from './face'
 test('Facenet smoke testing', async t => {
   const f = new Facenet()
   t.ok(f, 'should inited a Facenet instance')
-  f.quit()
+  await f.quit()
 })
 
 test('transformLandmarks()', async t => {
@@ -74,7 +74,7 @@ test('transformLandmarks()', async t => {
   t.deepEqual(pairedLandmarks2, EXPECTED_2, 'should transform landmarks with dim #2 right')
   t.deepEqual(pairedLandmarks3, EXPECTED_3, 'should transform landmarks with dim #3 right')
 
-  f.quit()
+  await f.quit()
 })
 
 test('distance() for multiple rows', async t => {

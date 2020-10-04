@@ -13,9 +13,11 @@ import { Dataset }  from './dataset'
 const FIXTURE_DIRECTORY = `${MODULE_ROOT}/tests/fixtures/dataset`
 
 class DatasetTest extends Dataset {
-  public async setup(): Promise<void> {
+
+  public async setup (): Promise<void> {
     //
   }
+
 }
 
 test('Smoke testing', async t => {

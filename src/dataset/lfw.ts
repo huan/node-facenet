@@ -3,10 +3,6 @@ import http        from 'http'
 import path        from 'path'
 import readline    from 'readline'
 
-import mkdirp         = require('mkdirp')
-import printf         = require('printf')
-const tar             = require('tar')
-
 import {
   log,
   MODULE_ROOT,
@@ -14,17 +10,22 @@ import {
 
 import { Dataset }        from './'
 
+import mkdirp         = require('mkdirp')
+import printf         = require('printf')
+const tar             = require('tar')
+
 export type LfwPair = [string, string, boolean] // image1, image2, isSame
 
 /**
  * https://github.com/davidsandberg/facenet/wiki/Validate-on-LFW
  */
 export class Lfw extends Dataset {
+
   private downloadUrl = 'http://vis-www.cs.umass.edu/lfw/lfw.tgz'
   private downloadFile:   string
   private pairListCache!: LfwPair[]
 
-  constructor(
+  constructor (
     public workdir = path.join(MODULE_ROOT, 'datasets', 'lfw'),
     public ext     = 'jpg',
   ) {
@@ -34,7 +35,7 @@ export class Lfw extends Dataset {
     this.downloadFile = path.join(workdir, 'lfw.tgz')
   }
 
-  public async setup(): Promise<void> {
+  public async setup (): Promise<void> {
     log.verbose('Lfw', 'setup()')
 
     if (!fs.existsSync(this.directory)) {
@@ -46,7 +47,7 @@ export class Lfw extends Dataset {
     await this.extract()
   }
 
-  public async download(): Promise<void> {
+  public async download (): Promise<void> {
     log.verbose('Lfw', 'download() to %s', this.directory)
 
     if (fs.existsSync(this.downloadFile)) {
@@ -83,7 +84,7 @@ export class Lfw extends Dataset {
     })
   }
 
-  public async extract(): Promise<void> {
+  public async extract (): Promise<void> {
     log.verbose('Lfw', 'extract()')
 
     const EXTRACTED_MARK_FILE = path.join(this.directory, 'EXTRACTED')
@@ -101,7 +102,7 @@ export class Lfw extends Dataset {
     fs.closeSync(fs.openSync(EXTRACTED_MARK_FILE, 'w')) // touch the file
   }
 
-  public async pairList(): Promise<LfwPair[]> {
+  public async pairList (): Promise<LfwPair[]> {
     log.verbose('Lfw', 'pairList()')
 
     if (this.pairListCache && this.pairListCache.length) {
@@ -111,13 +112,13 @@ export class Lfw extends Dataset {
     this.pairListCache = []
 
     const pairsTxt = path.join(MODULE_ROOT, 'python3/facenet/data/pairs.txt')
-/*
-10	300
-Abel_Pacheco	1	4
-Akhmed_Zakayev	1	3
-Abdel_Madi_Shabneh	1	Dean_Barker	1
-Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
-*/
+    /*
+    10 300
+    Abel_Pacheco 1 4
+    Akhmed_Zakayev 1 3
+    Abdel_Madi_Shabneh 1 Dean_Barker 1
+    Abdel_Madi_Shabneh 1 Giancarlo_Fisichella 1
+    */
 
     const rl = readline.createInterface({
       input: fs.createReadStream(pairsTxt),
@@ -128,13 +129,13 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
       let pair: [string, string, boolean]
 
       let id1: string,
-          id2: string,
-          num1: string,
-          num2: string
+        id2: string,
+        num1: string,
+        num2: string
 
       let file1: string,
-          file2: string,
-          same: boolean
+        file2: string,
+        same: boolean
 
       const arr = line.split('\t')
       if (arr.length === 2) {
@@ -172,7 +173,7 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
           return
       }
 
-      function filename(id: string, num: string) {
+      function filename (id: string, num: string) {
         return printf('%s/%s_%04d.jpg', id, id, num)
       }
 
@@ -187,4 +188,5 @@ Abdel_Madi_Shabneh	1	Giancarlo_Fisichella	1
       rl.on('error', reject)
     })
   }
+
 }

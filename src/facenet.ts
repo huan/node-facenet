@@ -44,14 +44,15 @@ export interface Embeddingable {
  * @class Facenet
  */
 export class Facenet implements Alignable, Embeddingable {
+
   private pythonFacenet: PythonFacenet
 
-  constructor() {
+  constructor () {
     log.verbose('Facenet', `constructor() v${VERSION}`)
     this.pythonFacenet = new PythonFacenet()
   }
 
-  public version(): string {
+  public version (): string {
     return VERSION
   }
 
@@ -60,7 +61,7 @@ export class Facenet implements Alignable, Embeddingable {
    * Init facenet
    * @returns {Promise<void>}
    */
-  public async init(): Promise<void> {
+  public async init (): Promise<void> {
     await this.initFacenet()
     await this.initMtcnn()
   }
@@ -68,7 +69,7 @@ export class Facenet implements Alignable, Embeddingable {
   /**
    * @private
    */
-  public async initFacenet(): Promise<void> {
+  public async initFacenet (): Promise<void> {
     log.verbose('Facenet', 'initFacenet()')
     const start = Date.now()
     await this.pythonFacenet.initFacenet()
@@ -78,7 +79,7 @@ export class Facenet implements Alignable, Embeddingable {
   /**
    * @private
    */
-  public async initMtcnn(): Promise<void> {
+  public async initMtcnn (): Promise<void> {
     log.verbose('Facenet', 'initMtcnn()')
     const start = Date.now()
     await this.pythonFacenet.initMtcnn()
@@ -90,7 +91,7 @@ export class Facenet implements Alignable, Embeddingable {
    * Quit facenet
    * @returns {Promise<void>}
    */
-  public async quit(): Promise<void> {
+  public async quit (): Promise<void> {
     log.verbose('Facenet', 'quit()')
     await this.pythonFacenet.quit()
   }
@@ -132,7 +133,7 @@ export class Facenet implements Alignable, Embeddingable {
    * // leftEye: [Object],rightEye: [Object],nose: [Object],leftMouthCorner: [Object],rightMouthCorner: [Object] -- Object is Point, something like { x: 441, y: 181 }
    * // imageData: ImageData { data: [Object] } -- Object is Uint8ClampedArray
    */
-  public async align(imageData: ImageData | string): Promise<Face[]> {
+  public async align (imageData: ImageData | string): Promise<Face[]> {
     if (typeof imageData === 'string') {
       log.verbose('Facenet', 'align(%s)', imageData)
       const image = await loadImage(imageData)
@@ -158,8 +159,8 @@ export class Facenet implements Alignable, Embeddingable {
         ||  boundingBox[3] > imageData.height
       ) {
         log.silly('Facenet', 'align(%dx%d) box[%s] out of boundary, skipped',
-                              imageData.width, imageData.height,
-                              boundingBox)
+          imageData.width, imageData.height,
+          boundingBox)
         continue
       }
 
@@ -172,12 +173,12 @@ export class Facenet implements Alignable, Embeddingable {
 
       if (face.width < MIN_FACE_SIZE) {
         log.verbose('Facenet', 'align() face skipped because width(%s) is less than MIN_FACE_SIZE(%s)',
-                                face.width, MIN_FACE_SIZE)
+          face.width, MIN_FACE_SIZE)
         continue
       }
       if ((face.confidence || 0) < MIN_FACE_CONFIDENCE) {
         log.verbose('Facenet', 'align() face skipped because confidence(%s) is less than MIN_FACE_CONFIDENCE(%s)',
-                                face.confidence, MIN_FACE_CONFIDENCE)
+          face.confidence, MIN_FACE_CONFIDENCE)
         continue
       }
 
@@ -203,7 +204,7 @@ export class Facenet implements Alignable, Embeddingable {
    * // array([ 0.03132, 0.05678, 0.06192, ..., 0.08909, 0.16793,-0.05703])
    * // array([ 0.03422,-0.08358, 0.03549, ..., 0.07108, 0.14013,-0.01417])
    */
-  public async embedding(face: Face): Promise<FaceEmbedding> {
+  public async embedding (face: Face): Promise<FaceEmbedding> {
     log.verbose('Facenet', 'embedding(%s)', face)
 
     let imageData = face.imageData
@@ -212,13 +213,13 @@ export class Facenet implements Alignable, Embeddingable {
     }
     if (imageData.width !== imageData.height) {
       log.warn('Facenet', 'embedding(%s) %dx%d not square!',
-                          face, imageData.width, imageData.height)
+        face, imageData.width, imageData.height)
       throw new Error('should be a square image because it will be resized to 160x160')
     }
 
     if (imageData.width !== INPUT_FACE_SIZE) {
       log.verbose('Facenet', 'embedding(%dx%d) got a face not 160x160, resizing...',
-                            imageData.width, imageData.height)
+        imageData.width, imageData.height)
       imageData = await resizeImage(
         imageData,
         INPUT_FACE_SIZE,
@@ -237,12 +238,12 @@ export class Facenet implements Alignable, Embeddingable {
   /**
    * @private
    */
-  public transformMtcnnLandmarks(landmarks: number[][]): number[][][] {
+  public transformMtcnnLandmarks (landmarks: number[][]): number[][][] {
     // landmarks has a strange data structure:
     // https://github.com/kpzhang93/MTCNN_face_detection_alignment/blob/bace6de9fab6ddf41f1bdf1c2207c50f7039c877/code/codes/camera_demo/test.m#L70
     const tLandmarks = nj.array(landmarks.reduce((a, b) => a.concat(b), []))
-                          .reshape(10, -1)
-                          .T as nj.NdArray<number>
+      .reshape(10, -1)
+      .T as nj.NdArray<number>
 
     const faceNum = tLandmarks.shape[0]
 
@@ -266,7 +267,7 @@ export class Facenet implements Alignable, Embeddingable {
   /**
    * @private
    */
-  public squareBox(box: number[]): number[] {
+  public squareBox (box: number[]): number[] {
     let x0 = box[0]
     let y0 = box[1]
     let x1 = box[2]
@@ -300,7 +301,7 @@ export class Facenet implements Alignable, Embeddingable {
     y1 = Math.round(y0 + h)
 
     log.silly('Facenet', 'squareBox([%s]) -> [%d,%d,%d,%d]',
-                      box, x0, y0, x1, y1)
+      box, x0, y0, x1, y1)
 
     return [x0, y0, x1, y1]
   }
@@ -326,7 +327,7 @@ export class Facenet implements Alignable, Embeddingable {
    * // distance: [ 0, 1.2971515811057608 ]
    * // The first face comes from the imageFile, the exactly same face, so the first result is 0.
    */
-  public distance(face: Face | number[], faceList: Face[] | number[][]): number[] {
+  public distance (face: Face | number[], faceList: Face[] | number[][]): number[] {
     let embedding     : number[]
     let embeddingList : number[][]
 
@@ -352,4 +353,5 @@ export class Facenet implements Alignable, Embeddingable {
       embeddingList,
     )
   }
+
 }

@@ -22,9 +22,10 @@ export interface EmbeddingCacheData {
 export type EmbeddingCacheEvent = 'hit' | 'miss'
 
 export class EmbeddingCache extends EventEmitter implements Embeddingable {
+
   public store!: FlashStore<string, number[]>
 
-  constructor(
+  constructor (
     public facenet: Facenet,
     public workdir: string,
   ) {
@@ -36,7 +37,7 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
   public on(event: 'miss', listener: (face: Face) => void): this
 
   public on(event: never, listener: any):                                this
-  public on(event: EmbeddingCacheEvent, listener: (face: Face) => void): this {
+  public on (event: EmbeddingCacheEvent, listener: (face: Face) => void): this {
     super.on(event, listener)
     return this
   }
@@ -45,11 +46,11 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
   public emit(event: 'miss', face: Face): boolean
 
   public emit(event: never, face: Face):               boolean
-  public emit(event: EmbeddingCacheEvent, face: Face): boolean {
+  public emit (event: EmbeddingCacheEvent, face: Face): boolean {
     return super.emit(event, face)
   }
 
-  public init(): void {
+  public init (): void {
     log.verbose('EmbeddingCache', 'init()')
 
     if (!fs.existsSync(this.workdir)) {
@@ -64,7 +65,7 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     }
   }
 
-  public async embedding(face: Face): Promise<FaceEmbedding> {
+  public async embedding (face: Face): Promise<FaceEmbedding> {
     log.verbose('EmbeddingCache', 'embedding(%s)', face)
 
     const faceMd5 = face.md5
@@ -83,11 +84,12 @@ export class EmbeddingCache extends EventEmitter implements Embeddingable {
     return embedding
   }
 
-  public async count(): Promise<number> {
-    return await this.store.count()
+  public async count (): Promise<number> {
+    return this.store.size
   }
 
-  public async destroy(): Promise<void> {
-    return await this.store.destroy()
+  public async destroy (): Promise<void> {
+    return this.store.destroy()
   }
+
 }

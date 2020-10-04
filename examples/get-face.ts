@@ -2,7 +2,7 @@
 
 import { Facenet } from '../'  // from 'facenet'
 
-async function main() {
+async function main () {
   // Instanciate FaceNet
   const facenet = new Facenet()
 
@@ -18,9 +18,9 @@ async function main() {
     }
     console.info(`Save ${faceList.length} faces from the imageFile`)
   } finally {
-    facenet.quit()
+    await facenet.quit()
   }
 }
 
 main()
-.catch(console.error)
+  .catch(console.error)

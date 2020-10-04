@@ -30,9 +30,10 @@ export interface AlignmentCacheData {
 export type AlignmentCacheEvent = 'hit' | 'miss'
 
 export class AlignmentCache extends EventEmitter implements Alignable {
+
   public store!: FlashStore<string, object>
 
-  constructor(
+  constructor (
     public facenet   : Facenet,
     public faceCache : FaceCache,
     public workdir   : string,
@@ -45,7 +46,7 @@ export class AlignmentCache extends EventEmitter implements Alignable {
   public on(event: 'miss', listener: (image: ImageData | string) => void): this
 
   public on(event: never, listener: any):                                               this
-  public on(event: AlignmentCacheEvent, listener: (image: ImageData | string) => void): this {
+  public on (event: AlignmentCacheEvent, listener: (image: ImageData | string) => void): this {
     super.on(event, listener)
     return this
   }
@@ -54,11 +55,11 @@ export class AlignmentCache extends EventEmitter implements Alignable {
   public emit(event: 'miss', image: ImageData | string): boolean
 
   public emit(event: never, image: any):                              boolean
-  public emit(event: AlignmentCacheEvent, image: ImageData | string): boolean {
+  public emit (event: AlignmentCacheEvent, image: ImageData | string): boolean {
     return super.emit(event, image)
   }
 
-  public init(): void {
+  public init (): void {
     log.verbose('AlignmentCache', 'init()')
 
     if (!fs.existsSync(this.workdir)) {
@@ -74,12 +75,12 @@ export class AlignmentCache extends EventEmitter implements Alignable {
     }
   }
 
-  public async destroy(): Promise<void> {
+  public async destroy (): Promise<void> {
     log.verbose('AlignmentCache', 'clean()')
     await this.store.destroy()
   }
 
-  public async align(image: ImageData | string ): Promise<Face[]> {
+  public async align (image: ImageData | string): Promise<Face[]> {
     if (typeof image === 'string') {
       const filename = image
       log.verbose('AlignmentCache', 'align(%s)', filename)
@@ -88,9 +89,9 @@ export class AlignmentCache extends EventEmitter implements Alignable {
       )
     } else {
       log.verbose('AlignmentCache', 'align(%dx%d)',
-                                    image.width,
-                                    image.height,
-                  )
+        image.width,
+        image.height,
+      )
     }
 
     const md5 = imageMd5(image)
@@ -111,7 +112,7 @@ export class AlignmentCache extends EventEmitter implements Alignable {
     return faceList
   }
 
-  private async get(
+  private async get (
     md5: string,
   ): Promise<Face[] | null> {
     const faceMd5List = await this.store.get(md5) as string[]
@@ -129,12 +130,12 @@ export class AlignmentCache extends EventEmitter implements Alignable {
     return null
   }
 
-  private async put(
+  private async put (
     md5:      string,
     faceList: Face[],
   ): Promise<void> {
     log.verbose('AlignmentCache', 'put(%s, faceList.length=%d)',
-                                  md5, faceList.length)
+      md5, faceList.length)
     await Promise.all(
       faceList.map(async face => this.faceCache.put(face)),
     )

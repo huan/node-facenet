@@ -23,7 +23,7 @@ test('PythonFacenet python venv', async t => {
   t.ok((process.env['PATH'] as string).startsWith(VIRTUAL_ENV), 'should set PATH right')
   t.notOk(process.env['PYTHONHOME'],                            'should have no PYTHONHOME')
 
-  pf.quit()
+  await pf.quit()
 })
 
 // test('JSON bridge', async t => {
@@ -70,14 +70,14 @@ test('Base64 bridge', async t => {
     const flattenData = nj.array(IMAGE_RGB_DATA).flatten().tolist() as number[]
 
     const typedData = new Uint8Array(flattenData)
-    const base64Text = new Buffer(typedData).toString('base64')
+    const base64Text = Buffer.from(typedData).toString('base64')
 
     const ret = await pf.base64_to_image(base64Text, row, col, depth)
     t.deepEqual(ret, IMAGE_RGB_DATA, 'should be equal after processed by python base64 bridge')
   } catch (e) {
     t.fail(e)
   } finally {
-    pf.quit()
+    await pf.quit()
   }
 })
 
@@ -119,8 +119,8 @@ test('embedding()', async t => {
 
     t.equal(embedding.length, 128, 'should get 128 dim embedding')
     const valid = embedding
-                  .map(i => i > -0.5 && i < 0.5)
-                  .reduce((total, cur) => total && cur, true)
+      .map(i => i > -0.5 && i < 0.5)
+      .reduce((total, cur) => total && cur, true)
     t.ok(valid, 'should get vector normalized between -0.5 to 0.5')
   } catch (e) {
     t.fail(e)

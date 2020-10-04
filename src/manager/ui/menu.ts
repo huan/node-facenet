@@ -7,7 +7,8 @@ import {
 }                         from '../../config'
 
 export class Menu {
-  constructor(
+
+  constructor (
     public screen:    blessed.Widgets.Screen,
     public menuList:  string[],
   ) {
@@ -19,7 +20,7 @@ export class Menu {
 
   }
 
-  public async start(wait = true): Promise<number> {
+  public async start (wait = true): Promise<number> {
     log.verbose('Menu', 'start()')
 
     this.screen.title = 'FaceNet Manager'
@@ -37,7 +38,7 @@ export class Menu {
     return menuIndex
   }
 
-  private backgroundElement() {
+  private backgroundElement () {
     log.verbose('Menu', 'backgroundElement()')
     const box = blessed.box({
       top:     0,
@@ -53,7 +54,7 @@ export class Menu {
     this.screen.append(box)
   }
 
-  private logoElement() {
+  private logoElement () {
     log.verbose('Menu', 'logoElement()')
     // FIXME: blessed typing BUG: no Image exported
     const icon = (blessed.widget as any).image({
@@ -67,7 +68,7 @@ export class Menu {
     this.screen.append(icon)
   }
 
-  private textElement() {
+  private textElement () {
     log.verbose('Menu', 'textElement()')
     const bigText = blessed.bigtext({
       top:     16,
@@ -83,7 +84,7 @@ export class Menu {
     this.screen.append(bigText)
   }
 
-  private versionElement() {
+  private versionElement () {
     log.verbose('Menu', 'versionElement()')
 
     const version = blessed.box({
@@ -102,7 +103,7 @@ export class Menu {
     this.screen.append(version)
   }
 
-  private pressElement(): Promise<void> {
+  private pressElement (): Promise<void> {
     log.verbose('Menu', 'pressElement()')
 
     const pressKey = blessed.box({
@@ -135,7 +136,7 @@ export class Menu {
     })
   }
 
-  private async menuElement(): Promise<number> {
+  private async menuElement (): Promise<number> {
     log.verbose('Menu', 'menuElement()')
 
     const list = blessed.list({
@@ -173,6 +174,7 @@ export class Menu {
       list.once('select', (_, selected) => resolve(selected))
     })
   }
+
 }
 
 export default Menu

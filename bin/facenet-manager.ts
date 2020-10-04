@@ -13,7 +13,7 @@ import {
   Manager,
 }               from '../src/manager/'
 
-function checkUpdate() {
+function checkUpdate () {
   const pkgFile   = path.join(MODULE_ROOT, 'package.json')
   const pkg       = require(pkgFile)
   const notifier  = updateNotifier({
@@ -23,11 +23,11 @@ function checkUpdate() {
   notifier.notify()
 }
 
-function assertNever(obj: never): never {
+function assertNever (obj: never): never {
   throw new Error('Unexpected object: ' + obj)
 }
 
-async function main(args: Args): Promise<number> {
+async function main (args: Args): Promise<number> {
   log.level(args.log as any)
   log.timestamp(false)
 
@@ -82,7 +82,7 @@ interface Args {
   log : string
 }
 
-function parseArguments(): Args {
+function parseArguments (): Args {
   const parser = new ArgumentParser({
     version     : VERSION,
     addHelp     : true,
@@ -124,14 +124,14 @@ function parseArguments(): Args {
 }
 
 process.on('warning', (warning) => {
-  console.warn(warning.name);    // Print the warning name
-  console.warn(warning.message); // Print the warning message
-  console.warn(warning.stack);   // Print the stack trace
-});
+  console.warn(warning.name)    // Print the warning name
+  console.warn(warning.message) // Print the warning message
+  console.warn(warning.stack)   // Print the stack trace
+})
 
 main(parseArguments())
-.then(process.exit)
-.catch(e => {
-  console.error(e)
-  process.exit(1)
-})
+  .then(process.exit)
+  .catch(e => {
+    console.error(e)
+    process.exit(1)
+  })

@@ -21,6 +21,7 @@ test('parentDirectory()', async t => {
   } else if (__filename.endsWith('.js')) {
     t.equal(parentDir, 'dist', 'should inside dist folder when compiled to .js')
   } else {
+    // eslint-disable-next-line no-path-concat
     t.fail('unknowned file extension: ' + __filename)
   }
 })

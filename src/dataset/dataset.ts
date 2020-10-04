@@ -11,24 +11,25 @@ export interface IdImageList {
 }
 
 export abstract class Dataset {
+
   // all is relative path
   // all is relative path
   private imageListCache!: string[]
   private idImageListCache!: IdImageList
 
-  constructor(
+  constructor (
     public directory: string,
     public ext = 'jpg',
   ) {
     log.verbose('Dataset', 'constructor(directory=%s, ext=%s)',
-                            directory,
-                            ext,
-              )
+      directory,
+      ext,
+    )
   }
 
   public abstract async setup(): Promise<void>  // Should be used to download/extract/initialize dataset files
 
-  public async idList(): Promise<string[]> {
+  public async idList (): Promise<string[]> {
     log.verbose('Dataset', 'idList()')
 
     const data = await this.idImageList()
@@ -38,7 +39,7 @@ export abstract class Dataset {
   /**
    * return relative paths
    */
-  public async imageList(): Promise<string[]> {
+  public async imageList (): Promise<string[]> {
     log.verbose('Dataset', 'imageList()')
 
     if (this.imageListCache) {
@@ -57,7 +58,7 @@ export abstract class Dataset {
     })
   }
 
-  public async idImageList(): Promise<IdImageList> {
+  public async idImageList (): Promise<IdImageList> {
     log.verbose('Dataset', 'idImageList()')
 
     if (this.idImageListCache && Object.keys(this.idImageListCache).length) {
@@ -79,8 +80,9 @@ export abstract class Dataset {
     })
 
     log.verbose('Dataset', 'idImageListCache() loaded %d ids',
-                            Object.keys(this.idImageListCache).length,
-              )
+      Object.keys(this.idImageListCache).length,
+    )
     return this.idImageListCache
   }
+
 }
