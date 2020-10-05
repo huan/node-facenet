@@ -7,7 +7,7 @@ pytest
 opencv-python
 scipy
 sklearn
-tensorflow==1.12.3
+tensorflow==1.7
 typing
 wheel
 numpy==1.16.2
