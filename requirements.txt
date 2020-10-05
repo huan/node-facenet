@@ -10,4 +10,4 @@ sklearn
 tensorflow==1.12.3
 typing
 wheel
-numpy==1.14.6
+numpy==1.13.3
