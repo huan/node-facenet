@@ -42,7 +42,7 @@
     "@types/tar": "^4.0.0",
     "@types/update-notifier": "^2.0.0",
     "coveralls": "^3.0.0",
-    "cross-env": "^5.0.5",
+    "cross-env": "^7.0.3",
     "flash-store": "^0.20.7",
     "gm": "^1.23.0",
     "jsdoc-to-markdown": "^6.0.1",
