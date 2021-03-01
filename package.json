@@ -45,7 +45,7 @@
     "cross-env": "^7.0.3",
     "flash-store": "^0.20.7",
     "gm": "^1.23.1",
-    "jsdoc-to-markdown": "^6.0.1",
+    "jsdoc-to-markdown": "^7.0.0",
     "numjs": "^0.16.0",
     "nyc": "^15.1.0",
     "pkg-jq": "^0.2.11",
