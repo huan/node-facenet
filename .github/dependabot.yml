@@ -1,0 +1,31 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "13:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: "@types/printf"
+    versions:
+    - 0.3.1
+  - dependency-name: "@types/update-notifier"
+    versions:
+    - 5.0.0
+  - dependency-name: flash-store
+    versions:
+    - 0.20.7
+  - dependency-name: "@chatie/eslint-config"
+    versions:
+    - 0.12.1
+    - 0.12.2
+  - dependency-name: "@types/rimraf"
+    versions:
+    - 3.0.0
+  - dependency-name: canvas
+    versions:
+    - 2.6.1
+  - dependency-name: "@chatie/tsconfig"
+    versions:
+    - 0.10.1
