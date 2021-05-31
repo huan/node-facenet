@@ -28,7 +28,7 @@
     "@chatie/eslint-config": "^0.12.3",
     "@chatie/git-scripts": "^0.6.2",
     "@chatie/semver": "^0.4.7",
-    "@chatie/tsconfig": "^0.14.1",
+    "@chatie/tsconfig": "^0.16.2",
     "@types/app-root-path": "^1.2.4",
     "@types/argparse": "^2.0.5",
     "@types/blessed": "^0.1.17",
