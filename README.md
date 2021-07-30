@@ -12,24 +12,25 @@ FaceNet is a deep convolutional network designed by Google, trained to solve fac
 1. optimize the embedding face recognition performance using only 128-bytes per face. 
 1. achieves accuracy of 99.63% on Labeled Faces in the Wild (LFW) dataset, and 95.12% on YouTube Faces DB.
 
-# INSTALL
+## INSTALL
 
 ```shell
-$ npm install facenet numjs flash-store
+npm install facenet numjs flash-store
 ```
 
 ### Peer Dependencies
+
 1. `numjs`
 1. `flash-store`
 
-# EXAMPLE
+## EXAMPLE
 
 The follow examples will give you some intuitions for using the code.
 
 1. **demo** exmaple will show you how to do `align` for face alignment and `embedding` to get face feature vector.
 1. **visualize** example will calculate the similarity between faces and draw them on the photo.
 
-## 1. Demo for API Usage
+### 1. Demo for API Usage
 
 TL;DR: Talk is cheap, show me the code!
 
@@ -91,7 +92,7 @@ landmarks: {
 embedding: array([ 0.03241, -0.0737,  0.0475, ..., 0.07235, 0.12581,-0.00817])
 ```
 
-## 2. Visualize for Intuition
+### 2. Visualize for Intuition
 
 ![FaceNet Visualization](https://huan.github.io/node-facenet/images/landing-twins-ricky-martin-visualized.jpg)
 
@@ -108,7 +109,7 @@ $ npm run example:visualize
 01:15:43 INFO CLI Visualized image saved to:  facenet-visulized.jpg
 ```
 
-## 3. Get the diffence of two face
+### 3. Get the diffence of two face
 
 Get the two face's distance, the smaller the number is, the similar of the two face 
 
@@ -124,18 +125,19 @@ faceList[1].embedding = await facenet.embedding(faceList[1])
 console.info('distance between the different face: ', faceList[0].distance(faceList[1]))
 console.info('distance between the same face:      ', faceList[0].distance(faceList[0]))
 ```
+
 Output:  
-distance between the different face:  1.2971515811057608   
+distance between the different face:  1.2971515811057608
 distance between the same face:       0
 
-In the example,   
-faceList[0] is totally the same with faceList[0], so the number is 0   
-faceList[1] is different with faceList[1], so the number is big.    
-If the number is smaller than 0.75, maybe they are the same person.   
+In the example,
+faceList[0] is totally the same with faceList[0], so the number is 0
+faceList[1] is different with faceList[1], so the number is big.
+If the number is smaller than 0.75, maybe they are the same person.
 
 Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/distance.ts>
 
-## 4. Save the face picture from a picture
+### 4. Save the face picture from a picture
 
 Recognize the face and save the face to local file.
 
@@ -155,34 +157,33 @@ console.info(`Save ${faceList.length} faces from the imageFile`)
 
 Full source code can be found at here: <https://github.com/huan/node-facenet/blob/master/examples/get-face.ts>
 
-FACENET MANAGER
-----------------
+## Facenet Manager
 
-**UNDER HEAVY DEVELOPMENT NOW**
+UNDER HEAVY DEVELOPMENT NOW
 
 Roadmap: release facenet-manager on version 0.8
 
-[![asciicast](https://asciinema.org/a/113686.png)](https://asciinema.org/a/113686?autoplay=1)
-> The above ascii recording is just for demo purpose. Will replace it with facenet-manager later.
+[![asciicast](https://asciinema.org/a/427927.svg)](https://asciinema.org/a/427927?autoplay=1)
 
-# DOCUMENT
+## DOCUMENT
 
 See [auto generated docs](https://huan.github.io/node-facenet)
 
-# INSTALL & REQUIREMENT
+## INSTALL & REQUIREMENT
 
 ```shell
-$ npm install facenet
+npm install facenet
 ```
 
-## OS
+### OS
 
 Supported:
+
 - [x] Linux
 - [x] Mac
 - [ ] Windows
 
-## Dependency
+### Dependency
 
 1. Node.js >= 7 (**8** is recommend)
 1. Tensorflow >= 1.2
@@ -196,7 +197,7 @@ pip3 install setuptools --upgrade
 
 ```
 
-## Ram
+### Ram
 
 | Neural Network Model | Task                |  Ram  |
 | ---                  | ---                 |  ---  |
@@ -207,13 +208,13 @@ If you are dealing with very large images(like 3000x3000 pixels), there will nee
 
 So I believe that Facenet will need at least 2GB memory, and >=4GB is recommended.
 
-# API
+## API
 
 Neural Network alone is not enough. It's Neural Network married with pre-trained model, married with easy to use APIs, that yield us the result that makes our APP sing.
 
 Facenet is designed for bring the state-of-art neural network with bleeding-edge technology to full stack developers.
 
-## Facenet
+### Facenet
 
 ```ts
 import { Facenet } from 'facenet'
@@ -222,11 +223,11 @@ const facenet = new Facenet()
 facenet.quit()
 ```
 
-### 1. Facenet#align(filename: string): Promise\<Face[]\>
+#### 1. Facenet#align(filename: string): Promise\<Face[]\>
 
 Do face alignment for the image, return a list of faces.
 
-### 2. Facenet#embedding(face: Face): Promise\<FaceEmbedding\>
+#### 2. Facenet#embedding(face: Face): Promise\<FaceEmbedding\>
 
 Get the embedding for a face.
 
@@ -234,7 +235,7 @@ Get the embedding for a face.
 face.embedding = await facenet.embedding(face)
 ```
 
-## Face
+### Face
 
 Get the 128 dim embedding vector for this face.(After alignment)
 
@@ -246,9 +247,9 @@ console.info('landmarks:',     face.facialLandmark)
 console.info('embedding:',     face.embedding)
 ```
 
-# ENVIRONMENT VARIABLES
+## ENVIRONMENT VARIABLES
 
-## FACENET_MODEL
+### FACENET_MODEL
 
 FaceNet neural network model files, set to other version of model as you like.
 
@@ -265,30 +266,29 @@ model-20170512-110547.ckpt-250000.data-00000-of-00001
 model-20170512-110547.meta
 ```
 
-# DOCKER
+## DOCKER
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/zixia/facenet.svg?maxAge=2592000)](https://hub.docker.com/r/zixia/facenet/) [![Docker Stars](https://img.shields.io/docker/stars/zixia/facenet.svg?maxAge=2592000)](https://hub.docker.com/r/zixia/facenet/) [![Docker Layers](https://images.microbadger.com/badges/image/zixia/facenet.svg)](https://microbadger.com/#/images/zixia/facenet)
 
-# DEVELOP
+## DEVELOP
 
 [![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/pr)](http://issuestats.com/github/huan/node-facenet) [![Issue Stats](http://issuestats.com/github/huan/node-facenet/badge/issue)](http://issuestats.com/github/huan/node-facenet) [![Coverage Status](https://coveralls.io/repos/github/huan/node-facenet/badge.svg?branch=master)](https://coveralls.io/github/huan/node-facenet?branch=master) 
 
 ```shell
-$ git clone git@github.com:zixia/node-facenet.git
-$ cd facenet
-$ npm install
-$ npm test
+git clone git@github.com:zixia/node-facenet.git
+cd facenet
+npm install
+npm test
 ```
 
-# COMMAND LINE INTERFACES
+## COMMAND LINE INTERFACES
 
-
-## align
+### align
 
 Draw a rectangle with five landmarks on all faces in the input\_image, save it to output\_image.
 
 ```shell
-$ ./node_modules/.bin/ts-node bin/align.ts input_image output_image
+./node_modules/.bin/ts-node bin/align.ts input_image output_image
 ```
 
 ## embedding
@@ -296,80 +296,80 @@ $ ./node_modules/.bin/ts-node bin/align.ts input_image output_image
 Output the 128 dim embedding vector of the face image.
 
 ```shell
-$ ./node_modules/.bin/ts-node bin/embedding.ts face_image
+./node_modules/.bin/ts-node bin/embedding.ts face_image
 ```
 
+## RESOURCES
 
-# RESOURCES
+### Machine Learning
 
-## Machine Learning
-* [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
-* [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
-* [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
-* [A tensorflow implementation of "Deep Convolutional Generative Adversarial Networks](http://carpedm20.github.io/faces/)
-* [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
-* [Average Face : OpenCV ( C++ / Python ) Tutorial](https://www.learnopencv.com/average-face-opencv-c-python-tutorial/) 
+- [Machine Learning is Fun! Part 4: Modern Face Recognition with Deep Learning](https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78)
+- [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
+- [Google: Our new system for recognizing faces is the best one ever](https://fortune.com/2015/03/17/google-facenet-artificial-intelligence/)
+- [A tensorflow implementation of "Deep Convolutional Generative Adversarial Networks](http://carpedm20.github.io/faces/)
+- [What does Locality Sensitive Hashing Forests do? · maheshakya/my_first_project Wiki](https://github.com/maheshakya/my_first_project/wiki/What-does-Locality-Sensitive-Hashing-Forests-do%3F)
+- [Average Face : OpenCV ( C++ / Python ) Tutorial](https://www.learnopencv.com/average-face-opencv-c-python-tutorial/) 
 
-## Python3
+### Python3
 
-* [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
-* [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
-* [Useful Python Modules: Flake8](https://dancallahan.info/journal/python-flake8/)
-* [PEP 8 - Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
-* [Python 3.6 venv — Creation of virtual environments](https://docs.python.org/3.6/library/venv.html)
+- [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
+- [PyLint, PyChecker or PyFlakes?](https://stackoverflow.com/questions/1428872/pylint-pychecker-or-pyflakes)
+- [Useful Python Modules: Flake8](https://dancallahan.info/journal/python-flake8/)
+- [PEP 8 - Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
+- [Python 3.6 venv — Creation of virtual environments](https://docs.python.org/3.6/library/venv.html)
 
-### 1. Typing
+#### 1. Typing
 
-* [Mypy syntax cheat sheet (Python 3)](mypy.readthedocs.io/en/latest/cheat_sheet_py3.html)
-* [Python 3 Type Hints and Static Analysis](https://code.tutsplus.com/tutorials/python-3-type-hints-and-static-analysis--cms-25731)
-* [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+- [Mypy syntax cheat sheet (Python 3)](mypy.readthedocs.io/en/latest/cheat_sheet_py3.html)
+- [Python 3 Type Hints and Static Analysis](https://code.tutsplus.com/tutorials/python-3-type-hints-and-static-analysis--cms-25731)
+- [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
 
-### 1. NumJS
+#### 1. NumJS
 
-* [Stackoverflow: numpy-like package for node](https://stackoverflow.com/questions/31412537/numpy-like-package-for-node)
-* [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
-* [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
-* [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
+- [Stackoverflow: numpy-like package for node](https://stackoverflow.com/questions/31412537/numpy-like-package-for-node)
+- [Read/manipulate/display images using NumJs](https://jsfiddle.net/nicolaspanel/047gwg0q/)
+- [Numjs - Like NumPy, in JavaScript](https://github.com/nicolaspanel/numjs)
+- [ndarray - Modular multidimensional arrays for JavaScript](https://github.com/scijs/ndarray)
 
 ## Dataset
 
 1. [LFW - Labeled Faces in the Wild](http://vis-www.cs.umass.edu/lfw/)
 
-# TODO
+## TODO
 
 - [x] NPM Module: `facenet`
 - [x] Docker Image: `zixia/facenet`
 - [ ] Examples
-    - [x] API Usage Demo
-    - [x] Triple Distance Visulization Demo
-    - [ ] Performance Test(Align/Embedding/Batch)
-    - [ ] Validation Test(LFW Accuracy)
+  - [x] API Usage Demo
+  - [x] Triple Distance Visulization Demo
+  - [ ] Performance Test(Align/Embedding/Batch)
+  - [ ] Validation Test(LFW Accuracy)
 - [ ] Neural Network Models
-    - [x] Facenet
-    - [x] Mtcnn
-    - [ ] Batch Support
+  - [x] Facenet
+  - [x] Mtcnn
+  - [ ] Batch Support
 - [ ] ~~Python3 `async` & `await`~~
 - [ ] Divide Different Neural Network to seprate class files(e.g. Facenet/Mtcnn)
 - [x] K(?)NN Alghorithm [Chinese Whispers](https://github.com/huan/chinese-whispers)
 - [ ] TensorFlow Sereving
 - [ ] OpenAPI Specification(Swagger)
 
-# INSPIRATION
+## INSPIRATION
 
 This repository is heavily inspired by the following implementations:
 
-* [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
-* [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
+- [FaceNet](https://github.com/davidsandberg/facenet) by David Sandberg @[davidsandberg](https://github.com/davidsandberg)
+- [OpenFace](https://github.com/cmusatyalab/openface) by CMU Satya Lab @[cmusatyalab](https://github.com/cmusatyalab)
 
-# CREDITS
+## CREDITS
 
 1. Face alignment using MTCNN: [Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Networks](https://kpzhang93.github.io/MTCNN_face_detection_alignment/index.html)
 1. Face embedding using FaceNet: [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/abs/1503.03832)
 1. TensorFlow implementation of the face recognizer: [Face recognition using Tensorflow](https://github.com/davidsandberg/facenet)
 
-# CONTRIBUTE
+## CONTRIBUTE
 
-## FaceNet Badge
+### FaceNet Badge
 
 [![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/huan/node-facenet)
 
@@ -377,37 +377,36 @@ This repository is heavily inspired by the following implementations:
 [![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/huan/node-facenet)
 ```
 
-# CHANGELOG
+## CHANGELOG
 
-## v0.9 master unstable
+### v0.9 master unstable
 
-## v0.8 (Apr 2018)
+### v0.8 (Apr 2018)
 
 1. Added `facenet-manager` command line tool for demo/validate/sort photos
 1. Switch to `FlashStore` npm module as key-value database
 
-## v0.3 Sep 2017
+### v0.3 Sep 2017
 
 1. Added three cache classes: AlignmentCache & EmbeddingCache & FaceCache.
 1. Added cache manager utilities: embedding-cache-manager & alignment-cache-manager & face-cache-manager
 1. Added Dataset manager utility: lfw-manager (should be dataset-manager in future)
 1. BREAKING CHANGE: `Face` class refactoring.
 
-## v0.2 Aug 2017 (BREAKING CHANGES)
+### v0.2 Aug 2017 (BREAKING CHANGES)
 
 1. `Facenet#align()` now accept a filename string as parameter.
 1. BREAKING CHANGE: `FaceImage` class had been removed.
 1. BREAKING CHANGE: `Face` class refactoring.
 
-## v0.1 Jul 2017
+### v0.1 Jul 2017
 
 1. `npm run demo` to visuliaze the face alignment and distance(embedding) in a three people photo.
 1. Facenet.align() to do face alignment
 1. Facenet.embedding() to calculate the 128 dim feature vector of face
 1. Initial workable version
 
-TROUBLESHOOTING
----------------
+## TROUBLESHOOTING
 
 ### Dependencies
 
@@ -421,22 +420,24 @@ windows | [instructions on our wiki](https://github.com/automattic/node-canvas/w
 
 more os see [node-canvas Wiki](https://github.com/Automattic/node-canvas/wiki/_pages).
 
-# FAQ
+## FAQ
 
 1. `facenet-manager` display not right under Windows
 
 See: [Running Terminal Dashboards on Windows](http://webservices20.blogspot.co.uk/2015/04/running-terminal-dashboards-on-windows.html)
 
-2. Error when install: `No package 'XXX' found`
+1. Error when install: `No package 'XXX' found`
 
 It's related with the NPM module `canvas`.
 
 Error messages:
+
 1. `No package 'pixman-1' found`
 2. `No package 'cairo' found`
 3. `No package 'pangocairo' found`
 
-Solution for Ubuntu 17.04: 
+Solution for Ubuntu 17.04:
+
 ```shell
 sudo apt install -y libpixman-1-dev
 sudo apt-get install -y libcairo2-dev
@@ -444,6 +445,7 @@ sudo apt-get install -y libpango1.0-dev
 ```
 
 Solution for Mac:
+
 ```shell
 brew install python3
 brew install pkg-config
@@ -453,26 +455,29 @@ brew install libpng
 brew install libjpeg
 ```
 
-3. Error when install: `fatal error: jpeglib.h: No such file or directory`
+1. Error when install: `fatal error: jpeglib.h: No such file or directory`
 
 It's related with the NPM module `canvas`.
 
 Solution for Ubuntu 17.04:
+
 ```shell
 sudo apt-get install -y libjpeg-dev
 ```
 
-4. Error when run: `Error: error while reading from input stream`
+1. Error when run: `Error: error while reading from input stream`
 
 It is related with the `libjpeg` package
 
 Solution for Mac:
+
 ```
 brew install libjpeg
 ```
 
-5. Error when run: 
-```
+1. Error when run:
+
+```sh
 Error: Cannot find module '../build/Release/canvas.node'
     at Function.Module._resolveFilename (module.js:527:15)
     at Function.Module._load (module.js:476:23)
@@ -485,17 +490,20 @@ Error: Cannot find module '../build/Release/canvas.node'
     at tryModuleLoad (module.js:508:12)
     at Function.Module._load (module.js:500:3)
 ```
+
 It seems the package not installed in a right way, like `sharp`, `canvas`, remove the package and reinstall it.
 
 run 
-```
+
+```sh
 rm -rf node node_modules/canvas
 // if sharp, then remove sharp folder
 npm install
 ```
 
-6. Error when install
-```
+1. Error when install
+
+```sh
 > facenet@0.3.19 postinstall:models /Users/jiaruili/git/rui/node-facenet
 > set -e && if [ ! -d models ]; then mkdir models; fi && cd models && if [ ! -f model.tar.bz2 ]; then curl --location --output model.tar.bz2.tmp https://github.com/huan/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2; mv model.tar.bz2.tmp model.tar.bz2; fi && tar jxvf model.tar.bz2 && cd -
 
@@ -506,27 +514,28 @@ tar: Error exit delayed from previous errors.
 
 It seems this because not get the full model file successfully. See [#issue63](https://github.com/huan/node-facenet/issues/63)
 
-Solution:    
+Solution:
 
-download the file from https://github.com/huan/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2     
+download the file from https://github.com/huan/node-facenet/releases/download/v0.1.9/model-20170512.tar.bz2
 rename the file `model.tar.bz2` and move it to the folder `models`
 try `npm install` again
 
-SEE ALSO
---------
+## SEE ALSO
+
 1. [Face Blinder](https://github.com/huan/face-blinder): Assitant Bot for Whom is Suffering form Face Blindess
 1. [Wechaty Blinder](https://github.com/huan/wechaty-blinder): Face Blinder Bot Powered by Wechaty
 
-# AUTHOR
+## AUTHOR
 
-Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
+Huan LI \<zixia@zixia.net\> (<http://linkedin.com/in/zixia>)
 
+<!-- markdownlint-disable MD033 -->
 <a href="http://stackoverflow.com/users/1123955/zixia">
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
 </a>
 
-# COPYRIGHT & LICENSE
+## COPYRIGHT & LICENSE
 
-* Code & Docs © 2017 Huan LI \<zixia@zixia.net\>
-* Code released under the Apache-2.0 License
-* Docs released under Creative Commons
+- Code & Docs © 2017 Huan LI \<zixia@zixia.net\>
+- Code released under the Apache-2.0 License
+- Docs released under Creative Commons
