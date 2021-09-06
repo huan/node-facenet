@@ -25,7 +25,7 @@
     "numjs": "^0.16"
   },
   "devDependencies": {
-    "@chatie/eslint-config": "^0.12.3",
+    "@chatie/eslint-config": "^0.14.1",
     "@chatie/git-scripts": "^0.6.2",
     "@chatie/semver": "^0.4.7",
     "@chatie/tsconfig": "^0.14.1",
