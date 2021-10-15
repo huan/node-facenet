@@ -43,7 +43,7 @@
     "@types/update-notifier": "^5.0.0",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.3",
-    "flash-store": "^0.20.7",
+    "flash-store": "^1.0.6",
     "gm": "^1.23.1",
     "jsdoc-to-markdown": "^7.0.0",
     "numjs": "^0.16.0",
